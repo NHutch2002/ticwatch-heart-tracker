@@ -15,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Stopwatch(time: MutableState<Long>, isPaused: MutableState<Boolean>) {
+fun Stopwatch(time: MutableState<Long>) {
 
     val hours = time.value / 3600
     val minutes = (time.value % 3600) / 60

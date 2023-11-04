@@ -176,7 +176,7 @@ fun ActiveWorkoutPage(navController: NavController) {
     Box {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FirstPage(time, isPaused)
+                0 -> FirstPage(time)
                 1 -> SecondPage(navController, isPaused)
             }
         }
@@ -213,13 +213,13 @@ fun PageIndicator(isSelected: Boolean) {
 }
 
 @Composable
-fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>) {
+fun FirstPage(time: MutableState<Long>) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Stopwatch(time, isPaused)
+        Stopwatch(time)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
