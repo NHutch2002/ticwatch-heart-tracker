@@ -45,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.widget.ArcLayout.LayoutParams.VerticalAlignment
+import kotlinx.coroutines.delay
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
@@ -159,11 +160,23 @@ fun ViewHistoryPage(navController: NavController) {
 fun ActiveWorkoutPage(navController: NavController) {
     val pagerState = rememberPagerState { 2 } // Replace 2 with your actual page count
     val isPaused = remember { mutableStateOf(false) }
+    val time = remember { mutableLongStateOf(0L) }
+
+    LaunchedEffect(key1 = Unit) {
+        while (true) {
+            delay(1000L)
+            if (!isPaused.value) {
+                time.value++
+            }
+        }
+    }
+
+
 
     Box {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FirstPage(isPaused)
+                0 -> FirstPage(time, isPaused)
                 1 -> SecondPage(navController, isPaused)
             }
         }
@@ -200,13 +213,13 @@ fun PageIndicator(isSelected: Boolean) {
 }
 
 @Composable
-fun FirstPage(isPaused: MutableState<Boolean>) {
+fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Stopwatch(isPaused)
+        Stopwatch(time, isPaused)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround

@@ -15,21 +15,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun Stopwatch(isPaused: MutableState<Boolean>) {
-    var time by remember { mutableLongStateOf(0L) }
+fun Stopwatch(time: MutableState<Long>, isPaused: MutableState<Boolean>) {
 
-    LaunchedEffect(key1 = Unit) {
-        while (true) {
-            delay(1000L)
-            if (!isPaused.value) {
-                time++
-            }
-        }
-    }
-
-    val hours = time / 3600
-    val minutes = (time % 3600) / 60
-    val seconds = time % 60
+    val hours = time.value / 3600
+    val minutes = (time.value % 3600) / 60
+    val seconds = time.value % 60
 
     Text(text = "%02d:%02d:%02d".format(hours, minutes, seconds), color = Color(0xFF9CF2F9))
 }
