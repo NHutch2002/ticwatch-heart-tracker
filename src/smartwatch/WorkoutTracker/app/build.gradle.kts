@@ -48,6 +48,7 @@ android {
 dependencies {
     implementation(files("libs/mobvoi-api-1.1.1.aar"))
     compileOnly("com.google.android.wearable:wearable:2.8.1")
+    implementation("androidx.compose.runtime:runtime-livedata")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("androidx.wear:wear:1.2.0")
     implementation("androidx.core:core-ktx:1.9.0")

@@ -23,7 +23,7 @@ import androidx.wear.compose.material.Button
 import kotlin.math.roundToInt
 
 @Composable
-fun HeartRate() {
+fun HeartRate(): Float? {
     var heartRate by remember { mutableStateOf<Float?>(null) }
     var showRequestPermissionButton by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -64,14 +64,8 @@ fun HeartRate() {
         }
     }
 
+    Log.v("Heart Rate", heartRate.toString())
 
-    if (showRequestPermissionButton) {
-        Button(onClick = { requestPermissionLauncher.launch(Manifest.permission.BODY_SENSORS) }) {
-            Text("Request Permission")
-        }
-    }
-    else {
-        Text("${heartRate?.let { "${it.roundToInt()}" } ?: "..."} BPM", color = Color(0xFF9CF2F9))
-    }
+    return heartRate
 
 }
