@@ -102,16 +102,7 @@ fun LandingPage(navController: NavController) {
 
 
 
-@Composable
-fun ViewHistoryPage(navController: NavController) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text="Workout History Page")
-    }
-}
+
 
 
 
