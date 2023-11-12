@@ -159,7 +159,7 @@ fun SecondPage(navController: NavController, isPaused: MutableState<Boolean>, ma
 
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = { navController.navigate("end_workout") },  colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
+                Button(onClick = { navController.navigate("end_workout/${maxHeartRate.floatValue}") },  colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
                     Icon(imageVector = Icons.Filled.Close, contentDescription = null)
                 }
                 Text("End", modifier = Modifier

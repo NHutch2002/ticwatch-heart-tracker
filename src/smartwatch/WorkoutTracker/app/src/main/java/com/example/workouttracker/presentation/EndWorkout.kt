@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -19,17 +20,17 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 
 @Composable
-fun EndWorkoutPage(navController: NavController) {
+fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
     val context = LocalContext.current
     val viewModel: HeartRateMonitorViewModel = viewModel()
     val HRRActive = remember { mutableStateOf(false) }
 
-    viewModel.startHeartRateMonitoring(context, HRRActive)
-
     val heartRates by viewModel.heartRates.observeAsState(emptyList())
-    val averageHeartRate = heartRates.average().toInt()
+    val heartRateRecovery by viewModel.heartRateRecovery.observeAsState(0)
 
-
+    LaunchedEffect(Unit){
+        viewModel.startHeartRateMonitoring(context, HRRActive, maxHeartRate)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -39,7 +40,8 @@ fun EndWorkoutPage(navController: NavController) {
         Text(text="End Workout Page")
         Button(onClick = { navController.navigate("landing_page") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
         }
+        Text("Heart Rate Recovery: $heartRateRecovery")
+
         Text(text = "Return to home page")
-        Text("Average Heart Rate: $averageHeartRate")
     }
 }

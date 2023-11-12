@@ -7,30 +7,34 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import kotlin.math.sqrt
 
 class HeartRateMonitorViewModel : ViewModel() {
     private val _heartRates = MutableLiveData<List<Float>>()
     val heartRates: LiveData<List<Float>> get() = _heartRates
 
-    fun startHeartRateMonitoring(context: Context, HRRActive: MutableState<Boolean>): Int {
+    private val _heartRateRecovery = MutableLiveData<Int>()
+    val heartRateRecovery: LiveData<Int> get() = _heartRateRecovery
+
+    fun startHeartRateMonitoring(context: Context, HRRActive: MutableState<Boolean>, maxHeartRate: Float) {
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
         val heartRateMeasurements = mutableListOf<Float>()
-        var testHeartRate = 0
 
         val heartRateListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
                 if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
                     heartRateMeasurements.add(event.values[0])
+                    Log.v("HRR Measurements Size", heartRateMeasurements.size.toString())
+                    if (heartRateMeasurements.size > 5) {
+                        val minOfLastTen = heartRateMeasurements.takeLast(5).minOrNull() ?: 0f
+                        Log.v("HRR Intermediate", minOfLastTen.toString())
+                        _heartRateRecovery.value = (150 - minOfLastTen).toInt()
+                    }
                 }
             }
 
@@ -43,14 +47,12 @@ class HeartRateMonitorViewModel : ViewModel() {
         // Wait for one minute in a new coroutine, then unregister the listener
         viewModelScope.launch {
             Log.v("HRR", "Starting Measurement")
-            delay(5000)
+            delay(20000)
+            Log.v("HRR", "Measurement Complete - ${_heartRateRecovery.value.toString()}")
             sensorManager.unregisterListener(heartRateListener)
             _heartRates.value = heartRateMeasurements
-            testHeartRate = heartRateMeasurements.average().toInt()
-            Log.v("HRR", "Completed - $testHeartRate")
             HRRActive.value = false
         }
-        return testHeartRate
-
     }
 }
+
