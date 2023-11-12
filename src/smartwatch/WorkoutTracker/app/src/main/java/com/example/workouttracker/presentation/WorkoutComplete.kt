@@ -17,9 +17,6 @@ import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
-import com.example.workouttracker.presentation.HeartRate
-import com.example.workouttracker.presentation.HeartRateMonitorViewModel
-import kotlin.math.roundToInt
 
 @Composable
 fun EndWorkoutPage(navController: NavController) {
@@ -44,6 +41,5 @@ fun EndWorkoutPage(navController: NavController) {
         }
         Text(text = "Return to home page")
         Text("Average Heart Rate: $averageHeartRate")
-        Text(HeartRate()?.let { "${it.roundToInt()} BPM" } ?: "Reading...", color = Color(0xFF9CF2F9))
     }
 }

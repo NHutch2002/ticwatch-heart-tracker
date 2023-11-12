@@ -24,7 +24,9 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,9 +42,6 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
-import com.example.workouttracker.presentation.HeartRate
-import com.example.workouttracker.presentation.MonitorAccelerometer
-import com.example.workouttracker.presentation.Stopwatch
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
@@ -52,21 +51,24 @@ fun ActiveWorkoutPage(navController: NavController) {
     val pagerState = rememberPagerState { 2 } // Replace 2 with your actual page count
     val isPaused = remember { mutableStateOf(false) }
     val time = remember { mutableLongStateOf(0L) }
+    val maxHeartRate = remember { mutableFloatStateOf(0F) }
 
     LaunchedEffect(key1 = Unit) {
         while (true) {
             delay(1000L)
             if (!isPaused.value) {
-                time.value++
+                time.longValue++
             }
         }
     }
 
+    HeartRate(maxHeartRate)
+
     Box {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FirstPage(time, isPaused)
-                1 -> SecondPage(navController, isPaused)
+                0 -> FirstPage(time, isPaused, maxHeartRate)
+                1 -> SecondPage(navController, isPaused, maxHeartRate)
             }
         }
 
@@ -102,8 +104,13 @@ fun PageIndicator(isSelected: Boolean) {
 }
 
 @Composable
-fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>) {
+fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
+    val currentHeartRate = remember { mutableFloatStateOf(0F) }
+
+    currentHeartRate.floatValue = HeartRate(maxHeartRate)
+
     MonitorAccelerometer(isPaused)
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -123,12 +130,12 @@ fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>) {
             )
             Text(text = "317kcal", color = Color(0xFF9CF2F9))
         }
-        Text(HeartRate()?.let { "${it.roundToInt()} BPM" } ?: "Reading...", color = Color(0xFF9CF2F9))
+        Text(if (currentHeartRate.floatValue <= 0) "Reading..." else "${currentHeartRate.floatValue.roundToInt()} BPM", color = Color(0xFF9CF2F9))
     }
 }
 
 @Composable
-fun SecondPage(navController: NavController, isPaused: MutableState<Boolean>) {
+fun SecondPage(navController: NavController, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
 
     Column (
         modifier = Modifier.fillMaxSize(), // Added background color for visualization

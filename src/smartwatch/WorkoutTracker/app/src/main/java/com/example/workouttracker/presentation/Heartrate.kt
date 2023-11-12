@@ -10,21 +10,13 @@ import android.hardware.SensorManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.wear.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.wear.compose.material.Button
-import kotlin.math.roundToInt
 
 @Composable
-fun HeartRate(): Float? {
-    var heartRate by remember { mutableStateOf<Float?>(null) }
+fun HeartRate(maxHeartRate: MutableFloatState): Float {
+    var heartRate by remember { mutableStateOf<Float>(0F) }
     var showRequestPermissionButton by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -37,6 +29,10 @@ fun HeartRate(): Float? {
             override fun onSensorChanged(event: SensorEvent) {
                 if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
                     heartRate = event.values[0]
+                    val currentHeartRate = heartRate
+                    if (currentHeartRate > maxHeartRate.floatValue){
+                        maxHeartRate.floatValue = currentHeartRate
+                    }
                 }
             }
 
@@ -48,7 +44,7 @@ fun HeartRate(): Float? {
         if (isGranted) {
             sensorManager.registerListener(heartRateListener, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL)
         } else {
-            // Handle the case where the user denies the permission request.
+            showRequestPermissionButton = true
         }
     }
 
