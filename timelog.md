@@ -158,3 +158,9 @@
 * Done a code refactor to improve readability of the project
 * Implemented Heart Rate Recovery measurement on workout completion, using a temporary theoretical max of 150 BPM
 * Implemented Progress Ring for measurement after workout that is animated while the HRR reading is taking place
+
+### 13th Nov - 4 Hours
+
+* Added animations for the HRR reading
+* Added percentages and current Heart Rate to the measurement page
+* Created basic flow on workout completion page
