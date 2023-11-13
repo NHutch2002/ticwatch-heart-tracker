@@ -97,7 +97,7 @@
 * Generated some questions to ask about the design to help improve the design over time
 * Created a google form to distribute
 
-## Week 6 - 23rd October - 30th October
+## Week 6 - 23rd October - 29th October
 
 ### 23rd Oct - 7 Hours
 
@@ -108,9 +108,53 @@
 ### 24th Oct - 30 Mins
 
 * Had a meeting to discuss progress made so far
-* Set out plans for the following weekm including more personal interviews for user feedback
+* Set out plans for the following week including more personal interviews for user feedback
 * Also planned out further development, including having a basic workout flow implemented
 
 ### 25th Oct - 2 Hours
 
 * Set up GitHub for the project, including making initial commit and transferring locally stored meeting minutes and time log into the version control
+
+### 27th Oct - 4 Hours
+
+* Set up Development Environment on laptop
+* Looked further into creating digital prototypes on ProtoPie
+
+## Week 7 - 30th Ocotber - 5th November
+
+### 30th Oct - 4 Hours
+
+* Created designs on the watch itself
+* Implemented stopwatch feature, although buggy at this stage
+* Implemented Heart Rate monitor, also has minor bugs
+
+### 31st Oct - 30 Minutes
+
+* Had a meeting to discuss progress made so far
+* Set out plans for the following week, including focusing more on the functionality of the application and fixing the minor bugs stated earlier
+* Discussed the idea of taking multiple HRR measurements across a workout for any time the user was resting for more than a minute
+
+### 4th Nov - 5 Hours
+
+* Created MoSCoW requirements for the project to ensure correct prioritisation for the following weeks
+* Researched graphing packages and their implementation on WearOS
+* Researched a database structure for Android
+
+## Week 8 - 6th November - 12th November
+
+### 6th Nov - 8 Hours
+
+* Fixed the Heart Rate Reading and Stopwatch bugs
+* Implemented auto-pausing functionality dependant on the movement of the watch dropping below a certain threshold over an approx. 3 second period
+* Started implemented HRR reading, however currently it reads heart rates for a given period (5 secs) then returns the average Heart Rate
+
+### 7th - 30 Minutes
+
+* Had a meeting to discuss progress made
+* Set out plans for the following week, including a code refactor, some sort of HRR measurement and some sort of graph
+
+### 12th Nov - 7 Hours
+
+* Done a code refactor to improve readability of the project
+* Implemented Heart Rate Recovery measurement on workout completion, using a temporary theoretical max of 150 BPM
+* Implemented Progress Ring for measurement after workout that is animated while the HRR reading is taking place
