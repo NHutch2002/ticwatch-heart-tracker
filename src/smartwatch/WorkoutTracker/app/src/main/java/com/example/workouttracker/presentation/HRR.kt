@@ -20,6 +20,9 @@ class HeartRateMonitorViewModel : ViewModel() {
     private val _heartRateRecovery = MutableLiveData<Int>()
     val heartRateRecovery: LiveData<Int> get() = _heartRateRecovery
 
+    private val _progress = MutableLiveData(0f)
+    val progress: LiveData<Float> get() = _progress
+
     fun startHeartRateMonitoring(context: Context, HRRActive: MutableState<Boolean>, maxHeartRate: Float) {
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
@@ -29,6 +32,7 @@ class HeartRateMonitorViewModel : ViewModel() {
             override fun onSensorChanged(event: SensorEvent) {
                 if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
                     heartRateMeasurements.add(event.values[0])
+                    _heartRates.value = heartRateMeasurements // Update _heartRates here
                     Log.v("HRR Measurements Size", heartRateMeasurements.size.toString())
                     if (heartRateMeasurements.size > 5) {
                         val minOfLastTen = heartRateMeasurements.takeLast(5).minOrNull() ?: 0f
@@ -37,6 +41,7 @@ class HeartRateMonitorViewModel : ViewModel() {
                     }
                 }
             }
+
 
             override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
         }
@@ -47,7 +52,10 @@ class HeartRateMonitorViewModel : ViewModel() {
         // Wait for one minute in a new coroutine, then unregister the listener
         viewModelScope.launch {
             Log.v("HRR", "Starting Measurement")
-            delay(20000)
+            for (i in 1..60) {
+                delay(1000L)
+                _progress.value = i / 60f
+            }
             Log.v("HRR", "Measurement Complete - ${_heartRateRecovery.value.toString()}")
             sensorManager.unregisterListener(heartRateListener)
             _heartRates.value = heartRateMeasurements

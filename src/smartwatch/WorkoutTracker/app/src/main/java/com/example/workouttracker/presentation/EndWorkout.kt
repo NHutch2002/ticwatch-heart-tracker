@@ -18,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
@@ -33,18 +35,11 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
 
     val heartRates by viewModel.heartRates.observeAsState(emptyList())
     val heartRateRecovery by viewModel.heartRateRecovery.observeAsState(0)
+    val progress by viewModel.progress.observeAsState(0f)
+
 
     LaunchedEffect(Unit){
         viewModel.startHeartRateMonitoring(context, HRRActive, maxHeartRate)
-    }
-
-    // Progress goes from 0 to 1 over 20 seconds
-    val progress = remember { Animatable(0f) }
-    LaunchedEffect(Unit) {
-        progress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 20_000, easing = LinearEasing)
-        )
     }
 
     Box(
@@ -52,7 +47,7 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
         contentAlignment = Alignment.Center
     ) {
         CircularProgress(
-            progress = progress.value,
+            progress = progress,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
@@ -63,11 +58,22 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text="End Workout Page")
-            Button(onClick = { navController.navigate("landing_page") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
+            if (progress < 1){
+                Text(text="Calculating \n Heart Rate Recovery", fontSize = 16.sp, textAlign = TextAlign.Center)
+                Text(text= "${(progress * 100).toInt()}%", fontSize = 64.sp, color = Color(0xFF9CF2F9))
+                if (heartRates.isEmpty()){
+                    Text(text = "Current Heartrate: Reading...")
+                }
+                else{
+                    Text(text="Current Heartrate: \n ${heartRates.takeLast(1)[0].toInt()} BPM", fontSize = 16.sp, textAlign = TextAlign.Center)
+                }
             }
-            Text(text = "Return to home page")
-            Text("Heart Rate Recovery: $heartRateRecovery")
+            else{
+                Button(onClick = { navController.navigate("landing_page") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
+                }
+                Text(text = "Return to home page")
+                Text("Heart Rate Recovery: $heartRateRecovery")
+            }
         }
     }
 }
