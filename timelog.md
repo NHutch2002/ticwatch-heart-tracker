@@ -159,6 +159,8 @@
 * Implemented Heart Rate Recovery measurement on workout completion, using a temporary theoretical max of 150 BPM
 * Implemented Progress Ring for measurement after workout that is animated while the HRR reading is taking place
 
+## Week 9 - 13th November - 19th November
+
 ### 13th Nov - 4 Hours
 
 * Added animations for the HRR reading
