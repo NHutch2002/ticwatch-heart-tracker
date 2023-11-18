@@ -7,7 +7,11 @@
 
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-feature android:name="android.hardware.type.watch" />
+
+
 
     <application
         android:allowBackup="true"
@@ -30,14 +34,17 @@
         <activity
             android:name="com.example.workouttracker.presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@android:style/Theme.DeviceDefault">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <service android:name="com.example.workouttracker.presentation.HeartRateMonitorService" />
+
     </application>
 
 </manifest>
