@@ -1,11 +1,19 @@
 package com.example.workouttracker.presentation
 
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,19 +31,65 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
+    val pagerState = rememberPagerState { 2 } // Replace 2 with your actual page count
+
     val context = LocalContext.current
     val viewModel: HeartRateMonitorViewModel = viewModel()
+
+
+    LaunchedEffect(Unit){
+        viewModel.startHeartRateMonitoring(context, maxHeartRate)
+    }
+
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HorizontalPager(state = pagerState) { page ->
+            when (page) {
+                0 -> {
+                    HRRPage(navController, maxHeartRate, viewModel)
+                }
+                1 -> {
+                    TestSecondPage(navController)
+                }
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Transparent), // Add a background color to make sure the indicators are visible
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Spacer(modifier = Modifier.fillMaxHeight(0.9f)) // Pushes the indicators towards the bottom
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            repeat(pagerState.pageCount) { index ->
+                PageIndicator(isSelected = pagerState.currentPage == index)
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp)) // Adds some space at the bottom
+    }
+}
+
+
+@Composable
+fun HRRPage(navController: NavController, maxHeartRate: Float, viewModel: HeartRateMonitorViewModel) {
+
 
     val heartRates by viewModel.heartRates.observeAsState(emptyList())
     val heartRateRecovery by viewModel.heartRateRecovery.observeAsState(0)
     val progress by viewModel.progress.observeAsState(0f)
 
 
-    LaunchedEffect(Unit){
-        viewModel.startHeartRateMonitoring(context, maxHeartRate)
-    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -69,6 +123,16 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
                 Text(text = "Return to home page")
                 Text("Heart Rate Recovery: $heartRateRecovery")
             }
+        }
+    }
+}
+
+@Composable
+fun TestSecondPage(navController: NavController) {
+    Column {
+        Text(text = "Second Page")
+        Button(onClick = { navController.navigate("landing_page") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
+            Text(text = "Return to home page")
         }
     }
 }
