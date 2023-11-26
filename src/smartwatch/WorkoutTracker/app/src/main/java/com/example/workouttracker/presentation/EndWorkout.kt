@@ -91,22 +91,22 @@ fun HRRPage(navController: NavController, maxHeartRate: Float, viewModel: HeartR
             progress = progress,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(10.dp),
             color = Color(0xFF9CF2F9),
-            strokeWidth = 8.dp
+            strokeWidth = 6.dp
         )
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (progress < 1){
-                Text(text="Calculating \n Heart Rate Recovery", fontSize = 16.sp, textAlign = TextAlign.Center)
+                Text(text="Measuring \n Heart Rate Recovery", fontSize = 14.sp, textAlign = TextAlign.Center)
                 Text(text= "${(progress * 100).toInt()}%", fontSize = 64.sp, color = Color(0xFF9CF2F9))
                 if (heartRates.isEmpty()){
-                    Text(text = "Current Heartrate: \n Reading...", fontSize = 16.sp, textAlign = TextAlign.Center)
+                    Text(text = "Current Heart Rate: \n Reading...", fontSize = 14.sp, textAlign = TextAlign.Center)
                 }
                 else{
-                    Text(text="Current Heartrate: \n ${heartRates.takeLast(1)[0].toInt()} BPM", fontSize = 16.sp, textAlign = TextAlign.Center)
+                    Text(text="Current Heart Rate: \n ${heartRates.takeLast(1)[0].toInt()} BPM", fontSize = 14.sp, textAlign = TextAlign.Center)
                 }
             }
             else{
