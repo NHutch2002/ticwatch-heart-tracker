@@ -19,9 +19,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -80,7 +81,12 @@ fun LandingPage(navController: NavController) {
         ) {
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(onClick = { navController.navigate("track_workout") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 27.toFloat(), saturation = 1.toFloat(), lightness = 0.63.toFloat())) ) {
-                    Icon(imageVector = Icons.Filled.LocalFireDepartment, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Filled.LocalFireDepartment,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(36.dp)
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp)) // Added spacer for separation
                 Text(text = "Start a Workout", modifier = Modifier
@@ -89,10 +95,15 @@ fun LandingPage(navController: NavController) {
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(onClick = { navController.navigate("view_history") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 27.toFloat(), saturation = 1.toFloat(), lightness = 0.63.toFloat()))) {
-                    Icon(imageVector = Icons.Filled.Assignment, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Filled.FavoriteBorder,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(36.dp)
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp)) // Added spacer for separation
-                Text(text = "Workout History", modifier = Modifier
+                Text(text = "Health History", modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .width(IntrinsicSize.Min), fontSize = 12.sp, textAlign = TextAlign.Center)
             }

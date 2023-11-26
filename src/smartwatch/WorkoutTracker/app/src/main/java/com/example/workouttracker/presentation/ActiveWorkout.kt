@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DirectionsRun
@@ -32,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,7 +45,7 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ActiveWorkoutPage(navController: NavController) {
-    val pagerState = rememberPagerState { 2 } // Replace 2 with your actual page count
+    val pagerState = rememberPagerState { 2 }
     val isPaused = remember { mutableStateOf(false) }
     val time = remember { mutableLongStateOf(0L) }
     val maxHeartRate = remember { mutableFloatStateOf(0F) }
@@ -64,47 +61,38 @@ fun ActiveWorkoutPage(navController: NavController) {
 
     HeartRate(maxHeartRate)
 
-    Box {
+    Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FirstPage(time, isPaused, maxHeartRate)
-                1 -> SecondPage(navController, isPaused, maxHeartRate)
+                0 -> WorkoutViewPage(time, isPaused, maxHeartRate)
+                1 -> WorkoutSettingsPage(navController, isPaused, maxHeartRate)
             }
         }
-
-        // Page indicators
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Transparent), // Add a background color to make sure the indicators are visible
-            contentAlignment = Alignment.BottomCenter
+                .align(Alignment.BottomCenter)
+                .background(Color.Transparent),
+            contentAlignment = Alignment.Center
         ) {
-            Spacer(modifier = Modifier.fillMaxHeight(0.9f)) // Pushes the indicators towards the bottom
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                repeat(pagerState.pageCount) { index ->
-                    PageIndicator(isSelected = pagerState.currentPage == index)
+            Column {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    repeat(pagerState.pageCount) { index ->
+                        PageIndicator(isSelected = pagerState.currentPage == index)
+                    }
                 }
+                Spacer(modifier = Modifier.height(12.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp)) // Adds some space at the bottom
         }
     }
-}
 
 
-@Composable
-fun PageIndicator(isSelected: Boolean) {
-    Box(
-        modifier = Modifier
-            .size(if (isSelected) 16.dp else 12.dp)
-            .clip(CircleShape)
-            .background(if (isSelected) Color.White else Color.Gray)
-    )
+
 }
 
 @Composable
-fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
+fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
     val currentHeartRate = remember { mutableFloatStateOf(0F) }
 
     currentHeartRate.floatValue = HeartRate(maxHeartRate)
@@ -120,25 +108,30 @@ fun FirstPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHear
         Stopwatch(time)
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "3.22km", color = Color(0xFF9CF2F9))
             Icon(
                 imageVector = Icons.Filled.DirectionsRun,
                 contentDescription = null,
-                tint = Color(0xFF9CF2F9)
+                tint = Color(0xFF9CF2F9),
+                modifier = Modifier.size(40.dp)
             )
             Text(text = "317kcal", color = Color(0xFF9CF2F9))
         }
-        Text(if (currentHeartRate.floatValue <= 0) "Reading..." else "${currentHeartRate.floatValue.roundToInt()} BPM", color = Color(0xFF9CF2F9))
+        Text(
+            if (currentHeartRate.floatValue <= 0) "Reading..." else "${currentHeartRate.floatValue.roundToInt()} BPM",
+            color = Color(0xFF9CF2F9),
+            fontSize = 20.sp)
     }
 }
 
 @Composable
-fun SecondPage(navController: NavController, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
+fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
 
     Column (
-        modifier = Modifier.fillMaxSize(), // Added background color for visualization
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

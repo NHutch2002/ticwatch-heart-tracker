@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsBike
@@ -42,7 +43,12 @@ fun TrackWorkoutPage(navController: NavController) {
         ) {
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(onClick = { navController.navigate("active_workout") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 185.toFloat(), saturation = 0.89.toFloat(), lightness = 0.79.toFloat())) ) {
-                    Icon(imageVector = Icons.Filled.DirectionsRun, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Filled.DirectionsRun,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(36.dp)
+                    )
                 }
                 Spacer(modifier = Modifier.height(6.dp)) // Added spacer for separation
                 Text(text = "Running", modifier = Modifier
@@ -51,7 +57,12 @@ fun TrackWorkoutPage(navController: NavController) {
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(onClick = { navController.navigate("active_workout") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 261.toFloat(), saturation = 1.toFloat(), lightness = 0.83.toFloat()))) {
-                    Icon(imageVector = Icons.Filled.DirectionsBike, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Filled.DirectionsBike,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(36.dp)
+                    )
                 }
                 Spacer(modifier = Modifier.height(6.dp)) // Added spacer for separation
                 Text(text = "Cycling", modifier = Modifier
