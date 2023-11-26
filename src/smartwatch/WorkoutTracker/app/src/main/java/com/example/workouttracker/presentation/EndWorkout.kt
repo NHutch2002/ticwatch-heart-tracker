@@ -121,7 +121,9 @@ fun HRRPage(navController: NavController, maxHeartRate: Float, viewModel: HeartR
 
 @Composable
 fun TestSecondPage(navController: NavController) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         Text(text = "Second Page")
         Button(onClick = { navController.navigate("landing_page") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
             Text(text = "Return to home page")
