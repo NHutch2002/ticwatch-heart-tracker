@@ -28,7 +28,7 @@ class HeartRateMonitorService : Service(){
 
         startForeground(1, notification)
 
-        val viewModel = HeartRateMonitorViewModel()
+        val viewModel = HeartRateMonitorViewModel(application = application)
 
         viewModel.startHeartRateMonitoring(this, maxHeartRate =150f)
 

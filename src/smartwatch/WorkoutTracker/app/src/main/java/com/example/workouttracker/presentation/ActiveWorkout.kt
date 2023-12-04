@@ -1,5 +1,7 @@
 package com.example.workouttracker.presentation
 
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,22 +26,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -49,6 +58,19 @@ fun ActiveWorkoutPage(navController: NavController) {
     val isPaused = remember { mutableStateOf(false) }
     val time = remember { mutableLongStateOf(0L) }
     val maxHeartRate = remember { mutableFloatStateOf(0F) }
+
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+
+    val viewModel: HeartRateMonitorViewModel = viewModel(factory = HeartRateMonitorViewModelFactory(application))
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = viewModel) {
+        coroutineScope.launch {
+            viewModel.startHeartRateMonitoring(context, maxHeartRate.floatValue)
+        }
+    }
+    Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
 
     LaunchedEffect(key1 = Unit) {
         while (true) {
@@ -64,7 +86,7 @@ fun ActiveWorkoutPage(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> WorkoutViewPage(time, isPaused, maxHeartRate)
+                0 -> WorkoutViewPage(time, isPaused, maxHeartRate, viewModel)
                 1 -> WorkoutSettingsPage(navController, isPaused, maxHeartRate)
             }
         }
@@ -92,11 +114,10 @@ fun ActiveWorkoutPage(navController: NavController) {
 }
 
 @Composable
-fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
-    val currentHeartRate = remember { mutableFloatStateOf(0F) }
-
-    currentHeartRate.floatValue = HeartRate(maxHeartRate)
-
+fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState, viewModel: HeartRateMonitorViewModel) {
+    val heartRate by viewModel.heartRate.collectAsState()
+    Log.d("WorkoutViewPage", "Heart rate: $heartRate")
+    val heartRateRounded = heartRate?.roundToInt()
     MonitorAccelerometer(isPaused)
 
 
@@ -121,9 +142,10 @@ fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, m
             Text(text = "317kcal", color = Color(0xFF9CF2F9))
         }
         Text(
-            if (currentHeartRate.floatValue <= 0) "Reading..." else "${currentHeartRate.floatValue.roundToInt()} BPM",
+            if (heartRateRounded == null || heartRateRounded <= 0) "Reading..." else "$heartRateRounded BPM",
             color = Color(0xFF9CF2F9),
-            fontSize = 20.sp)
+            fontSize = 20.sp
+        )
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.workouttracker.presentation
 
+import android.app.Application
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
@@ -20,6 +21,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.draw.alpha
@@ -44,13 +46,12 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
     val pagerState = rememberPagerState { 3 } // Replace 2 with your actual page count
 
     val context = LocalContext.current
-    val viewModel: HeartRateMonitorViewModel = viewModel()
-
+    val application = context.applicationContext as Application
+    val viewModel: HeartRateMonitorViewModel = viewModel(factory = HeartRateMonitorViewModelFactory(application))
 
     LaunchedEffect(Unit){
         viewModel.startHeartRateMonitoring(context, maxHeartRate)
     }
-
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
@@ -86,10 +87,12 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
 fun HRRPage(maxHeartRate: Float, viewModel: HeartRateMonitorViewModel) {
 
 
-    val heartRates by viewModel.heartRates.observeAsState(emptyList())
+    val heartRate by viewModel.heartRate.collectAsState()
     val heartRateRecovery by viewModel.heartRateRecovery.observeAsState(0)
     val progress by viewModel.progress.observeAsState(0f)
     val measurementCompleted = progress >= 1f
+
+    viewModel.finalHRRReading()
 
 
     val animationDuration = 2000
@@ -148,13 +151,13 @@ fun HRRPage(maxHeartRate: Float, viewModel: HeartRateMonitorViewModel) {
                 ) {
                     Text(text="Measuring \n Heart Rate Recovery", fontSize = 14.sp, textAlign = TextAlign.Center)
                     Text(text= "${(progress * 100).toInt()}%", fontSize = 64.sp, color = Color(0xFF9CF2F9))
-                    if (heartRates.isEmpty()){
+                    if (heartRate == null){
                         Text(text = "Current Heart Rate", fontSize = 14.sp, textAlign = TextAlign.Center)
                         Text(text = "Reading...", fontSize = 16.sp, textAlign = TextAlign.Center)
                     }
                     else{
                         Text(text="Current Heart Rate", fontSize = 14.sp, textAlign = TextAlign.Center)
-                        Text(text="${heartRates.takeLast(1)[0].toInt()} BPM", fontSize = 16.sp, textAlign = TextAlign.Center)
+                        Text(text="${heartRate!!.toInt()} BPM", fontSize = 16.sp, textAlign = TextAlign.Center)
                     }
                 }
             }
