@@ -34,7 +34,6 @@ class HeartRateMonitorViewModel : ViewModel() {
             "MyApp::HeartRateMonitorWakeLock"
         )
 
-// Acquire the wake lock
         wakeLock.acquire(60 * 1000L /* 1 minute */)
 
         val heartRateListener = object : SensorEventListener {
@@ -47,7 +46,7 @@ class HeartRateMonitorViewModel : ViewModel() {
                     if (heartRateMeasurements.size > 5) {
                         val minOfLastTen = heartRateMeasurements.takeLast(5).minOrNull() ?: 0f
                         Log.v("HRR Intermediate", minOfLastTen.toString())
-                        _heartRateRecovery.value = (150 - minOfLastTen).toInt()
+                        _heartRateRecovery.value = (maxHeartRate - minOfLastTen).toInt()
                     }
                 }
             }
@@ -56,15 +55,14 @@ class HeartRateMonitorViewModel : ViewModel() {
             override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
         }
 
-        // Register the listener
         sensorManager.registerListener(
             heartRateListener,
             heartRateSensor,
             SensorManager.SENSOR_DELAY_NORMAL
         )
 
-        // Wait for one minute in a new coroutine, then unregister the listener
         viewModelScope.launch {
+
             Log.v("HRR", "Starting Measurement")
             val startTime = System.currentTimeMillis()
             while (true) {

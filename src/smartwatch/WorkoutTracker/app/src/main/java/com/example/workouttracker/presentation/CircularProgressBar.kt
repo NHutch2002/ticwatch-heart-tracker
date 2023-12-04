@@ -8,13 +8,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.MaterialTheme
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
-
 
 @Composable
 fun CircularProgress(
@@ -34,7 +34,6 @@ fun CircularProgress(
         val startAngle = -90f
         val sweep = progress * 360f
 
-        // Draw the progress bar with rounded cap
         drawArc(
             color = color,
             startAngle = startAngle,
@@ -45,12 +44,21 @@ fun CircularProgress(
             style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
         )
 
-        // Calculate the position of the end of the progress bar
+
+//        val startX = halfSize.width + innerRadius * cos(startAngle * PI / 180f)
+//        val startY = halfSize.height + innerRadius * sin(startAngle * PI / 180f)
+//
+//        drawCircle(
+//            color = Color.White,
+//            radius = strokeWidth.toPx(),
+//            center = Offset(startX.toFloat(), startY.toFloat())
+//        )
+
+
         val endAngle = sweep - 90f
         val endX = halfSize.width + innerRadius * cos(endAngle * PI / 180f)
         val endY = halfSize.height + innerRadius * sin(endAngle * PI / 180f)
 
-        // Draw a small white circle at the end of the progress bar
         drawCircle(
             color = Color.White,
             radius = strokeWidth.toPx(),
