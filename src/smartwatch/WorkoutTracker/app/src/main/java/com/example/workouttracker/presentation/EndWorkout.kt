@@ -14,11 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -30,22 +27,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
+
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -65,7 +55,7 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> HRRPage(navController, maxHeartRate, viewModel)
+                0 -> HRRPage(maxHeartRate, viewModel)
 //                0 -> HRRBarChart()
                 1 -> HeartRateReport()
                 2 -> ReturnHomePage(navController)
@@ -93,14 +83,13 @@ fun EndWorkoutPage(navController: NavController, maxHeartRate: Float) {
 
 
 @Composable
-fun HRRPage(navController: NavController, maxHeartRate: Float, viewModel: HeartRateMonitorViewModel) {
+fun HRRPage(maxHeartRate: Float, viewModel: HeartRateMonitorViewModel) {
 
 
     val heartRates by viewModel.heartRates.observeAsState(emptyList())
     val heartRateRecovery by viewModel.heartRateRecovery.observeAsState(0)
     val progress by viewModel.progress.observeAsState(0f)
     val measurementCompleted = progress >= 1f
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
 
     val animationDuration = 2000
