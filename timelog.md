@@ -166,3 +166,54 @@
 * Added animations for the HRR reading
 * Added percentages and current Heart Rate to the measurement page
 * Created basic flow on workout completion page
+
+### 15th Nov - 30 Mins 
+
+* Updating timelog.md
+* Adding Licensing to project
+
+### 18th Nov - 4 Hours
+
+* Fixing bug for HRR Timer when screen times out
+* Added swipeability on Workout End page
+
+## Week 10 - 20th November - 26th November
+
+### 24th Nov - 4 Hours
+
+* Adjusted Styling of several pages
+* Finalised HRR Calculation Stage
+
+### 26th Nov - 6 Hours
+
+* Fixing Swipeability issue on EndWorkout screen
+* Further Improved clarity on Active HRR Measurement
+* Sample Graph Implemented
+
+## Week 11 - 27th November - 3rd December
+
+### 1st Dec - 6 Hours
+
+* Further Stylistic changes
+* Added Sample Bar Chart to compare two different chart types
+
+## Week 12 - 4th December - 10th December
+
+### 4th Dec - 7 Hours
+
+* Adding Animations on graph entry
+* Started work on making Shared ViewModel for Heart Rate measuring
+
+### 5th Dec - 4 Hours
+
+* Preparing for meeting with Sharon
+* Analysing semesters work for effective round up of progress
+* Generating plan for the rest of the project into next semester
+
+## Week 13 - 11th December - 17th December
+
+### 11th Dec - 6 Hours
+
+* Backdating Timelog
+* Investigating Android Room Database Structure
+* Conntinuing on Shared ViewModel implementation
