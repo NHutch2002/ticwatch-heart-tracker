@@ -42,7 +42,7 @@ fun TrackWorkoutPage(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = { navController.navigate("active_workout") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 185.toFloat(), saturation = 0.89.toFloat(), lightness = 0.79.toFloat())) ) {
+                Button(onClick = { navController.navigate("workout_session") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 185.toFloat(), saturation = 0.89.toFloat(), lightness = 0.79.toFloat())) ) {
                     Icon(
                         imageVector = Icons.Filled.DirectionsRun,
                         contentDescription = null,
@@ -56,7 +56,7 @@ fun TrackWorkoutPage(navController: NavController) {
                     .width(IntrinsicSize.Min), fontSize = 14.sp, textAlign = TextAlign.Center)
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = { navController.navigate("active_workout") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 261.toFloat(), saturation = 1.toFloat(), lightness = 0.83.toFloat()))) {
+                Button(onClick = { navController.navigate("workout_session") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.hsl(hue = 261.toFloat(), saturation = 1.toFloat(), lightness = 0.83.toFloat()))) {
                     Icon(
                         imageVector = Icons.Filled.DirectionsBike,
                         contentDescription = null,

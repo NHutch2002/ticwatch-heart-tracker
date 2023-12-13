@@ -30,8 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import androidx.wear.compose.material.ButtonDefaults
 
 
@@ -54,13 +52,7 @@ fun WorkoutApp() {
         composable("landing_page") { LandingPage(navController) }
         composable("track_workout") { TrackWorkoutPage(navController) }
         composable("view_history") { ViewHistoryPage(navController) }
-        composable("active_workout") { ActiveWorkoutPage(navController) }
-        composable("end_workout/{maxHeartRate}", arguments = listOf(navArgument("maxHeartRate") { type = NavType.FloatType })) { backStackEntry ->
-            val maxHeartRate = backStackEntry.arguments?.getFloat("maxHeartRate")
-            if (maxHeartRate != null) {
-                EndWorkoutPage(navController, maxHeartRate)
-            }
-        }
+        composable("workout_session") { WorkoutSession(navController) }
     }
 }
 

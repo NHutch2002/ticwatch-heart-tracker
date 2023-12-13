@@ -1,5 +1,7 @@
 package com.example.workouttracker.presentation
 
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,13 +26,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,11 +50,18 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ActiveWorkoutPage(navController: NavController) {
+fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorViewModel, endWorkout: () -> Unit) {
     val pagerState = rememberPagerState { 2 }
     val isPaused = remember { mutableStateOf(false) }
     val time = remember { mutableLongStateOf(0L) }
     val maxHeartRate = remember { mutableFloatStateOf(0F) }
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = viewModel) {
+        viewModel.startMonitoring(context)
+    }
+    Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
 
     LaunchedEffect(key1 = Unit) {
         while (true) {
@@ -59,13 +72,11 @@ fun ActiveWorkoutPage(navController: NavController) {
         }
     }
 
-    HeartRate(maxHeartRate)
-
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> WorkoutViewPage(time, isPaused, maxHeartRate)
-                1 -> WorkoutSettingsPage(navController, isPaused, maxHeartRate)
+                0 -> WorkoutViewPage(time, isPaused, maxHeartRate, viewModel)
+                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout)
             }
         }
         Box(
@@ -92,11 +103,10 @@ fun ActiveWorkoutPage(navController: NavController) {
 }
 
 @Composable
-fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
-    val currentHeartRate = remember { mutableFloatStateOf(0F) }
-
-    currentHeartRate.floatValue = HeartRate(maxHeartRate)
-
+fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState, viewModel: HeartRateMonitorViewModel) {
+    val heartRate by viewModel.heartRate.collectAsState()
+    Log.d("WorkoutViewPage", "Heart rate: $heartRate")
+    val heartRateRounded = heartRate?.roundToInt()
     MonitorAccelerometer(isPaused)
 
 
@@ -121,14 +131,15 @@ fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, m
             Text(text = "317kcal", color = Color(0xFF9CF2F9))
         }
         Text(
-            if (currentHeartRate.floatValue <= 0) "Reading..." else "${currentHeartRate.floatValue.roundToInt()} BPM",
+            if (heartRateRounded == null || heartRateRounded <= 0) "Reading..." else "$heartRateRounded BPM",
             color = Color(0xFF9CF2F9),
-            fontSize = 20.sp)
+            fontSize = 20.sp
+        )
     }
 }
 
 @Composable
-fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
+fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boolean>, endWorkout: () -> Unit) {
 
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -152,7 +163,7 @@ fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boo
 
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = { navController.navigate("end_workout/${maxHeartRate.floatValue}") },  colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
+                Button(onClick = { endWorkout() },  colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
                     Icon(imageVector = Icons.Filled.Close, contentDescription = null)
                 }
                 Text("End", modifier = Modifier

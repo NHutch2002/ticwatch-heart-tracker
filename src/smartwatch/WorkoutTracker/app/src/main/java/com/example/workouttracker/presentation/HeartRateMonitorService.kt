@@ -28,16 +28,9 @@ class HeartRateMonitorService : Service(){
 
         startForeground(1, notification)
 
-        val viewModel = HeartRateMonitorViewModel()
-
-        viewModel.startHeartRateMonitoring(this, maxHeartRate =150f)
-
         return START_STICKY
     }
-
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-
-
 }
