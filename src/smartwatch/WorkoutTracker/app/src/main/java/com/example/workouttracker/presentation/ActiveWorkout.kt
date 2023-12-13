@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -41,34 +40,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ActiveWorkoutPage(navController: NavController) {
+fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorViewModel, endWorkout: () -> Unit) {
     val pagerState = rememberPagerState { 2 }
     val isPaused = remember { mutableStateOf(false) }
     val time = remember { mutableLongStateOf(0L) }
     val maxHeartRate = remember { mutableFloatStateOf(0F) }
 
     val context = LocalContext.current
-    val application = context.applicationContext as Application
-
-    val viewModel: HeartRateMonitorViewModel = viewModel(factory = HeartRateMonitorViewModelFactory(application))
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = viewModel) {
-        coroutineScope.launch {
-            viewModel.startHeartRateMonitoring(context, maxHeartRate.floatValue)
-        }
+        viewModel.startMonitoring(context)
     }
     Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
 
@@ -81,13 +72,11 @@ fun ActiveWorkoutPage(navController: NavController) {
         }
     }
 
-    HeartRate(maxHeartRate)
-
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> WorkoutViewPage(time, isPaused, maxHeartRate, viewModel)
-                1 -> WorkoutSettingsPage(navController, isPaused, maxHeartRate)
+                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout)
             }
         }
         Box(
@@ -150,7 +139,7 @@ fun WorkoutViewPage(time: MutableState<Long>, isPaused: MutableState<Boolean>, m
 }
 
 @Composable
-fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boolean>, maxHeartRate: MutableFloatState) {
+fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boolean>, endWorkout: () -> Unit) {
 
     Column (
         modifier = Modifier.fillMaxSize(),
@@ -174,7 +163,7 @@ fun WorkoutSettingsPage(navController: NavController, isPaused: MutableState<Boo
 
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = { navController.navigate("end_workout/${maxHeartRate.floatValue}") },  colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
+                Button(onClick = { endWorkout() },  colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
                     Icon(imageVector = Icons.Filled.Close, contentDescription = null)
                 }
                 Text("End", modifier = Modifier
