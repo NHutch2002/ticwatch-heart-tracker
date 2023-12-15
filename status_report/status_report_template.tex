@@ -1,68 +1,87 @@
     
 \documentclass[11pt]{article}
 \usepackage{times}
-    \usepackage{fullpage}
-    
-    \title{ {{cookiecutter.project_title}}
-    \author{ {{cookiecutter.student_name}} - {{cookiecutter.student_id}} }
+\usepackage{fullpage}
 
-    \begin{document}
-    \maketitle
-    
-    
+\title{ {{Heart Rate Recovery Tracking for Fitness on a Smartwatch}} }
+\author{ {{Nathan Hutchison}} - {{2556961H}} }
+
+\begin{document}
+\maketitle
      
 
-\section{Status report}
+\section{Proposal}\label{proposal}
 
-\subsection{Proposal}\label{proposal}
+\subsection{Motivation}\label{motivation}
 
-\subsubsection{Motivation}\label{motivation}
+Heart Rate Recovery (HRR) is a valuable indicator of cardiovascular health and general fitness, however many people do not know how to actively track their HRR and are unaware of their heart health. An application that visualises your HRR while remaining simple and clear to understand will give the user a sense of their cardiovascular health and how to improve it.
 
-\emph{{[}Clearly motivate the purpose of your project; why someone would
-care about what you are doing{]}}
+\subsection{Aims}\label{aims}
 
-\subsubsection{Aims}\label{aims}
+My WearOS application aims to provide a clear graphical representation of users HRR after a workout, as well as giving feedback on how to improve their HRR to strive closer to an expected healthy target value. Users should also be able to view their past workouts to see how their HRR has changed over time through simple comparisons.
 
-\emph{{[}Clearly state what the project is intended to do. This should
-be something which is measurable; it should be possible to tell if you
-succeeded{]}}
+\section{Progress}\label{progress}
 
-\subsection{Progress}\label{progress}
+\begin{itemize}
+    \item Have a basic app flow set up, including swipe-based navigation on certain pages to provide more context or interactivity where required
+    \item Have a active workout page including stopwatch and current heart rate
+    \item Have graphing package implemented with sample data, with an easy access to put actual data into
+    \item Have auto-pausing functionality implemented to allow for automatic HRR calculations as well as pausing of the stopwatch on the active workout page
+    \item Implemented Shared ViewModel to ensure Heart Rate Monitoring remains continuous throughout the workout session
+    \item Have simple and clean animations to give a better flow to the application
+\end{itemize}
 
-\emph{{[}Briefly state your progress so far, as a bulleted list{]}}
+\section{Problems and risks}\label{problems-and-risks}
 
-\subsection{Problems and risks}\label{problems-and-risks}
+\subsection{Problems}\label{problems}
 
-\subsubsection{Problems}\label{problems}
+The following issues have hindered me so far:
 
-\emph{{[}What problems have you had so far, that have held up the
-project?{]}}
+\begin{itemize}
+    \item Attempting to get a prototype design on the watch rather than as a Figma design
+    \item Adapting the graphing package to suit my project, including making custom renders to adapt the bar chart
+    \item Making the Heart Rate Recovery (HRR) Calculation a foreground service to ensure accurate measurement of HRR across a minute
+    \item Making a workout session object to ensure continuous Heart Rate measurement over both active workout and HRR page views
+    
+\end{itemize}
 
-\subsubsection{Risks}\label{risks}
+\subsection{Risks}\label{risks}
 
-\emph{{[}What problems do you foresee in the future and how will you
-mitigate them?{]}}
+\begin{itemize}
+    \item Passing all of the data from the active workout to the finished workout page. \textbf{Mitigation}: Will ensure database is setup as soon as possible to enable easier data handling
+    \item Ensuring auto-pause functionality is not annoying more than useful. \textbf{Mitigation}: Tweak the sensitivity of the auto-pause module and do real-world tests to ensure appropriate functionality
+    \item Ensuring I get enough quality evaluations while being limited to one physical device. \textbf{Mitigation}: Start evaluation stage as early as possible to ensure I have time for valuable feedback and redesigns based off this feedback.
+\end{itemize}
 
-\subsection{Plan}\label{plan}
+\section{Plan}\label{plan}
 
-\emph{{[}Time plan, in roughly weekly to monthly blocks, up until
-submission week{]}}
+\begin{itemize}
+    \item Beginning of Semester 2 - Should have most of the code completed by now reading for the testing and evaluation stage
+    \item Mid-January - Start with first iterations of evaluations
+    \begin{itemize}
+        \item Should last approx. 2-3 weeks
+        \item This will include both design evaluations and software evaluations (getting friends to use the app and report their findings)
+        \item During this time I will begin writing background sections in dissertation - Research, Motivation, etc.
+        \item Also will start working on comprehensive testing suite to ensure correct functionality.
+    \end{itemize}
+    \item Early February - Second evaluation (more focused on evaluating functionality and features rather than design)
+    \begin{itemize}
+        \item Should last until beginning of March
+        \item Work on having implementation section finished through this time
+        \item Begin the evaluation section during this time, reflecting on the first evaluation here
+    \end{itemize}
+    \item Early March until Project Completion (22/03/24 @ 5pm) - Finalising dissertation
+    \begin{itemize}
+        \item Last sections to write including final evaluation and future work
+        \item This will include having peer and family reviews
+    \end{itemize}
+        
+        
+\end{itemize}
 
     
-\subsection{Ethics and data}\label{ethics}
-\emph{Specify what ethical approval you need to do your evaluation and how you are approaching it. This is mandatory. 
-Specify what data you expect to collect in your evaluation. Explain how this data will help you evaluate your project.
-}
+\section{Ethics and data}\label{ethics}
 
-Options for ethics:
-\item This project does not involve human subjects or data. No approval required.
-\item I have verified that the ethics checklist will apply to any evaluation I need to do. I will sign and complete the checklist.
-\item I have sought ethical guidance from the School's ethics convener and I will:
-\begin{itemize}
-    \item Proceed under specific instructions from the Ethics convener (e.g. modified checklist).
-    \item Apply for College Ethics Board approval.
-    \item Other procedure (give details)
-\end{itemize}    
-
+This project will involve tests with human users during the evaluation. This evaluation will be carried out using the TicWatch Pro 3 provided to them, and no extra applications or packages will need to be installed onto their own personal devices. My evaluation planning stage will be carried out over the winter break, however I am very aware of the Ethics Checklist these evaluations need to follow and will ensure they meet the ethical standards expected by the university.
 
 \end{document}
