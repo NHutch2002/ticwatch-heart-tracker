@@ -26,7 +26,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +39,7 @@ import androidx.wear.compose.material.Text
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorViewModel) {
-    val pagerState = rememberPagerState { 3 } // Replace 2 with your actual page count
+    val pagerState = rememberPagerState { 3 }
 
     LaunchedEffect(key1 = Unit){
         viewModel.startHRRMeasurement()
@@ -173,86 +172,6 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
         }
     }
 }
-
-//@Composable
-//fun LineChartPage() {
-//
-//    val entries = arrayListOf<Entry>()
-//
-//    for (i in 0..60) {
-//        val x = 150 - i/2
-////        if (i == 0 || i == 60 || i % 10 == 0) {
-//            entries.add(Entry(i.toFloat(), x.toFloat()))
-////        }
-//    }
-//
-//    val dataset = LineDataSet(entries, "Heart Rate")
-//    dataset.setDrawValues(false)
-//    dataset.setDrawCircleHole(false)
-//    dataset.setDrawCircles(false)
-//    dataset.circleRadius = 2f
-//    dataset.mode = LineDataSet.Mode.CUBIC_BEZIER
-//    dataset.cubicIntensity = 0.2f
-//
-//    val labels = arrayListOf<String>()
-//    labels.add("0s")
-//    labels.add("60s")
-//
-//    val lineData = LineData(dataset)
-//
-//    Column(
-//        modifier = Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Spacer(modifier = Modifier.height(16.dp))
-//        Text(text = "Line Graph")
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth(0.9f)
-//                .height(100.dp)
-//                .padding(16.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Text(
-//                text = "BPM",
-//                modifier = Modifier.graphicsLayer(rotationZ = -90f),
-//                style = TextStyle(fontSize = 8.sp, color = Color.White)
-//            )
-//            AndroidView({ context ->
-//                LineChart(context).apply {
-//                    data = lineData
-//                    xAxis.position = XAxis.XAxisPosition.BOTTOM
-//                    xAxis.textColor = android.graphics.Color.WHITE
-//                    xAxis.valueFormatter = object : ValueFormatter() {
-//                        override fun getFormattedValue(value: Float): String {
-//                            return when (value) {
-//                                entries.first().x -> "0"
-//                                entries.last().x -> "60"
-//                                else -> ""
-//                            }
-//                        }
-//                    }
-//                    xAxis.setDrawLabels(true)
-//                    xAxis.setDrawAxisLine(false)
-//                    xAxis.setDrawGridLines(false)
-//                    xAxis.setDrawLabels(true)
-//                    axisLeft.textColor = android.graphics.Color.WHITE
-//                    axisRight.isEnabled = false
-//                    legend.isEnabled = false
-//                    description.isEnabled = false
-//                    animateX(1000)
-//                }
-//            }, modifier = Modifier
-//                .weight(1f)
-//                .fillMaxHeight())
-//        }
-//        Text(
-//            text = "Time (s)",
-//            style = TextStyle(fontSize = 8.sp, color = Color.White)
-//        )
-//    }
-//}
 
 @Composable
 fun ReturnHomePage(navController: NavController) {

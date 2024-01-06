@@ -9,5 +9,5 @@ data class User(
     @PrimaryKey
     val name: String,
     val birthday: LocalDate,
-    val weight: Int,
+    var weight: Int,
 )

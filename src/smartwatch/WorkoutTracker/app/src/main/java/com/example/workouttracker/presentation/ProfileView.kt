@@ -43,8 +43,15 @@ fun ProfileViewPage(navController: NavController) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val age = LocalDate.now().year - user.birthday.year
+    val today = LocalDate.now()
+    val birthdate = user.birthday // assuming this is the LocalDate object from the database
 
+    var age = today.year - birthdate.year
+
+    if (today.monthValue < birthdate.monthValue ||
+        (today.monthValue == birthdate.monthValue && today.dayOfMonth < birthdate.dayOfMonth)) {
+        age -= 1
+    }
 
     LaunchedEffect(Unit) {
         coroutineScope.launch(Dispatchers.IO) {
@@ -60,8 +67,8 @@ fun ProfileViewPage(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "Age: ${user.birthday}", color = Color.White, fontSize = 20.sp)
-        Text(text = "Weight: ${user.weight}", color = Color.White, fontSize = 20.sp)
+        Text(text = "Age: $age years", color = Color.White, fontSize = 20.sp)
+        Text(text = "Weight: ${user.weight} kg", color = Color.White, fontSize = 20.sp)
         Spacer(modifier = Modifier.size(16.dp))
         Column (horizontalAlignment = Alignment.CenterHorizontally) {
             Button(

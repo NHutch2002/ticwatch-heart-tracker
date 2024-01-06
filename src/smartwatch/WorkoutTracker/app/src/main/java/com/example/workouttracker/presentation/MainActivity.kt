@@ -29,7 +29,8 @@ fun WorkoutApp() {
         composable("landing_page") { LandingPage(navController) }
         composable("main_menu") {MainMenuPage(navController)}
         composable("user_settings") { UserSettingsPage(navController) }
-        composable("profile_creator") { EnterNamePage(navController) }
+        composable("profile_creator") { EnterBirthdayPage(navController) }
+        composable("profile_weight") { EnterWeightPage(navController) }
         composable("profile_view") { ProfileViewPage(navController) }
         composable("profile_deletion_splashscreen") { ProfileDeletionSplashscreen(navController) }
         composable("required_fields_splashscreen") { RequiredFieldsSplashScreen(navController) }

@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -18,85 +17,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.Month
-import java.time.format.DateTimeFormatter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.first
 import java.util.Locale
-
-@Composable
-fun EnterNamePage(navController: NavController) {
-    val name by remember { mutableStateOf("user") }
-
-    val selectedNumber = remember { mutableIntStateOf(0) }
-
-    // Create a state for the selected date
-    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
-    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-
-    // Create a function to handle date changes
-    val onDateChange: (LocalDate) -> Unit = { newDate ->
-        selectedDate = newDate
-    }
-
-    val db = AppDatabase.getInstance(LocalContext.current)
-    val userDao = db.userDao()
-
-    val coroutineScope = rememberCoroutineScope()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Please Enter Your\nBirthday?", fontSize = 20.sp, textAlign = TextAlign.Center, color = Color.White)
-        Spacer(modifier = Modifier.height(8.dp))
-        DatePickerDialog(selectedDate, onDateChange)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    Log.v("EnterNamePage", name)
-                    Log.v("EnterNamePage", selectedNumber.intValue.toString())
-                    Log.v("EnterNamePage", selectedDate.toString())
-                    val user = User(name, selectedDate, 50)
-                    userDao.insertUser(user)
-                    val users = userDao.getAllUsers()
-                    Log.v("EnterNamePage", "userDao.insertUser(user)")
-                    Log.v("EnterNamePage", "userDao.getAllUsers(): $users")
-                    withContext(Dispatchers.Main) {
-                        while(users.first().isEmpty()){
-                            delay(100)
-                            Log.v("EnterNamePage", "users.first().isEmpty()")
-                        }
-                        if (users.first().isNotEmpty()){
-                            Log.v("EnterNamePage", "users.first().isNotEmpty()")
-                            navController.navigate("landing_page")
-                        }
-                    }
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(0xFF49a72f)
-            )
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Done,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(36.dp)
-            )
-        }
-    }
-}
-
-
 
 @Composable
 fun DatePickerDialog(
@@ -106,11 +34,9 @@ fun DatePickerDialog(
     val daysInMonth = selectedDate.month.length(selectedDate.isLeapYear)
     val days = (1..daysInMonth).toList()
     val months = Month.values().toList()
-    val years = (1900..2099).toList()
+    val currentYear = LocalDate.now().year
+    val years = (1900..currentYear).toList().reversed()
 
-
-
-    // Create a state for each dropdown menu
     var isDayDropdownExpanded by remember { mutableStateOf(false) }
     var isMonthDropdownExpanded by remember { mutableStateOf(false) }
     var isYearDropdownExpanded by remember { mutableStateOf(false) }
@@ -177,6 +103,7 @@ fun DatePickerDialog(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(text = "Year", fontSize = 10.sp, color = Color.White)
             Button(
@@ -200,6 +127,60 @@ fun DatePickerDialog(
                     }
                 }
             }
+        }
+    }
+}
+
+
+
+@Composable
+fun EnterBirthdayPage(navController: NavController) {
+    val name by remember { mutableStateOf("user") }
+
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+
+    val onDateChange: (LocalDate) -> Unit = { newDate ->
+        selectedDate = newDate
+    }
+
+    val db = AppDatabase.getInstance(LocalContext.current)
+    val userDao = db.userDao()
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Please Enter\nYour Birthday", fontSize = 20.sp, textAlign = TextAlign.Center, color = Color.White)
+        Spacer(modifier = Modifier.height(8.dp))
+        DatePickerDialog(selectedDate, onDateChange)
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = {
+                coroutineScope.launch(Dispatchers.IO) {
+                    val user = User(name, selectedDate, 0)
+                    userDao.insertUser(user)
+                    val users = userDao.getAllUsers()
+                    withContext(Dispatchers.Main) {
+                        if (users.first().isNotEmpty()){
+                            navController.navigate("profile_weight")
+                        }
+                    }
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xFF49a72f)
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Done,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(36.dp)
+            )
         }
     }
 }
