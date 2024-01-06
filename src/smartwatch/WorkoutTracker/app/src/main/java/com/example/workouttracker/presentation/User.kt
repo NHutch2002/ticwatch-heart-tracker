@@ -2,11 +2,12 @@ package com.example.workouttracker.presentation
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 
 @Entity(tableName = "user")
 data class User(
     @PrimaryKey
     val name: String,
-    val age: Int,
+    val birthday: LocalDate,
     val weight: Int,
 )

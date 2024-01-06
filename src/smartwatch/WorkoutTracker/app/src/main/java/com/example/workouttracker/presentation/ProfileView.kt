@@ -32,15 +32,18 @@ import androidx.wear.compose.material.Text
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 @Composable
 fun ProfileViewPage(navController: NavController) {
     val db = AppDatabase.getInstance(LocalContext.current)
     val userDao = db.userDao()
 
-    var user by remember { mutableStateOf(User("", 0, 0)) }
+    var user by remember { mutableStateOf(User("", LocalDate.MIN, 0)) }
 
     val coroutineScope = rememberCoroutineScope()
+
+    val age = LocalDate.now().year - user.birthday.year
 
 
     LaunchedEffect(Unit) {
@@ -57,7 +60,7 @@ fun ProfileViewPage(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "Age: ${user.age}", color = Color.White, fontSize = 20.sp)
+        Text(text = "Age: ${user.birthday}", color = Color.White, fontSize = 20.sp)
         Text(text = "Weight: ${user.weight}", color = Color.White, fontSize = 20.sp)
         Spacer(modifier = Modifier.size(16.dp))
         Column (horizontalAlignment = Alignment.CenterHorizontally) {

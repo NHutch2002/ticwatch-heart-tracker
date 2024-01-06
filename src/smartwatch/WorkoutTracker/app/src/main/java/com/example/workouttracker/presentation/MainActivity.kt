@@ -32,6 +32,7 @@ fun WorkoutApp() {
         composable("profile_creator") { EnterNamePage(navController) }
         composable("profile_view") { ProfileViewPage(navController) }
         composable("profile_deletion_splashscreen") { ProfileDeletionSplashscreen(navController) }
+        composable("required_fields_splashscreen") { RequiredFieldsSplashScreen(navController) }
         composable("track_workout") { TrackWorkoutPage(navController) }
         composable("view_history") { ViewHistoryPage(navController) }
         composable("workout_session") { WorkoutSession(navController) }
