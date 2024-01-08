@@ -31,35 +31,33 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.charts.BarChart
 
 @Composable
-fun HRRBarChart() {
+fun HRRBarChart(heartRateRecoverySamples: List<Int>?) {
     val entries = arrayListOf<BarEntry>()
-    val preProcessedReadings = arrayListOf<Float>()
 
-    for (i in 0..60) {
-        val x = 150 - i/2
-        preProcessedReadings.add(x.toFloat())
+    val totalReadings = heartRateRecoverySamples?.size
+    val bucketInterval = (totalReadings?.minus(2))?.div(28)
+    val normalisedEntries = arrayListOf<Int>()
+    val excessReadingsPerBucket = (totalReadings?.minus(2))?.rem(28)
+
+    if (heartRateRecoverySamples != null) {
+        normalisedEntries.add(heartRateRecoverySamples.first())
     }
-
-    val totalReadings = preProcessedReadings.size
-    val bucketInterval = (totalReadings - 2) / 28
-    val normalisedEntries = arrayListOf<Float>()
-    val excessReadingsPerBucket = (totalReadings - 2) % 28
-
-    normalisedEntries.add(preProcessedReadings.first())
 
     var currentIndex = 1
     for (i in 1..28){
         val start = currentIndex
-        val end = start + bucketInterval + if (i <= excessReadingsPerBucket) 1 else 0
-        val average = preProcessedReadings.subList(start, end).average()
-        normalisedEntries.add(average.toFloat())
+        val end = start + bucketInterval!! + if (i <= excessReadingsPerBucket!!) 1 else 0
+        val average = heartRateRecoverySamples.subList(start, end).average()
+        normalisedEntries.add(average.toInt())
         currentIndex = end
     }
 
-    normalisedEntries.add(preProcessedReadings.last())
+    if (heartRateRecoverySamples != null) {
+        normalisedEntries.add(heartRateRecoverySamples.last())
+    }
 
     for (i in 0..29){
-        entries.add(BarEntry(i.toFloat(), normalisedEntries[i]))
+        entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
     }
 
 

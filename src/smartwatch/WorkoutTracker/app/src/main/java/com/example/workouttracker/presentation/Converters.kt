@@ -20,7 +20,11 @@ class Converters {
     }
 
     @TypeConverter
-    fun toIntList(data: String): List<Int> {
-        return data.split(",").map { it.toInt() }
+    fun toIntList(value: String): List<Int> {
+        return if (value.isEmpty()) {
+            emptyList()
+        } else {
+            value.split(",").mapNotNull { it.toIntOrNull() }
+        }
     }
 }

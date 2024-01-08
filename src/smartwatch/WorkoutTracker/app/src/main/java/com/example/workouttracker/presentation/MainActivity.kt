@@ -1,6 +1,7 @@
 package com.example.workouttracker.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
@@ -32,11 +33,20 @@ fun WorkoutApp() {
         composable("profile_creator") { EnterBirthdayPage(navController) }
         composable("profile_weight") { EnterWeightPage(navController) }
         composable("profile_view") { ProfileViewPage(navController) }
+        composable("workout_deletion_splashscreen") { WorkoutDeletionSplashscreen(navController) }
         composable("profile_deletion_splashscreen") { ProfileDeletionSplashscreen(navController) }
         composable("required_fields_splashscreen") { RequiredFieldsSplashScreen(navController) }
         composable("track_workout") { TrackWorkoutPage(navController) }
         composable("view_history") { ViewHistoryPage(navController) }
         composable("workout_session") { WorkoutSession(navController) }
+        composable("workout_review/{workoutId}") { backStackEntry ->
+            val workoutId = backStackEntry.arguments?.getString("workoutId")
+            if (workoutId != null) {
+                WorkoutReviewPage(navController, workoutId)
+            } else {
+                Log.v("WorkoutApp", "workoutId was null")
+            }
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.workouttracker.presentation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,11 +13,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,12 +34,28 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 @Composable
-fun HeartRateReport() {
+fun HeartRateReport(viewModel: HeartRateMonitorViewModel) {
     val entries = arrayListOf<BarEntry>()
     val preProcessedReadings = arrayListOf<Float>()
+
+    val db = AppDatabase.getInstance(LocalContext.current)
+    val workoutDao = db.workoutDao()
+    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, emptyList(), emptyList())) }
+
+    LaunchedEffect(Unit){
+        CoroutineScope(Dispatchers.IO).launch{
+            workout.value = workoutDao.getAllWorkouts().first().last()
+            Log.v("WorkoutReview", workout.value.toString())
+        }
+    }
 
     for (i in 0..60) {
         val x = 120 + i

@@ -61,7 +61,7 @@ fun UserSettingsPage(navController: NavController) {
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
-                    onClick = { navController.navigate("workout_session") },
+                    onClick = { navController.navigate("workout_deletion_splashscreen") },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.DarkGray
                     )
@@ -74,7 +74,7 @@ fun UserSettingsPage(navController: NavController) {
                     )
                 }
                 Spacer(modifier = Modifier.height(6.dp))
-                Text(text = "Delete Info", modifier = Modifier
+                Text(text = "Delete Workouts", modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .width(IntrinsicSize.Min), fontSize = 14.sp, textAlign = TextAlign.Center)
             }

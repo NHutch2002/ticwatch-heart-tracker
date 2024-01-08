@@ -7,7 +7,7 @@ import java.time.LocalDate
 @Entity(tableName = "workout")
 data class Workout(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Long? = null,
     val date: LocalDate,
     var heartRates: List<Int>,
     var HRRs: List<Int>,

@@ -23,4 +23,7 @@ interface WorkoutDao {
 
     @Delete
     fun deleteWorkout(workout: Workout)
+
+    @Query("DELETE FROM workout")
+    fun deleteAllWorkouts()
 }

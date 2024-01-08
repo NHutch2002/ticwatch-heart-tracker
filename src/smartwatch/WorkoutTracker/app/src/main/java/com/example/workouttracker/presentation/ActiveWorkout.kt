@@ -44,7 +44,10 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
@@ -118,8 +121,12 @@ fun WorkoutViewPage(
     val heartRateRounded = heartRate?.roundToInt()
     MonitorAccelerometer(isPaused)
 
-    LaunchedEffect(heartRateRounded) {
-        heartRateRounded?.let { heartRates.add(it) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            heartRateRounded?.let { heartRates.add(it) }
+            delay(5000L)
+            Log.v("WorkoutViewPage", "Heart rates: $heartRates")
+        }
     }
 
     Column(
@@ -192,7 +199,17 @@ fun WorkoutSettingsPage(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
                     onClick = {
-                        endWorkout()
+                        val workout = Workout(
+                            date = currentDate,
+                            heartRates = heartRates.toList(),
+                            HRRs = emptyList()
+                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            workoutDao.insertWorkout(workout)
+                            Log.v("WorkoutSettingsPage", "Inserted workout: $workout")
+                            endWorkout()
+                        }
+
                               },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))
                 ) {

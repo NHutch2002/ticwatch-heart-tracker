@@ -14,9 +14,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     val heartRate = MutableStateFlow<Float?>(null)
+    val heartRateList = MutableLiveData<List<Int>>(emptyList())
+
     private var sensorManager: SensorManager? = null
     private var heartRateListener: SensorEventListener? = null
 
@@ -63,6 +66,9 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                 _progress.value = elapsedMillis / 60000f
                 if (elapsedMillis >= 60000L) {
                     break
+                }
+                heartRate.value?.let {
+                    heartRateList.value = heartRateList.value?.plus(it.roundToInt()) // Append current heart rate to the list
                 }
                 delay(10L)
             }
