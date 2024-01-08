@@ -29,7 +29,7 @@ import androidx.wear.compose.material.Text
 @Composable
 fun TrackWorkoutPage(navController: NavController) {
     Column (
-        modifier = Modifier.fillMaxSize(), // Added background color for visualization
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
