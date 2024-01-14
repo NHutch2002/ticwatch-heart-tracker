@@ -76,4 +76,15 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
             stopMonitoring()
         }
     }
+
+    // Pass the value of isPaused into a new function in here called startMidHRRMeasurement()
+    // This function will keep track of HRR values in a temporary variable while active
+    // while keeping an eye out for an updated isPaused value. This could potentially be done with a LiveData
+    // but need to check the functionality of that.
+    // Once the function has complete that measurement, we can then add the list of HRR to a new variable
+    // that is passed into the database.
+    // Need to figure out how these HRR values are going to be represented on the EndWorkout Page.
+    // Could be a combination of horizontal sliding and lazycolumn
+    // Finally also need to take into account the maxHeartRate, saving this value as the first value in the HRR
+    // measurement. This needs to be reset after each HRR measurement to ensure fresh measurements each time.
 }

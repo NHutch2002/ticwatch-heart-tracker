@@ -42,7 +42,7 @@ import java.time.LocalDate
 
 
 @Composable
-fun HeartRateReport(viewModel: HeartRateMonitorViewModel) {
+fun HeartRateReport() {
     val entries = arrayListOf<BarEntry>()
     val preProcessedReadings = arrayListOf<Float>()
 

@@ -39,7 +39,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun EnterWeightPage(navController: NavController){
     var isWeightDropdownExpanded by remember { mutableStateOf(false) }
-    var selectedWeight by remember { mutableIntStateOf(70) } // Default weight
+    var selectedWeight by remember { mutableIntStateOf(70) }
 
     val weights = (30..200).toList()
 

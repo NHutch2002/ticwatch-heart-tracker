@@ -87,7 +87,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> HRRPage(viewModel)
-                1 -> HeartRateReport(viewModel)
+                1 -> HeartRateReport()
                 2 -> ReturnHomePage(navController)
             }
         }
