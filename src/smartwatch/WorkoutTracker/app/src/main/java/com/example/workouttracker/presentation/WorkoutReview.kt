@@ -23,8 +23,6 @@ import androidx.wear.compose.material.Text
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.style.TextAlign
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import kotlinx.coroutines.CoroutineScope
@@ -88,7 +86,7 @@ fun HRRReviewPage(HRRValues: List<Int>){
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (HRRValues.isEmpty()){
-
+            Text(text = "No HRR data to show")
         }
         else {
             HRRBarChart(HRRValues)

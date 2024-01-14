@@ -13,15 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,55 +30,45 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import java.time.LocalDate
+import kotlin.math.roundToInt
 
 
 @Composable
-fun HeartRateReport() {
+fun HeartRateReport(heartRates: List<Int>) {
     val entries = arrayListOf<BarEntry>()
-    val preProcessedReadings = arrayListOf<Float>()
 
-    val db = AppDatabase.getInstance(LocalContext.current)
-    val workoutDao = db.workoutDao()
-    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, emptyList(), emptyList())) }
+    val totalReadings = heartRates.size
+    val bucketInterval = (totalReadings - 2) / 28
+    val normalisedEntries = arrayListOf<Int>()
+    val excessReadingsPerBucket = (totalReadings - 2) % 28
 
-    LaunchedEffect(Unit){
-        CoroutineScope(Dispatchers.IO).launch{
-            workout.value = workoutDao.getAllWorkouts().first().last()
-            Log.v("WorkoutReview", workout.value.toString())
+    if (heartRates.size > 30){
+        normalisedEntries.add(heartRates.first())
+
+        var currentIndex = 1
+        for (i in 1..28){
+            val start = currentIndex
+            val end = start + bucketInterval + if (i <= excessReadingsPerBucket) 1 else 0
+            val average = heartRates.subList(start, end).average()
+            normalisedEntries.add(average.roundToInt())
+            currentIndex = end
+        }
+
+        normalisedEntries.add(heartRates.last())
+
+        for (i in 0..29){
+            entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
         }
     }
 
-    for (i in 0..60) {
-        val x = 120 + i
-        preProcessedReadings.add(x.toFloat())
+    else {
+        normalisedEntries.addAll(heartRates)
+        for (i in normalisedEntries.indices){
+            entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
+        }
     }
 
-    val totalReadings = preProcessedReadings.size
-    val bucketInterval = (totalReadings - 2) / 28
-    val normalisedEntries = arrayListOf<Float>()
-    val excessReadingsPerBucket = (totalReadings - 2) % 28
-
-    normalisedEntries.add(preProcessedReadings.first())
-
-    var currentIndex = 1
-    for (i in 1..28){
-        val start = currentIndex
-        val end = start + bucketInterval + if (i <= excessReadingsPerBucket) 1 else 0
-        val average = preProcessedReadings.subList(start, end).average()
-        normalisedEntries.add(average.toFloat())
-        currentIndex = end
-    }
-
-    normalisedEntries.add(preProcessedReadings.last())
-
-    for (i in 0..29){
-        entries.add(BarEntry(i.toFloat(), normalisedEntries[i]))
-    }
+    Log.v("HeartRateReport", "Normalised entries: ${normalisedEntries.toList()}")
 
 
     val dataset = BarDataSet(entries, "Heart Rate")
@@ -110,12 +96,22 @@ fun HeartRateReport() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "${normalisedEntries.first().toInt()} - ${normalisedEntries.last().toInt()} BPM",
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp)
-            )
+            if (normalisedEntries.isNotEmpty()){
+                Text(
+                    text = "${normalisedEntries.min()} - ${normalisedEntries.max()} BPM",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            else{
+                Text(
+                    text = "No heart rate data",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)

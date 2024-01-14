@@ -9,21 +9,17 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.sqrt
 
 @Composable
-fun MonitorAccelerometer(isPaused: MutableState<Boolean>) {
+fun MonitorAccelerometer(isPaused: MutableState<Boolean>, viewModel: HeartRateMonitorViewModel) {
     val context = LocalContext.current
-    var acceleration by remember { mutableStateOf(0f) }
+    var acceleration by remember { mutableFloatStateOf(0f) }
     val measurements = remember { mutableStateListOf<Float>() }
 
 
     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     val vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
-
-
-
 
     val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
@@ -41,8 +37,7 @@ fun MonitorAccelerometer(isPaused: MutableState<Boolean>) {
 
                     measurements.add(acceleration)
 
-                    // If the list has more than 100 elements, remove the oldest one
-                    if (measurements.size > 100) {
+                    if (measurements.size > 200) {
                         measurements.removeAt(0)
                     }
                 }
@@ -65,16 +60,14 @@ fun MonitorAccelerometer(isPaused: MutableState<Boolean>) {
 
     if (averageAcceleration < 3) {
         if (!isPaused.value){
+            viewModel.toggleIsPaused()
             vibrator.vibrate(vibrationEffect)
         }
         isPaused.value = true
-//        if (!HRRActive.value){
-//            HRRActive.value = true
-//            viewModel.startHeartRateMonitoring(context, HRRActive)
-//        }
     }
     else{
         if (isPaused.value){
+            viewModel.toggleIsPaused()
             vibrator.vibrate(vibrationEffect)
         }
         isPaused.value = false

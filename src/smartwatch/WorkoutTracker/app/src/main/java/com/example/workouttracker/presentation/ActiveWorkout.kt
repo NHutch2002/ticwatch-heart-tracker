@@ -47,6 +47,7 @@ import androidx.wear.compose.material.Text
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import kotlin.math.roundToInt
@@ -77,11 +78,24 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
         }
     }
 
+    val currentDate = LocalDate.now()
+
+    val db = AppDatabase.getInstance(LocalContext.current)
+    val workoutDao = db.workoutDao()
+
+    LaunchedEffect(Unit){
+        CoroutineScope(Dispatchers.IO).launch {
+            val workout = Workout(null, currentDate, emptyList(), emptyList())
+            workoutDao.insertWorkout(workout)
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
+        MonitorAccelerometer(isPaused, viewModel)
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> WorkoutViewPage(time, isPaused, maxHeartRate, viewModel, heartRates)
-                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates)
+                0 -> WorkoutViewPage(time, maxHeartRate, viewModel, heartRates)
+                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates, workoutDao)
             }
         }
         Box(
@@ -110,7 +124,6 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
 @Composable
 fun WorkoutViewPage(
     time: MutableState<Long>,
-    isPaused: MutableState<Boolean>,
     maxHeartRate: MutableFloatState,
     viewModel: HeartRateMonitorViewModel,
     heartRates: MutableList<Int>
@@ -119,13 +132,18 @@ fun WorkoutViewPage(
     val heartRate by viewModel.heartRate.collectAsState()
     Log.d("WorkoutViewPage", "Heart rate: $heartRate")
     val heartRateRounded = heartRate?.roundToInt()
-    MonitorAccelerometer(isPaused)
 
     LaunchedEffect(Unit) {
         while (true) {
-            heartRateRounded?.let { heartRates.add(it) }
-            delay(5000L)
-            Log.v("WorkoutViewPage", "Heart rates: $heartRates")
+            val heartRateForDatabase = viewModel.heartRate.value?.roundToInt()
+            if (heartRateForDatabase != null){
+                heartRates.add(heartRateForDatabase)
+                Log.v("WorkoutViewPage", "Heart Rate Added: $heartRateForDatabase")
+                delay(5000L)
+            }
+            else{
+                delay(1000L)
+            }
         }
     }
 
@@ -162,13 +180,11 @@ fun WorkoutSettingsPage(
     navController: NavController,
     isPaused: MutableState<Boolean>,
     endWorkout: () -> Unit,
-    heartRates: MutableList<Int>
+    heartRates: MutableList<Int>,
+    workoutDao: WorkoutDao
 ) {
 
-    val currentDate = LocalDate.now()
-
-    val db = AppDatabase.getInstance(LocalContext.current)
-    val workoutDao = db.workoutDao()
+    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, emptyList(), emptyList())) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -196,16 +212,16 @@ fun WorkoutSettingsPage(
                 )
 
             }
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
                     onClick = {
-                        val workout = Workout(
-                            date = currentDate,
-                            heartRates = heartRates.toList(),
-                            HRRs = emptyList()
-                        )
+                        Log.v("WorkoutSettingsPage", "Heart rates: ${heartRates.toList()}")
+
                         CoroutineScope(Dispatchers.IO).launch {
-                            workoutDao.insertWorkout(workout)
+                            workout.value = workoutDao.getAllWorkouts().first().last()
+                            workout.value.heartRates = heartRates.toList()
+                            workoutDao.updateWorkout(workout.value)
                             Log.v("WorkoutSettingsPage", "Inserted workout: $workout")
                             endWorkout()
                         }

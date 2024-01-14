@@ -24,7 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -42,7 +42,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -50,44 +49,38 @@ import java.time.LocalDate
 fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorViewModel) {
     val pagerState = rememberPagerState { 3 }
 
-    val heartRateRecoverySamples by viewModel.heartRateList.observeAsState()
-    val progress by viewModel.progress.observeAsState(0f)
-    val measurementCompleted = progress >= 1f
+    val calculatingHRR = viewModel.calculatingHRR.collectAsState()
+
+    val heartRates = remember { mutableStateListOf<Int>() }
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
-    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, emptyList(), emptyList())) }
-
-    LaunchedEffect(key1 = Unit){
-        viewModel.startHRRMeasurement()
-    }
-
-    // Change the logic of this block!!
-    // Rather than using a LaunchedEffect block use a simple while statement to wait for the measurement to complete
-    // Once complete, get the HRR list and update the workout accordingly!
-
-    // Another bug to fix is the Heart Rate measurements not being recorded during the workout, this does work in the previous version of the
-    // file however with the changing logic allowing it to add to the list regardless of whether it has updated or not has broken it!
-    // Check file history to see previous working Heart Rates list
 
     LaunchedEffect(Unit){
-        CoroutineScope(Dispatchers.IO).launch{
-            Log.v("WorkoutReview", "Waiting for workout to be updated")
-            workout.value = workoutDao.getAllWorkouts().first().last()
-            while (!measurementCompleted){
-                delay(1000)
-            }
-            workout.value.HRRs = heartRateRecoverySamples!!
-            Log.v("WorkoutReview", workout.value.toString())
-            workoutDao.updateWorkout(workout.value)
+        CoroutineScope(Dispatchers.IO).launch {
+            val workout = workoutDao.getAllWorkouts().first().last()
+            heartRates.addAll(workout.heartRates)
         }
+    }
+
+    LaunchedEffect(Unit){
+        Log.v("WorkoutReview", "Waiting for workout to be updated")
+        if (!calculatingHRR.value){
+            viewModel.startHRRMeasurementIfStationary()
+        }
+        var isFinished = false
+        while (!isFinished){
+            isFinished = viewModel.progress.value!! >= 1f
+            delay(1000)
+        }
+        viewModel.stopMonitoring()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> HRRPage(viewModel)
-                1 -> HeartRateReport()
+                1 -> HeartRateReport(heartRates)
                 2 -> ReturnHomePage(navController)
             }
         }
@@ -117,8 +110,8 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
 
     val heartRateRecoverySamples by viewModel.heartRateList.observeAsState()
     val heartRate by viewModel.heartRate.collectAsState()
-    val progress by viewModel.progress.observeAsState(0f)
-    val measurementCompleted = progress >= 1f
+    val progress by viewModel.progress.observeAsState()
+    val measurementCompleted = progress!! >= 1f
 
     val animationDuration = 2000
     val textOpacity by animateFloatAsState(
@@ -158,7 +151,7 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
         contentAlignment = Alignment.Center
     ) {
         CircularProgress(
-            progress = progress,
+            progress = progress!!,
             modifier = Modifier
                 .graphicsLayer(
                     scaleX = circularProgressScale,
@@ -183,7 +176,7 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text="Measuring \n Heart Rate Recovery", fontSize = 14.sp, textAlign = TextAlign.Center)
-                    Text(text= "${(progress * 100).toInt()}%", fontSize = 64.sp, color = Color(0xFF9CF2F9))
+                    Text(text= "${(progress!! * 100).toInt()}%", fontSize = 64.sp, color = Color(0xFF9CF2F9))
                     if (heartRate == null){
                         Text(text = "Current Heart Rate", fontSize = 14.sp, textAlign = TextAlign.Center)
                         Text(text = "Reading...", fontSize = 16.sp, textAlign = TextAlign.Center)
