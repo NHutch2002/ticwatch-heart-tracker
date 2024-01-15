@@ -1,26 +1,60 @@
 package com.example.workouttracker.presentation
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
+import androidx.core.content.ContextCompat
 import androidx.wear.compose.navigation.composable
 import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
 import androidx.wear.compose.navigation.SwipeDismissableNavHost
+import androidx.activity.result.contract.ActivityResultContracts
+
 
 
 
 
 
 class MainActivity : ComponentActivity() {
+
+    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.BODY_SENSORS)
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions.all { it.value }) {
+                // All permissions are granted
+            } else {
+                Toast.makeText(this,
+                    "Permissions not granted by the user.",
+                    Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!allPermissionsGranted()) {
+            requestMultiplePermissions.launch(REQUIRED_PERMISSIONS)
+        }
+
         setContent {
             WorkoutApp()
         }
     }
+
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 }
+
+
 
 @Composable
 fun WorkoutApp() {

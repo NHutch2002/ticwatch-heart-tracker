@@ -24,10 +24,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -46,6 +49,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,7 +61,8 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
     val calculatingHRR = viewModel.calculatingHRR.collectAsState()
 
     val heartRates = remember { mutableStateListOf<Int>() }
-    var time: Long = 0
+    val time = remember { mutableLongStateOf(0L) }
+    val date = remember { mutableStateOf(LocalDate.MIN) }
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
@@ -65,7 +71,8 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
         CoroutineScope(Dispatchers.IO).launch {
             val workout = workoutDao.getAllWorkouts().first().last()
             heartRates.addAll(workout.heartRates)
-            time = workout.time
+            time.longValue = workout.time
+            date.value = workout.date
         }
     }
 
@@ -87,7 +94,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
             when (page) {
                 0 -> HRRPage(viewModel)
                 1 -> HeartRateReport(heartRates)
-                2 -> ReturnHomePage(navController, time)
+                2 -> ReturnHomePage(navController, time, date)
             }
         }
         Box(
@@ -213,18 +220,23 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
 }
 
 @Composable
-fun ReturnHomePage(navController: NavController, time: Long) {
+fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date: MutableState<LocalDate>) {
 
-    val hours = time / 3600
-    val minutes = (time % 3600) / 60
-    val seconds = time % 60
+    val hours = time.value / 3600
+    val minutes = (time.value % 3600) / 60
+    val seconds = time.value % 60
+
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM")
+    val workoutDate = date.value.format(dateFormatter)
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Time: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Text(text = "Date: $workoutDate")
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
         Spacer(modifier = Modifier.size(8.dp))
         Button(
             onClick = { navController.navigate("main_menu") },

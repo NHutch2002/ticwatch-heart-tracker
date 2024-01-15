@@ -46,7 +46,7 @@ fun ViewHistoryPage(navController: NavController) {
         workouts.value = workoutDao.getAllWorkouts().first()
     }
 
-    val pagerState = rememberPagerState(pageCount = ceil(workouts.value.size / 2.0).toInt())
+    val pagerState = rememberPagerState(initialPage = 0)
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +64,7 @@ fun ViewHistoryPage(navController: NavController) {
             }
         }
         else {
-            HorizontalPager(state = pagerState) { page ->
+            HorizontalPager(state = pagerState, count = ceil(workouts.value.size / 2.0).toInt()) { page ->
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Top,

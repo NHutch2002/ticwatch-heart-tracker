@@ -84,26 +84,6 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
 
 
 @Composable
-fun HRRReviewPage(HRRValues: List<Int>){
-
-    val splitHRRs = splitListBySeparator(HRRValues, -1)
-
-    Column(
-        verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (HRRValues.isEmpty()){
-            Text(text = "Please wait...")
-        }
-        else {
-            Log.v("Review", splitHRRs.last().last().toString())
-                HRRBarChart(splitHRRs.last())
-        }
-
-    }
-}
-
-@Composable
 fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate){
     val hours = time / 3600
     val minutes = (time % 3600) / 60
@@ -122,7 +102,7 @@ fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate)
         Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
         Spacer(modifier = Modifier.size(8.dp))
         Button(
-            onClick = { navController.navigate("main_menu") },
+            onClick = { navController.navigate("view_history") },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.DarkGray
             ),

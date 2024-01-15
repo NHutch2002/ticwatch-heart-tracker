@@ -51,6 +51,7 @@ dependencies {
     implementation(files("libs/mobvoi-api-1.1.1.aar"))
     implementation("androidx.compose.material3:material3:1.1.2")
     compileOnly("com.google.android.wearable:wearable:2.8.1")
+    implementation("com.google.accompanist:accompanist-pager:0.20.0")
     implementation("com.chargemap.compose:numberpicker:1.0.3")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")

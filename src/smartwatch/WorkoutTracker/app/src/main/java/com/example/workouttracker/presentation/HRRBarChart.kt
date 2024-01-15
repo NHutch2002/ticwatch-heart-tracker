@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,9 +33,6 @@ import com.github.mikephil.charting.charts.BarChart
 @Composable
 fun HRRBarChart(heartRateRecoverySamples: List<Int>?) {
     val entries = arrayListOf<BarEntry>()
-
-    Log.v("HRRBarChart", heartRateRecoverySamples!!.first().toString())
-    Log.v("HRRBarChart", heartRateRecoverySamples!!.last().toString())
 
     val totalReadings = heartRateRecoverySamples?.size
     val bucketInterval = (totalReadings?.minus(2))?.div(28)

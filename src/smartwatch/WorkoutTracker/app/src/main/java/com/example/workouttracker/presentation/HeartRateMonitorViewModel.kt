@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 class HeartRateMonitorViewModel(application: Application) : ViewModel() {
@@ -79,7 +80,7 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                     break
                 }
                 heartRate.value?.let {
-                    heartRateList.value = heartRateList.value?.plus(it.roundToInt()) // Append current heart rate to the list
+                    heartRateList.value = heartRateList.value?.plus(it.roundToInt())
                 }
                 delay(10L)
             }
@@ -89,17 +90,12 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     }
 
     fun toggleIsPaused(){
-
-        Log.v("HRR", "Toggling isPaused - ${isPaused.value}")
-
         isPaused.value = !isPaused.value
-
+        Log.v("HRR", "Toggling isPaused - ${isPaused.value}")
         if (isPaused.value){
             startHRRMeasurementIfStationary()
         }
     }
-
-
 
     // Remember to add a conditional so that heartRate needs to be a certain value before triggering a measurement e.g. >= 100bpm to prevent premature measurement
     fun startHRRMeasurementIfStationary() {
@@ -113,6 +109,9 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                 var workout: Workout
 
                 val startTime = System.currentTimeMillis()
+
+                val tempHeartRates = mutableListOf<Int>()
+
                 while (true) {
                     val elapsedMillis = System.currentTimeMillis() - startTime
                     _progress.value = elapsedMillis / 60000f
@@ -122,37 +121,31 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                     if (!isPaused.value) {
                         midWorkoutHRR.value = emptyList()
                         Log.v("HRR", "Measurement Cancelled")
+                        calculatingHRR.value = false
                         return@launch
                     }
                     heartRate.value?.let {
-                        midWorkoutHRR.value = midWorkoutHRR.value?.plus(it.roundToInt()) // Append current heart rate to the list
+                        tempHeartRates.add(it.roundToInt())
+                        if (tempHeartRates.size >= 100) {
+                            midWorkoutHRR.value = midWorkoutHRR.value?.plus(tempHeartRates.first())
+                            tempHeartRates.clear()
+                        }
                     }
                     delay(10L)
                 }
                 heartRateList.value = midWorkoutHRR.value
                 midWorkoutHRR.value = midWorkoutHRR.value?.plus(-1)
                 calculatingHRR.value = false
+                Log.v("HRR", "Measurement Complete!!")
                 CoroutineScope(Dispatchers.IO).launch {
                     workout = workoutDao.getAllWorkouts().first().last()
                     workout.HRRs = workout.HRRs.plus(midWorkoutHRR.value!!)
                     workoutDao.updateWorkout(workout)
+                    withContext(Dispatchers.Main){
+                        midWorkoutHRR.value = emptyList()
+                    }
                 }
             }
         }
     }
-    // Pass the value of isPaused into a new function in here called startMidHRRMeasurement()
-    // This function will keep track of HRR values in a temporary variable while active
-    // while keeping an eye out for an updated isPaused value. This could potentially be done with a LiveData
-    // but need to check the functionality of that.
-    // Once the function has complete that measurement, we can then add the list of HRR to a new variable
-    // that is passed into the database.
-    // Need to figure out how these HRR values are going to be represented on the EndWorkout Page.
-    // Could be a combination of horizontal sliding and lazycolumn
-    // Finally also need to take into account the maxHeartRate, saving this value as the first value in the HRR
-    // measurement. This needs to be reset after each HRR measurement to ensure fresh measurements each time.
-
-
-
-    // Make a workout in the database at the start. Update the last workout when the user navigates to the end workout screen.
-    // This will mean that the mid workout HRR measurements can always be added straight away to the last db entry
 }
