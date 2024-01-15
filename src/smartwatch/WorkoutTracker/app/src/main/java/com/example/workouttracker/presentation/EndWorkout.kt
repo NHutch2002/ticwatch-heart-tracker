@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +56,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
     val calculatingHRR = viewModel.calculatingHRR.collectAsState()
 
     val heartRates = remember { mutableStateListOf<Int>() }
+    var time: Long = 0
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
@@ -60,6 +65,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
         CoroutineScope(Dispatchers.IO).launch {
             val workout = workoutDao.getAllWorkouts().first().last()
             heartRates.addAll(workout.heartRates)
+            time = workout.time
         }
     }
 
@@ -81,7 +87,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
             when (page) {
                 0 -> HRRPage(viewModel)
                 1 -> HeartRateReport(heartRates)
-                2 -> ReturnHomePage(navController)
+                2 -> ReturnHomePage(navController, time)
             }
         }
         Box(
@@ -207,15 +213,32 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
 }
 
 @Composable
-fun ReturnHomePage(navController: NavController) {
+fun ReturnHomePage(navController: NavController, time: Long) {
+
+    val hours = time / 3600
+    val minutes = (time % 3600) / 60
+    val seconds = time % 60
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Third Page")
-        Button(onClick = { navController.navigate("landing_page") }, colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))) {
-            Text(text = "Return to home page")
+        Text(text = "Time: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Spacer(modifier = Modifier.size(8.dp))
+        Button(
+            onClick = { navController.navigate("main_menu") },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.DarkGray
+            ),
+            modifier = Modifier.size(28.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Home,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(18.dp)
+            )
         }
     }
 }

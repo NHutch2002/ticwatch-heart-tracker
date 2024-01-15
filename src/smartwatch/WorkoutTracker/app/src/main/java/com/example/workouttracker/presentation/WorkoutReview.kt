@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -22,13 +23,17 @@ import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.Alignment
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Icon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -36,9 +41,8 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
-    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, emptyList(), emptyList())) }
-
-    val HRRValues = workout.value.HRRs
+    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0, emptyList(), emptyList())) }
+    
 
     val pagerState = rememberPagerState { 3 }
 
@@ -53,9 +57,9 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> HRRReviewPage(HRRValues)
-                1 -> HRReviewReport()
-                2 -> ReturnHistoryPage(navController)
+                0 -> HRRReviewPage(workout.value.HRRs)
+                1 -> HeartRateReport(workout.value.heartRates)
+                2 -> ReturnHistoryPage(navController, workout.value.time, workout.value.date)
             }
         }
         Box(
@@ -81,51 +85,59 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
 
 @Composable
 fun HRRReviewPage(HRRValues: List<Int>){
+
+    val splitHRRs = splitListBySeparator(HRRValues, -1)
+
     Column(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (HRRValues.isEmpty()){
-            Text(text = "No HRR data to show")
+            Text(text = "Please wait...")
         }
         else {
-            HRRBarChart(HRRValues)
+            Log.v("Review", splitHRRs.last().last().toString())
+                HRRBarChart(splitHRRs.last())
         }
 
     }
 }
 
-
 @Composable
-fun HRReviewReport() {
-    Column(
-        verticalArrangement = Arrangement.SpaceAround,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "HR Report")
-    }
-}
+fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate){
+    val hours = time / 3600
+    val minutes = (time % 3600) / 60
+    val seconds = time % 60
 
+    val dateFormatter = DateTimeFormatter.ofPattern("dd/MM")
+    val workoutDate = date.format(dateFormatter)
 
-@Composable
-fun ReturnHistoryPage(navController: NavController){
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Third Page")
+        Text(text = "Date: $workoutDate")
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Spacer(modifier = Modifier.size(8.dp))
         Button(
-            onClick = { navController.navigate("view_history") },
+            onClick = { navController.navigate("main_menu") },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(0xFF9CF2F9)
-            )
+                backgroundColor = Color.DarkGray
+            ),
+            modifier = Modifier.size(28.dp)
         ) {
-
-            Text(text = "Return to workout history page")
+            Icon(
+                imageVector = Icons.Filled.Home,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(18.dp)
+            )
         }
     }
 }
+
 
 
 

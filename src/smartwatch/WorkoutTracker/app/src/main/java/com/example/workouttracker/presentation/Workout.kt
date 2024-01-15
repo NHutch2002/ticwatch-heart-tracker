@@ -9,6 +9,7 @@ data class Workout(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
     val date: LocalDate,
+    var time: Long,
     var heartRates: List<Int>,
     var HRRs: List<Int>,
 )

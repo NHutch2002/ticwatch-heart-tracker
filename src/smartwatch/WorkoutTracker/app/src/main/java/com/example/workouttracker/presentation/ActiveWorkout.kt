@@ -85,7 +85,7 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
 
     LaunchedEffect(Unit){
         CoroutineScope(Dispatchers.IO).launch {
-            val workout = Workout(null, currentDate, emptyList(), emptyList())
+            val workout = Workout(null, currentDate, 0, emptyList(), emptyList())
             workoutDao.insertWorkout(workout)
         }
     }
@@ -95,7 +95,7 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> WorkoutViewPage(time, maxHeartRate, viewModel, heartRates)
-                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates, workoutDao)
+                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates, workoutDao, time)
             }
         }
         Box(
@@ -181,10 +181,11 @@ fun WorkoutSettingsPage(
     isPaused: MutableState<Boolean>,
     endWorkout: () -> Unit,
     heartRates: MutableList<Int>,
-    workoutDao: WorkoutDao
+    workoutDao: WorkoutDao,
+    time: MutableState<Long>
 ) {
 
-    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, emptyList(), emptyList())) }
+    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0 ,emptyList(), emptyList())) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -221,6 +222,7 @@ fun WorkoutSettingsPage(
                         CoroutineScope(Dispatchers.IO).launch {
                             workout.value = workoutDao.getAllWorkouts().first().last()
                             workout.value.heartRates = heartRates.toList()
+                            workout.value.time = time.value
                             workoutDao.updateWorkout(workout.value)
                             Log.v("WorkoutSettingsPage", "Inserted workout: $workout")
                             endWorkout()
