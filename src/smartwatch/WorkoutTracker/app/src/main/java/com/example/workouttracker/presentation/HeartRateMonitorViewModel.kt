@@ -41,6 +41,8 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     val db = AppDatabase.getInstance(application)
     val workoutDao = db.workoutDao()
 
+    var peakHeartRate = MutableLiveData<Int>(0)
+
     fun startMonitoring(context: Context) {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         Log.v("HRR", "Sensor Registered")
@@ -52,6 +54,9 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                 if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
                     Log.v("HRR", "Heart Rate: ${event.values[0]}")
                     heartRate.value = event.values[0]
+                    if (event.values[0] > peakHeartRate.value!!) {
+                        peakHeartRate.value = event.values[0].roundToInt()
+                    }
                 }
             }
             override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -69,26 +74,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
         Log.v("HRR", "Monitoring Stopped")
     }
 
-    fun startHRRMeasurement() {
-        viewModelScope.launch {
-            Log.v("HRR", "Starting Measurement")
-            val startTime = System.currentTimeMillis()
-            while (true) {
-                val elapsedMillis = System.currentTimeMillis() - startTime
-                _progress.value = elapsedMillis / 60000f
-                if (elapsedMillis >= 60000L) {
-                    break
-                }
-                heartRate.value?.let {
-                    heartRateList.value = heartRateList.value?.plus(it.roundToInt())
-                }
-                delay(10L)
-            }
-            Log.v("HRR", "Measurement Complete - ${_heartRateRecovery.value.toString()}")
-            stopMonitoring()
-        }
-    }
-
     fun toggleIsPaused(){
         isPaused.value = !isPaused.value
         Log.v("HRR", "Toggling isPaused - ${isPaused.value}")
@@ -100,6 +85,8 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     // Remember to add a conditional so that heartRate needs to be a certain value before triggering a measurement e.g. >= 100bpm to prevent premature measurement
     fun startHRRMeasurementIfStationary() {
         _progress.value = 0f
+        midWorkoutHRR.value = midWorkoutHRR.value?.plus(peakHeartRate.value!!)
+        Log.v("HRR", "Added Peak Heart Rate to midWorkoutHRR: ${midWorkoutHRR.value}")
         viewModelScope.launch {
             if (isPaused.value) {
                 Log.v("HRR", "Starting Measurement")
@@ -135,6 +122,7 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                 }
                 heartRateList.value = midWorkoutHRR.value
                 midWorkoutHRR.value = midWorkoutHRR.value?.plus(-1)
+                peakHeartRate.value = 0
                 calculatingHRR.value = false
                 Log.v("HRR", "Measurement Complete!!")
                 CoroutineScope(Dispatchers.IO).launch {
