@@ -59,8 +59,6 @@ import java.time.format.DateTimeFormatter
 fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorViewModel) {
     val pagerState = rememberPagerState { 3 }
 
-    val calculatingHRR = viewModel.calculatingHRR.collectAsState()
-
     val heartRates = remember { mutableStateListOf<Int>() }
     val time = remember { mutableLongStateOf(0L) }
     val date = remember { mutableStateOf(LocalDate.MIN) }

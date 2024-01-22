@@ -7,8 +7,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,9 +30,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
 
     private val _progress = MutableLiveData(0f)
     val progress: LiveData<Float> get() = _progress
-
-    private val _heartRateRecovery = MutableLiveData<Int>()
-    val heartRateRecovery: LiveData<Int> get() = _heartRateRecovery
 
     private var isPaused = MutableStateFlow(false)
     private var midWorkoutHRR = MutableLiveData<List<Int>>(emptyList())

@@ -20,12 +20,6 @@ class CustomHRRBarChartRenderer(
         color = Color.parseColor("#a70005")
         style = Paint.Style.FILL
     }
-
-    private val zonePaint = Paint().apply {
-        color = Color.GREEN
-        alpha = 75
-    }
-
     override fun drawDataSet(c: Canvas, dataSet: IBarDataSet, index: Int) {
         super.drawDataSet(c, dataSet, index)
         val buffer = mBarBuffers[index].buffer

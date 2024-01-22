@@ -3,7 +3,6 @@ package com.example.workouttracker.presentation
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.RectF
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.interfaces.dataprovider.BarDataProvider
@@ -18,7 +17,7 @@ class CustomHeartRateBarChartRenderer(
     chart: BarDataProvider,
     animator: ChartAnimator,
     viewPortHandler: ViewPortHandler,
-    private val maxHR: Float
+    maxHR: Float
 ) : BarChartRenderer(chart, animator, viewPortHandler) {
     private val circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#a70005")
@@ -40,10 +39,6 @@ class CustomHeartRateBarChartRenderer(
 
     override fun drawDataSet(c: Canvas, dataSet: IBarDataSet, index: Int) {
         super.drawDataSet(c, dataSet, index)
-
-        if (dataSet == null) {
-            return
-        }
 
         val buffer = mBarBuffers[index].buffer
         for (j in buffer.indices step 4) {
