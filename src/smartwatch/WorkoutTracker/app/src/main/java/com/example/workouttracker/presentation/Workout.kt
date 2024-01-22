@@ -12,5 +12,6 @@ data class Workout(
     var time: Long,
     var heartRates: List<Int>,
     var HRRs: List<Int>,
+    var calories: Int = 0
 )
 

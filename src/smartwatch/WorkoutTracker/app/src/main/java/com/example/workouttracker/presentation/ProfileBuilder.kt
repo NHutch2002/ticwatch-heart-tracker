@@ -148,6 +148,15 @@ fun EnterBirthdayPage(navController: NavController) {
 
     val coroutineScope = rememberCoroutineScope()
 
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val user = userDao.getAllUsers().first()
+            if (user.isNotEmpty()){
+                selectedDate = user.first().birthday
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -161,9 +170,16 @@ fun EnterBirthdayPage(navController: NavController) {
         Button(
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
-                    val user = User(name, selectedDate, 0)
-                    userDao.insertUser(user)
+                    var user = User(name, selectedDate, 0, "")
                     val users = userDao.getAllUsers()
+                    if (users.first().isNotEmpty()){
+                        user = users.first().first()
+                        user.birthday = selectedDate
+                        userDao.updateUser(user)
+                    }
+                    else {
+                        userDao.insertUser(user)
+                    }
                     withContext(Dispatchers.Main) {
                         if (users.first().isNotEmpty()){
                             navController.navigate("profile_weight")
@@ -184,46 +200,6 @@ fun EnterBirthdayPage(navController: NavController) {
         }
     }
 }
-
-
-
-//@Composable
-//fun NumberPicker(
-//    numbers: List<Int>,
-//    onNumberSelected: (Int) -> Unit,
-//    selectedNumber: Int
-//) {
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        LazyColumn(
-//            modifier = Modifier.height(64.dp)
-//        ) {
-//            items(numbers) { number ->
-//                val isSelected = number == selectedNumber
-//                val backgroundColor = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.surface
-//                val contentColor = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
-//                Box(
-//                    modifier = Modifier
-//                        .selectable(
-//                            selected = isSelected,
-//                            onClick = { onNumberSelected(number) }
-//                        )
-//                        .background(backgroundColor)
-//                        .padding(horizontal = 16.dp, vertical = 8.dp)
-//                        .width(20.dp),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Text(
-//                        text = number.toString(),
-//                        style = MaterialTheme.typography.body1,
-//                        color = contentColor
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
 
 
 

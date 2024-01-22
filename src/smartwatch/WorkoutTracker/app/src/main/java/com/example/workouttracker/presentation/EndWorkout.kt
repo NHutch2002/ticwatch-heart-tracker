@@ -28,6 +28,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,24 +64,39 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
     val heartRates = remember { mutableStateListOf<Int>() }
     val time = remember { mutableLongStateOf(0L) }
     val date = remember { mutableStateOf(LocalDate.MIN) }
+    val calories = remember { mutableIntStateOf(0) }
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
 
+    val user = remember { mutableStateOf(User("", LocalDate.MIN, 0, "")) }
+    val userDao = db.userDao()
+
     LaunchedEffect(Unit){
         CoroutineScope(Dispatchers.IO).launch {
             val workout = workoutDao.getAllWorkouts().first().last()
+            user.value = userDao.getUserById("user")
             heartRates.addAll(workout.heartRates)
             time.longValue = workout.time
             date.value = workout.date
+            calories.intValue = workout.calories
         }
+    }
+
+
+    val today = LocalDate.now()
+    val birthdate = user.value.birthday // assuming this is the LocalDate object from the database
+
+    var age = today.year - birthdate.year
+
+    if (today.monthValue < birthdate.monthValue ||
+        (today.monthValue == birthdate.monthValue && today.dayOfMonth < birthdate.dayOfMonth)) {
+        age -= 1
     }
 
     LaunchedEffect(Unit){
         Log.v("WorkoutReview", "Waiting for workout to be updated")
-        if (!calculatingHRR.value){
-            viewModel.startHRRMeasurementIfStationary()
-        }
+
         var isFinished = false
         while (!isFinished){
             isFinished = viewModel.progress.value!! >= 1f
@@ -92,9 +108,9 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> HRRPage(viewModel)
-                1 -> HeartRateReport(heartRates)
-                2 -> ReturnHomePage(navController, time, date)
+                0 -> HRRPage(viewModel, navController)
+                1 -> HeartRateReport(heartRates, age, navController)
+                2 -> ReturnHomePage(navController, time, date, calories)
             }
         }
         Box(
@@ -119,7 +135,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
 
 
 @Composable
-fun HRRPage(viewModel: HeartRateMonitorViewModel) {
+fun HRRPage(viewModel: HeartRateMonitorViewModel, navController: NavController) {
 
     val heartRateRecoverySamples by viewModel.heartRateList.observeAsState()
     val heartRate by viewModel.heartRate.collectAsState()
@@ -211,7 +227,7 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if(measurementCompleted){
-                        HRRBarChart(heartRateRecoverySamples)
+                        HRRBarChart(heartRateRecoverySamples, navController)
                     }
                 }
             }
@@ -220,7 +236,7 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel) {
 }
 
 @Composable
-fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date: MutableState<LocalDate>) {
+fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date: MutableState<LocalDate>, calories: MutableState<Int>) {
 
     val hours = time.value / 3600
     val minutes = (time.value % 3600) / 60
@@ -237,6 +253,8 @@ fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date:
         Text(text = "Date: $workoutDate")
         Spacer(modifier = Modifier.size(8.dp))
         Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Calories Burned: ${calories.value} kcal")
         Spacer(modifier = Modifier.size(8.dp))
         Button(
             onClick = { navController.navigate("main_menu") },

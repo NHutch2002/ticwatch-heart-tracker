@@ -25,6 +25,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
@@ -42,13 +43,29 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
     val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0, emptyList(), emptyList())) }
-    
+
+    val userDao = db.userDao()
+    val user = remember { mutableStateOf(User("", LocalDate.MIN, 0, "")) }
+
+    val age = remember { mutableIntStateOf(0) }
 
     val pagerState = rememberPagerState { 3 }
 
     LaunchedEffect(Unit){
         CoroutineScope(Dispatchers.IO).launch{
             workout.value = workoutDao.getWorkoutById(workoutId.toInt())
+            user.value = userDao.getUserById("user")
+
+            val today = LocalDate.now()
+            val birthdate = user.value.birthday // assuming this is the LocalDate object from the database
+
+            age.intValue = today.year - birthdate.year
+
+            if (today.monthValue < birthdate.monthValue ||
+                (today.monthValue == birthdate.monthValue && today.dayOfMonth < birthdate.dayOfMonth)) {
+                age.intValue -= 1
+            }
+
             Log.v("WorkoutReview", workout.value.heartRates.toString())
         }
     }
@@ -57,9 +74,9 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> HRRReviewPage(workout.value.HRRs)
-                1 -> HeartRateReport(workout.value.heartRates)
-                2 -> ReturnHistoryPage(navController, workout.value.time, workout.value.date)
+                0 -> HRRReviewPage(workout.value.HRRs, navController)
+                1 -> HeartRateReport(workout.value.heartRates, age.intValue, navController)
+                2 -> ReturnHistoryPage(navController, workout.value.time, workout.value.date, workout.value.calories)
             }
         }
         Box(
@@ -84,7 +101,7 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
 
 
 @Composable
-fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate){
+fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate, calories: Int){
     val hours = time / 3600
     val minutes = (time % 3600) / 60
     val seconds = time % 60
@@ -100,6 +117,8 @@ fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate)
         Text(text = "Date: $workoutDate")
         Spacer(modifier = Modifier.size(8.dp))
         Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Calories Burned: $calories kcal")
         Spacer(modifier = Modifier.size(8.dp))
         Button(
             onClick = { navController.navigate("view_history") },

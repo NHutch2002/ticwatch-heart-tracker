@@ -62,14 +62,17 @@ fun WorkoutApp() {
 
     SwipeDismissableNavHost(navController, startDestination = "landing_page"){
         composable("landing_page") { LandingPage(navController) }
-        composable("main_menu") {MainMenuPage(navController)}
+        composable("main_menu") { MainMenuPage(navController) }
         composable("user_settings") { UserSettingsPage(navController) }
         composable("profile_creator") { EnterBirthdayPage(navController) }
         composable("profile_weight") { EnterWeightPage(navController) }
+        composable("profile_gender") { EnterGenderPage(navController) }
         composable("profile_view") { ProfileViewPage(navController) }
         composable("workout_deletion_splashscreen") { WorkoutDeletionSplashscreen(navController) }
         composable("profile_deletion_splashscreen") { ProfileDeletionSplashscreen(navController) }
         composable("required_fields_splashscreen") { RequiredFieldsSplashScreen(navController) }
+        composable("heart_rate_info_screen") { HeartRateInfoScreen(navController) }
+        composable("hrr_info_screen") { HRRInfoScreen(navController) }
         composable("track_workout") { TrackWorkoutPage(navController) }
         composable("view_history") { ViewHistoryPage(navController) }
         composable("workout_session") { WorkoutSession(navController) }

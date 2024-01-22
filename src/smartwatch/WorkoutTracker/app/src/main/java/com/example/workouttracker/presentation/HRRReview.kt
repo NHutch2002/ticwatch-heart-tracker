@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
@@ -21,16 +22,18 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HRRReviewPage(HRRValues: List<Int>){
+fun HRRReviewPage(HRRValues: List<Int>?, navController: NavController){
 
-    val splitHRRs = splitListBySeparator(HRRValues, -1).reversed()
+    val safeHRRValues = HRRValues?: emptyList()
+
+    val splitHRRs = splitListBySeparator(safeHRRValues, -1).reversed()
 
     val verticalPagerState = rememberPagerState(initialPage = 0)
 
     Log.v("HRRReview", splitHRRs.size.toString())
-    Log.v("HRRReview", HRRValues.size.toString())
-    Log.v("HRRReview", HRRValues.find { it == -1 }.toString())
-    Log.v("HRRReview", splitListBySeparator(HRRValues, -1).size.toString())
+    Log.v("HRRReview", safeHRRValues.size.toString())
+    Log.v("HRRReview", safeHRRValues.find { it == -1 }.toString())
+    Log.v("HRRReview", splitListBySeparator(safeHRRValues, -1).size.toString())
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -43,8 +46,10 @@ fun HRRReviewPage(HRRValues: List<Int>){
                     .background(Color.Transparent),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                repeat(splitHRRs.size) {index ->
-                    PageIndicator(isSelected = verticalPagerState.currentPage == index)
+                if (splitHRRs.size > 1){
+                    repeat(splitHRRs.size) {index ->
+                        PageIndicator(isSelected = verticalPagerState.currentPage == index)
+                    }
                 }
             }
         }
@@ -53,11 +58,11 @@ fun HRRReviewPage(HRRValues: List<Int>){
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (HRRValues.isEmpty()) {
+            if (safeHRRValues.isEmpty()) {
                 Text(text = "Please wait...")
             } else {
                 VerticalPager(state = verticalPagerState, count = splitHRRs.size) { page ->
-                    HRRBarChart(splitHRRs[page])
+                    HRRBarChart(splitHRRs[page], navController)
                 }
             }
         }

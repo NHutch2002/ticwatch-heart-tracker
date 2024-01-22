@@ -1,5 +1,6 @@
 package com.example.workouttracker.presentation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavController
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -31,7 +40,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.charts.BarChart
 
 @Composable
-fun HRRBarChart(heartRateRecoverySamples: List<Int>?) {
+fun HRRBarChart(heartRateRecoverySamples: List<Int>?, navController: NavController) {
     val entries = arrayListOf<BarEntry>()
 
     val totalReadings = heartRateRecoverySamples?.size
@@ -60,96 +69,130 @@ fun HRRBarChart(heartRateRecoverySamples: List<Int>?) {
         entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
     }
 
+    Log.v("HRRBarChart", "Entries: $normalisedEntries")
+    if (heartRateRecoverySamples != null) {
+        Log.v("HRRBarChart", "Unchanged Entries: ${heartRateRecoverySamples.size}")
+    }
+    Log.v("HRRBarChart", "Unchanged Entries: $heartRateRecoverySamples")
 
-    val dataset = BarDataSet(entries, "Heart Rate")
-    dataset.setDrawValues(false)
-    dataset.color = android.graphics.Color.DKGRAY
+    if (entries.isNotEmpty()) {
 
-    val barData = BarData(dataset)
+        val dataset = BarDataSet(entries, "Heart Rate")
+        dataset.setDrawValues(false)
+        dataset.color = android.graphics.Color.DKGRAY
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Text(
-            text = "HR Recovery",
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(8.dp)
-        )
+        val barData = BarData(dataset)
+
         Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color(0xFF111111))
-                .padding(1.dp),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = "${normalisedEntries.first().toInt() - normalisedEntries.last().toInt()} BPM",
+                text = "HR Recovery",
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(90.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "BPM",
-                    modifier = Modifier.graphicsLayer(rotationZ = -90f),
-                    style = TextStyle(fontSize = 8.sp, color = Color.White)
-                )
-                AndroidView(
-                    { context ->
-                        BarChart(context).apply {
-                            data = barData
-                            xAxis.position = XAxis.XAxisPosition.BOTTOM
-                            xAxis.textColor = android.graphics.Color.WHITE
-                            xAxis.setLabelCount(2, true)
-                            xAxis.axisMinimum = 0f
-                            xAxis.axisMaximum = 29f
-                            xAxis.valueFormatter = object : ValueFormatter() {
-                                override fun getFormattedValue(value: Float): String {
-                                    return when (value) {
-                                        0f -> "0s"
-                                        29f -> "60s"
-                                        else -> ""
-                                    }
-                                }
-                            }
-                            data.barWidth = 0.7f
-
-                            xAxis.setDrawLabels(true)
-                            xAxis.setDrawAxisLine(false)
-                            xAxis.setDrawGridLines(false)
-                            axisLeft.textColor = android.graphics.Color.WHITE
-                            axisRight.isEnabled = false
-                            legend.isEnabled = false
-                            description.isEnabled = false
-                            animateX(2000)
-
-                            val customRenderer =
-                                CustomBarChartRenderer(this, animator, viewPortHandler)
-                            renderer = customRenderer
-
-                            invalidate()
-                        }
-                    }, modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                )
-            }
-            Text(
-                text = "Time (s)",
-                style = TextStyle(fontSize = 8.sp, color = Color.White),
                 modifier = Modifier.padding(8.dp)
             )
-        }
-        Spacer(modifier = Modifier.height(32.dp))
-    }
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color(0xFF111111))
+                    .padding(1.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Text(
+                        text = "${normalisedEntries.first().toInt() - normalisedEntries.last().toInt()} BPM",
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            navController.navigate("hrr_info_screen")
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.DarkGray,
+                        ),
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(10.dp)
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(90.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "BPM",
+                        modifier = Modifier.graphicsLayer(rotationZ = -90f),
+                        style = TextStyle(fontSize = 8.sp, color = Color.White)
+                    )
+                    AndroidView(
+                        { context ->
+                            BarChart(context).apply {
+                                data = barData
+                                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                                xAxis.textColor = android.graphics.Color.WHITE
+                                xAxis.setLabelCount(2, true)
+                                xAxis.axisMinimum = 0f
+                                xAxis.axisMaximum = 29f
+                                xAxis.valueFormatter = object : ValueFormatter() {
+                                    override fun getFormattedValue(value: Float): String {
+                                        return when (value) {
+                                            0f -> "0s"
+                                            29f -> "60s"
+                                            else -> ""
+                                        }
+                                    }
+                                }
+                                data.barWidth = 0.7f
 
+                                xAxis.setDrawLabels(true)
+                                xAxis.setDrawAxisLine(false)
+                                xAxis.setDrawGridLines(false)
+                                axisLeft.textColor = android.graphics.Color.WHITE
+                                axisRight.isEnabled = false
+                                legend.isEnabled = false
+                                description.isEnabled = false
+                                animateX(2000)
+
+                                val customRenderer =
+                                    CustomHRRBarChartRenderer(
+                                        this,
+                                        animator,
+                                        viewPortHandler,
+                                        normalisedEntries.first().toFloat(),
+                                    )
+                                renderer = customRenderer
+
+                                invalidate()
+                            }
+                        }, modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    )
+                }
+                Text(
+                    text = "Time",
+                    style = TextStyle(fontSize = 8.sp, color = Color.White),
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDate
 data class User(
     @PrimaryKey
     val name: String,
-    val birthday: LocalDate,
+    var birthday: LocalDate,
     var weight: Int,
+    var gender: String,
 )

@@ -24,10 +24,12 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,9 +60,11 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
     val pagerState = rememberPagerState { 2 }
     val isPaused = remember { mutableStateOf(false) }
     val time = remember { mutableLongStateOf(0L) }
-    val maxHeartRate = remember { mutableFloatStateOf(0F) }
+    val maxHeartRate = remember { mutableIntStateOf(0) }
     val heartRates = remember { mutableStateListOf<Int>() }
 
+    val calories = viewModel.caloriesBurned.value
+    val caloriesInt = calories?.roundToInt()
 
     val context = LocalContext.current
 
@@ -94,8 +98,8 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
         MonitorAccelerometer(isPaused, viewModel)
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> WorkoutViewPage(time, maxHeartRate, viewModel, heartRates)
-                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates, workoutDao, time)
+                0 -> WorkoutViewPage(time, maxHeartRate, viewModel, heartRates, caloriesInt)
+                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates, workoutDao, time, caloriesInt)
             }
         }
         Box(
@@ -124,14 +128,16 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
 @Composable
 fun WorkoutViewPage(
     time: MutableState<Long>,
-    maxHeartRate: MutableFloatState,
+    maxHeartRate: MutableIntState,
     viewModel: HeartRateMonitorViewModel,
-    heartRates: MutableList<Int>
+    heartRates: MutableList<Int>,
+    caloriesInt: Int?
 ) {
 
     val heartRate by viewModel.heartRate.collectAsState()
     Log.d("WorkoutViewPage", "Heart rate: $heartRate")
     val heartRateRounded = heartRate?.roundToInt()
+
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -147,6 +153,12 @@ fun WorkoutViewPage(
         }
     }
 
+    LaunchedEffect(heartRate){
+        if (heartRate != null && heartRate!! > maxHeartRate.intValue){
+            maxHeartRate.intValue = heartRate!!.roundToInt()
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
@@ -158,14 +170,40 @@ fun WorkoutViewPage(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "3.22km", color = Color(0xFF9CF2F9))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "Peak HR",
+                    color = Color(0xFF9CF2F9),
+                    fontSize = 12.sp
+                )
+                Text(
+                    if (maxHeartRate.intValue == 0) "-- BPM" else "${maxHeartRate.intValue} BPM",
+                    color = Color(0xFF9CF2F9),
+                    fontSize = 16.sp
+                )
+            }
             Icon(
                 imageVector = Icons.Filled.DirectionsRun,
                 contentDescription = null,
                 tint = Color(0xFF9CF2F9),
                 modifier = Modifier.size(40.dp)
             )
-            Text(text = "317kcal", color = Color(0xFF9CF2F9))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
+                Text(
+                    text = "Calories",
+                    color = Color(0xFF9CF2F9),
+                    fontSize = 12.sp
+                )
+                Text(
+                    if (caloriesInt == null) "--kcal" else "${caloriesInt}kcal",
+                    color = Color(0xFF9CF2F9)
+                )
+            }
         }
         Text(
             if (heartRateRounded == null || heartRateRounded <= 0) "Reading..." else "$heartRateRounded BPM",
@@ -182,7 +220,8 @@ fun WorkoutSettingsPage(
     endWorkout: () -> Unit,
     heartRates: MutableList<Int>,
     workoutDao: WorkoutDao,
-    time: MutableState<Long>
+    time: MutableState<Long>,
+    caloriesInt: Int?
 ) {
 
     val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0 ,emptyList(), emptyList())) }
@@ -223,6 +262,9 @@ fun WorkoutSettingsPage(
                             workout.value = workoutDao.getAllWorkouts().first().last()
                             workout.value.heartRates = heartRates.toList()
                             workout.value.time = time.value
+                            if (caloriesInt != null) {
+                                workout.value.calories = caloriesInt
+                            }
                             workoutDao.updateWorkout(workout.value)
                             Log.v("WorkoutSettingsPage", "Inserted workout: $workout")
                             endWorkout()

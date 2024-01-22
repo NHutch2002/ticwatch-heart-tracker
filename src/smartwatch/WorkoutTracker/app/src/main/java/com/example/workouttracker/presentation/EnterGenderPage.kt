@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Man
+import androidx.compose.material.icons.filled.Woman
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,14 +40,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.absoluteValue
 
 @Composable
-fun EnterWeightPage(navController: NavController){
-    var isWeightDropdownExpanded by remember { mutableStateOf(false) }
-    var selectedWeight by remember { mutableIntStateOf(70) }
-
-    val weights = (40..150 step 5).toList()
+fun EnterGenderPage(navController: NavController){
+    var isMale by remember { mutableStateOf(false) }
+    var isFemale by remember { mutableStateOf(false) }
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val userDao = db.userDao()
@@ -54,8 +54,16 @@ fun EnterWeightPage(navController: NavController){
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             val user = userDao.getAllUsers().first()
-            if (user.isNotEmpty() && user.first().weight != 0) {
-                selectedWeight = user.first().weight
+            if (user.isNotEmpty()){
+                Log.v("EnterGenderPage", "user: ${user.first().gender}")
+                if (user.first().gender == "male"){
+                    isMale = true
+                    isFemale = false
+                }
+                else if (user.first().gender == "female"){
+                    isMale = false
+                    isFemale = true
+                }
             }
         }
     }
@@ -68,52 +76,77 @@ fun EnterWeightPage(navController: NavController){
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Please Enter\nYour Weight",
+            text = "Please Select\nYour Gender",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = Color.White
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ){
-            Button(
-                onClick = { isWeightDropdownExpanded = true },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.DarkGray
-                )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = selectedWeight.toString())
+                Text(text = "Male", color = Color.White, fontSize = 10.sp)
+                Spacer(modifier = Modifier.height(6.dp))
+                Button(
+                    onClick = {
+                        isMale = true
+                        isFemale = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (isMale) Color.LightGray else Color.DarkGray
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Man,
+                        contentDescription = null,
+                        tint = if (isMale) Color.Black else Color.White,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
             }
-            Text(text = "kg", color = Color.White, modifier = Modifier.padding(start = 8.dp))
-
-            DropdownMenu(
-                expanded = isWeightDropdownExpanded,
-                onDismissRequest = { isWeightDropdownExpanded = false }
+            Spacer(modifier = Modifier.width(20.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                weights.forEach { weight ->
-                    DropdownMenuItem(onClick = {
-                        selectedWeight = weight
-                        isWeightDropdownExpanded = false
-                    }) {
-                        Text(text = weight.toString(), color = Color.Black)
-                    }
+                Text(text = "Female", color = Color.White, fontSize = 10.sp)
+                Spacer(modifier = Modifier.height(6.dp))
+                Button(
+                    onClick = {
+                        isMale = false
+                        isFemale = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (isFemale) Color.LightGray else Color.DarkGray
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Woman,
+                        contentDescription = null,
+                        tint = if (isFemale) Color.Black else Color.White,
+                        modifier = Modifier.size(36.dp)
+                    )
                 }
             }
         }
-
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     val user = userDao.getUserById("user")
-                    user.weight = selectedWeight
+                    if (isMale){
+                        user.gender = "male"
+                    }
+                    else{
+                        user.gender = "female"
+                    }
                     userDao.updateUser(user)
                     val users = userDao.getAllUsers()
                     withContext(Dispatchers.Main) {
                         if (users.first().isNotEmpty()){
-                            navController.navigate("profile_gender")
+                            navController.navigate("landing_page")
                         }
                     }
                 }
