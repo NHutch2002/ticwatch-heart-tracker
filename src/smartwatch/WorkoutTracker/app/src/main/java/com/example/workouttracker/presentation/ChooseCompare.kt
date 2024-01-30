@@ -1,5 +1,6 @@
 package com.example.workouttracker.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.wear.compose.material.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
@@ -34,23 +35,27 @@ import kotlinx.coroutines.flow.first
 import java.time.format.DateTimeFormatter
 import kotlin.math.ceil
 
-
+// NEED TO ADD DATES TO THE HRR BUTTONS AS A POINT OF REFERENCE
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ViewHistoryPage(navController: NavController) {
+fun ChooseComparePage(navController: NavController, hrr1: String) {
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
     val workouts = remember { mutableStateOf(listOf<Workout>()) }
+    val HRRs = remember { mutableStateOf(listOf<List<Int>>()) }
 
     LaunchedEffect(Unit) {
         workouts.value = workoutDao.getAllWorkouts().first()
+        workouts.value.forEach { workout ->
+            HRRs.value += splitListBySeparator(workout.HRRs, -1)
+        }
     }
 
     val pagerState = rememberPagerState(initialPage = 0)
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (workouts.value.isEmpty()) {
+        if (HRRs.value.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -64,35 +69,48 @@ fun ViewHistoryPage(navController: NavController) {
             }
         }
         else {
-            HorizontalPager(state = pagerState, count = ceil(workouts.value.size / 2.0).toInt()) { page ->
+            HorizontalPager(state = pagerState, count = ceil(HRRs.value.size / 2.0).toInt()) { page ->
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Spacer(modifier = Modifier.size(54.dp))
+                    Spacer(modifier = Modifier.size(20.dp))
+                    Text(
+                        text = "Please select a HRR\nmeasurement to compare",
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.size(20.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
                         val startIndex = page * 2
                         val endIndex = (page + 1) * 2
-                        val workoutsOnPage = workouts.value.subList(startIndex, endIndex.coerceAtMost(workouts.value.size))
+                        val HRRsOnPage = HRRs.value.subList(startIndex, endIndex.coerceAtMost(HRRs.value.size))
 
-                        workoutsOnPage.forEach { workout ->
+                        HRRsOnPage.forEach { HRR ->
                             val dateFormatter = DateTimeFormatter.ofPattern("dd/MM")
-                            val workoutDate = workout.date.format(dateFormatter)
                             Column(
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Button(
-                                    onClick = { navController.navigate("workout_review/${workout.id}") },
+                                    onClick = { navController.navigate("hrr_comparison/${hrr1}/${HRR}") },
                                     colors = ButtonDefaults.buttonColors(
                                         backgroundColor = Color.Cyan
                                     )
-                                ){}
-                                Text(workoutDate)
+                                ){
+                                    Log.v("ChooseComparePage", "HRR: ${HRR.first().toInt()} ${HRR.last().toInt()} ${HRR.first().toInt() - HRR.last().toInt()}")
+                                    Text(
+                                        text = "${HRR.first().toInt() - HRR.last().toInt()}",
+                                        fontSize = 18.sp,
+                                        textAlign = TextAlign.Center,
+                                        color = Color.Black
+                                    )
+                                }
+
                             }
                         }
                     }
@@ -106,7 +124,10 @@ fun ViewHistoryPage(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { navController.navigate("main_menu") },
+            onClick = {
+                navController.navigate("main_menu")
+                Log.v("ChooseComparePage", "main_menu")
+                      },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.DarkGray
             ),

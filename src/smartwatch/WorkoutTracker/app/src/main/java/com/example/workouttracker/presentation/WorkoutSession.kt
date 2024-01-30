@@ -21,13 +21,12 @@ fun WorkoutSession(navController: NavController) {
     if (isEndWorkoutScreen) {
         val stopIntent = Intent(application, HeartRateMonitorService::class.java)
         application.stopService(stopIntent)
-
         EndWorkoutPage(navController, viewModel)
     } else {
         val startIntent = Intent(application, HeartRateMonitorService::class.java)
         application.startService(startIntent)
 
-        ActiveWorkoutPage(navController, viewModel) {
+        ActiveWorkoutPage(viewModel) {
             isEndWorkoutScreen = true
         }
     }

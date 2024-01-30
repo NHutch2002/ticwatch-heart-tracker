@@ -60,7 +60,8 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
     val pagerState = rememberPagerState { 3 }
 
     val heartRates = remember { mutableStateListOf<Int>() }
-    val time = remember { mutableLongStateOf(0L) }
+    val activeTime = remember { mutableLongStateOf(0L) }
+    val totalTime = remember { mutableLongStateOf(0L) }
     val date = remember { mutableStateOf(LocalDate.MIN) }
     val calories = remember { mutableIntStateOf(0) }
 
@@ -75,7 +76,8 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
             val workout = workoutDao.getAllWorkouts().first().last()
             user.value = userDao.getUserById("user")
             heartRates.addAll(workout.heartRates)
-            time.longValue = workout.time
+            activeTime.longValue = workout.activeTime
+            totalTime.longValue = workout.totalTime
             date.value = workout.date
             calories.intValue = workout.calories
         }
@@ -96,6 +98,17 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
         Log.v("WorkoutReview", "Waiting for workout to be updated")
 
         var isFinished = false
+
+        if (viewModel.progress.value == 0f && (viewModel.heartRate.value ?: 0f) >= 90){
+            Log.v("WorkoutReview", "Starting HRR measurement")
+            viewModel.startHRRMeasurementIfStationary()
+        }
+
+        else if (viewModel.progress.value!! == 0f && (viewModel.heartRate.value ?: 0f) < 90){
+            Log.v("WorkoutReview", "Not high enough heart rate to start HRR measurement")
+            viewModel.setMaxProgress()
+        }
+
         while (!isFinished){
             isFinished = viewModel.progress.value!! >= 1f
             delay(1000)
@@ -107,8 +120,8 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> HRRPage(viewModel, navController)
-                1 -> HeartRateReport(heartRates, age, navController)
-                2 -> ReturnHomePage(navController, time, date, calories)
+                1 -> HeartRateReport(heartRates, age, totalTime.longValue, navController)
+                2 -> ReturnHomePage(navController, activeTime, totalTime, date, calories)
             }
         }
         Box(
@@ -203,7 +216,11 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel, navController: NavController) 
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(text="Measuring \n Heart Rate Recovery", fontSize = 14.sp, textAlign = TextAlign.Center)
-                    Text(text= "${(progress!! * 100).toInt()}%", fontSize = 64.sp, color = Color(0xFF9CF2F9))
+                    Text(
+                        if (progress!! < 1) "${(progress!! * 100).toInt()}%" else "100%",
+                        fontSize = 64.sp,
+                        color = Color(0xFF9CF2F9)
+                    )
                     if (heartRate == null){
                         Text(text = "Current Heart Rate", fontSize = 14.sp, textAlign = TextAlign.Center)
                         Text(text = "Reading...", fontSize = 16.sp, textAlign = TextAlign.Center)
@@ -224,8 +241,26 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel, navController: NavController) 
                     verticalArrangement = Arrangement.SpaceAround,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if(measurementCompleted){
-                        HRRBarChart(heartRateRecoverySamples, navController)
+                    if(measurementCompleted && heartRateRecoverySamples?.isNotEmpty() == true){
+                        HRRBarChart(heartRateRecoverySamples, navController, false)
+                    }
+                    else if (measurementCompleted){
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Text(
+                                text = "HR Recovery",
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center,
+                            )
+                            Text(
+                                text = "No data\nto show",
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }
@@ -234,11 +269,12 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel, navController: NavController) 
 }
 
 @Composable
-fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date: MutableState<LocalDate>, calories: MutableState<Int>) {
+fun ReturnHomePage(navController: NavController, activeTime: MutableState<Long>, totalTime: MutableState<Long>, date: MutableState<LocalDate>, calories: MutableState<Int>) {
 
-    val hours = time.value / 3600
-    val minutes = (time.value % 3600) / 60
-    val seconds = time.value % 60
+
+    val formattedActiveTime = timeFormatter(activeTime.value)
+    val formattedTotalTime = timeFormatter(totalTime.value)
+
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM")
     val workoutDate = date.value.format(dateFormatter)
@@ -250,7 +286,9 @@ fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date:
     ) {
         Text(text = "Date: $workoutDate")
         Spacer(modifier = Modifier.size(8.dp))
-        Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Text(text = "Duration: $formattedTotalTime")
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Active Time: $formattedActiveTime")
         Spacer(modifier = Modifier.size(8.dp))
         Text(text = "Calories Burned: ${calories.value} kcal")
         Spacer(modifier = Modifier.size(8.dp))
@@ -269,4 +307,13 @@ fun ReturnHomePage(navController: NavController, time: MutableState<Long>, date:
             )
         }
     }
+}
+
+
+private fun timeFormatter(time: Long): String {
+    val hours = time / 3600
+    val minutes = (time % 3600) / 60
+    val seconds = time % 60
+
+    return "%02d:%02d:%02d".format(hours, minutes, seconds)
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.Text
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -41,7 +43,7 @@ import kotlin.math.roundToInt
 
 
 @Composable
-fun HeartRateReport(heartRates: List<Int>?, age: Int, navController: NavController) {
+fun HeartRateReport(heartRates: List<Int>?, age: Int, totalTime: Long, navController: NavController) {
 
     val safeHeartRates = heartRates?: emptyList()
 
@@ -51,6 +53,8 @@ fun HeartRateReport(heartRates: List<Int>?, age: Int, navController: NavControll
     val bucketInterval = (totalReadings - 2) / 28
     val normalisedEntries = arrayListOf<Int>()
     val excessReadingsPerBucket = (totalReadings - 2) % 28
+
+    val averageHeartRate = safeHeartRates.average().roundToInt()
 
     if (safeHeartRates.size > 30){
         normalisedEntries.add(safeHeartRates.first())
@@ -159,19 +163,32 @@ fun HeartRateReport(heartRates: List<Int>?, age: Int, navController: NavControll
                                 data = barData
                                 xAxis.position = XAxis.XAxisPosition.BOTTOM
                                 xAxis.textColor = android.graphics.Color.WHITE
-                                xAxis.setLabelCount(2, true)
+                                xAxis.setLabelCount(30, false)
                                 xAxis.axisMinimum = 0f
                                 xAxis.axisMaximum = 29f
                                 xAxis.valueFormatter = object : ValueFormatter() {
                                     override fun getFormattedValue(value: Float): String {
                                         return when (value) {
-                                            0f -> "0s"
-                                            29f -> "60s"
+                                            in 3.5f..4.5f -> "00:00:00"
+                                            in 24.5f..25.5f -> "%02d:%02d:%02d".format(
+                                                totalTime / 3600,
+                                                (totalTime % 3600) / 60,
+                                                totalTime % 60
+                                            )
                                             else -> ""
                                         }
                                     }
                                 }
                                 data.barWidth = 0.7f
+
+                                val avgHeartRateLine = LimitLine(averageHeartRate.toFloat(), "$averageHeartRate Avg")
+                                avgHeartRateLine.lineColor = Color.Gray.toArgb()
+                                avgHeartRateLine.lineWidth = 1f
+                                avgHeartRateLine.textColor = Color.Gray.toArgb()
+                                avgHeartRateLine.textSize = 10f
+                                avgHeartRateLine.labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+
+                                axisLeft.addLimitLine(avgHeartRateLine)
 
                                 xAxis.setDrawLabels(true)
                                 xAxis.setDrawAxisLine(false)
@@ -201,6 +218,28 @@ fun HeartRateReport(heartRates: List<Int>?, age: Int, navController: NavControll
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+
+    else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Transparent),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                text = "HR Range",
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "No data\nto show",
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

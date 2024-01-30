@@ -61,7 +61,7 @@ fun UserSettingsPage(navController: NavController) {
             }
             Column (horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
-                    onClick = { navController.navigate("workout_deletion_splashscreen") },
+                    onClick = { navController.navigate("workout_are_you_sure") },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.DarkGray
                     )

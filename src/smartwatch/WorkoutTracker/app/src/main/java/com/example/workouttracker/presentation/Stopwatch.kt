@@ -7,16 +7,26 @@ import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
 
 @Composable
-fun Stopwatch(time: MutableState<Long>) {
+fun Stopwatch(time: MutableState<Long>, active: Boolean) {
 
     val hours = time.value / 3600
     val minutes = (time.value % 3600) / 60
     val seconds = time.value % 60
 
-    Text(
-        text = "%02d:%02d:%02d".format(hours, minutes, seconds),
-        color = Color(0xFF9CF2F9),
-        fontSize = 20.sp
-    )
+
+    if (active) {
+        Text(
+            text = "%02d:%02d:%02d".format(hours, minutes, seconds),
+            color = Color(0xFF9CF2F9),
+            fontSize = 20.sp
+        )
+    }
+    else {
+        Text(
+            text = "%02d:%02d:%02d".format(hours, minutes, seconds),
+            color = Color(0xFF9CF2F9),
+            fontSize = 12.sp
+        )
+    }
 }
 

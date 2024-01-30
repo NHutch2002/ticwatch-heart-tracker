@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CompareArrows
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,7 +41,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.charts.BarChart
 
 @Composable
-fun HRRBarChart(heartRateRecoverySamples: List<Int>?, navController: NavController) {
+fun HRRBarChart(heartRateRecoverySamples: List<Int>?, navController: NavController, isReview: Boolean) {
     val entries = arrayListOf<BarEntry>()
 
     val totalReadings = heartRateRecoverySamples?.size
@@ -106,6 +107,25 @@ fun HRRBarChart(heartRateRecoverySamples: List<Int>?, navController: NavControll
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
+                    if (isReview){
+                        Button(
+                            onClick = {
+                                navController.navigate("choose_compare/${heartRateRecoverySamples}")
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.DarkGray,
+                            ),
+                            modifier = Modifier.size(20.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CompareArrows,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "${normalisedEntries.first().toInt() - normalisedEntries.last().toInt()} BPM",
                         fontSize = 16.sp,

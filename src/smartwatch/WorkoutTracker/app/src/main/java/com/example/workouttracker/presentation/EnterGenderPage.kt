@@ -11,8 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Man
-import androidx.compose.material.icons.filled.Woman
+import androidx.compose.material.icons.filled.Female
+import androidx.compose.material.icons.filled.Male
+import androidx.compose.material.icons.filled.Transgender
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,6 +43,7 @@ import kotlinx.coroutines.withContext
 fun EnterGenderPage(navController: NavController){
     var isMale by remember { mutableStateOf(false) }
     var isFemale by remember { mutableStateOf(false) }
+    var isOther by remember { mutableStateOf(false) }
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val userDao = db.userDao()
@@ -53,13 +55,22 @@ fun EnterGenderPage(navController: NavController){
             val user = userDao.getAllUsers().first()
             if (user.isNotEmpty()){
                 Log.v("EnterGenderPage", "user: ${user.first().gender}")
-                if (user.first().gender == "male"){
-                    isMale = true
-                    isFemale = false
-                }
-                else if (user.first().gender == "female"){
-                    isMale = false
-                    isFemale = true
+                when (user.first().gender) {
+                    "male" -> {
+                        isMale = true
+                        isFemale = false
+                        isOther = false
+                    }
+                    "female" -> {
+                        isMale = false
+                        isFemale = true
+                        isOther = false
+                    }
+                    "other" -> {
+                        isMale = false
+                        isFemale = false
+                        isOther = true
+                    }
                 }
             }
         }
@@ -91,13 +102,14 @@ fun EnterGenderPage(navController: NavController){
                     onClick = {
                         isMale = true
                         isFemale = false
+                        isOther = false
                     },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = if (isMale) Color.LightGray else Color.DarkGray
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Man,
+                        imageVector = Icons.Filled.Male,
                         contentDescription = null,
                         tint = if (isMale) Color.Black else Color.White,
                         modifier = Modifier.size(36.dp)
@@ -114,15 +126,40 @@ fun EnterGenderPage(navController: NavController){
                     onClick = {
                         isMale = false
                         isFemale = true
+                        isOther = false
                     },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = if (isFemale) Color.LightGray else Color.DarkGray
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Woman,
+                        imageVector = Icons.Filled.Female,
                         contentDescription = null,
                         tint = if (isFemale) Color.Black else Color.White,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(20.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Other", color = Color.White, fontSize = 10.sp)
+                Spacer(modifier = Modifier.height(6.dp))
+                Button(
+                    onClick = {
+                        isMale = false
+                        isFemale = false
+                        isOther = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = if (isOther) Color.LightGray else Color.DarkGray
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Transgender,
+                        contentDescription = null,
+                        tint = if (isOther) Color.Black else Color.White,
                         modifier = Modifier.size(36.dp)
                     )
                 }
@@ -136,8 +173,11 @@ fun EnterGenderPage(navController: NavController){
                     if (isMale){
                         user.gender = "male"
                     }
-                    else{
+                    else if (isFemale){
                         user.gender = "female"
+                    }
+                    else{
+                        user.gender = "other"
                     }
                     userDao.updateUser(user)
                     val users = userDao.getAllUsers()

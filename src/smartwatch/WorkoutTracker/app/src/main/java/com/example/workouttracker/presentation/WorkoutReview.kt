@@ -42,7 +42,7 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
 
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
-    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0, emptyList(), emptyList())) }
+    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0, 0, emptyList(), emptyList())) }
 
     val userDao = db.userDao()
     val user = remember { mutableStateOf(User("", LocalDate.MIN, 0, "")) }
@@ -75,8 +75,8 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> HRRReviewPage(workout.value.HRRs, navController)
-                1 -> HeartRateReport(workout.value.heartRates, age.intValue, navController)
-                2 -> ReturnHistoryPage(navController, workout.value.time, workout.value.date, workout.value.calories)
+                1 -> HeartRateReport(workout.value.heartRates, age.intValue, workout.value.totalTime, navController)
+                2 -> ReturnHistoryPage(navController, workout.value.activeTime, workout.value.totalTime, workout.value.date, workout.value.calories)
             }
         }
         Box(
@@ -101,10 +101,10 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
 
 
 @Composable
-fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate, calories: Int){
-    val hours = time / 3600
-    val minutes = (time % 3600) / 60
-    val seconds = time % 60
+fun ReturnHistoryPage(navController: NavController, activeTime: Long, totalTime:Long, date: LocalDate, calories: Int){
+
+    val formattedActiveTime = timeFormatter(activeTime)
+    val formattedTotalTime = timeFormatter(totalTime)
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd/MM")
     val workoutDate = date.format(dateFormatter)
@@ -116,7 +116,9 @@ fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate,
     ) {
         Text(text = "Date: $workoutDate")
         Spacer(modifier = Modifier.size(8.dp))
-        Text(text = "Duration: %02d:%02d:%02d".format(hours, minutes, seconds))
+        Text(text = "Duration: $formattedTotalTime")
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(text = "Active Time: $formattedActiveTime")
         Spacer(modifier = Modifier.size(8.dp))
         Text(text = "Calories Burned: $calories kcal")
         Spacer(modifier = Modifier.size(8.dp))
@@ -137,7 +139,13 @@ fun ReturnHistoryPage(navController: NavController, time: Long, date: LocalDate,
     }
 }
 
+private fun timeFormatter(time: Long): String {
+    val hours = time / 3600
+    val minutes = (time % 3600) / 60
+    val seconds = time % 60
 
+    return "%02d:%02d:%02d".format(hours, minutes, seconds)
+}
 
 
 

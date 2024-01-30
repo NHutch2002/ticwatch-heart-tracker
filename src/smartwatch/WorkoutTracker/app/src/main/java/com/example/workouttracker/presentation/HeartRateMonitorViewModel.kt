@@ -6,6 +6,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,18 +22,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import kotlin.math.roundToInt
+import kotlin.math.sqrt
+
 
 class HeartRateMonitorViewModel(application: Application) : ViewModel() {
+
     val heartRate = MutableStateFlow<Float?>(null)
     val heartRateList = MutableLiveData<List<Int>>(emptyList())
 
     private var sensorManager: SensorManager? = null
     private var heartRateListener: SensorEventListener? = null
+    private var accelerometerListener: SensorEventListener? = null
 
     private val _progress = MutableLiveData(0f)
     val progress: LiveData<Float> get() = _progress
 
-    private var isPaused = MutableStateFlow(false)
+    var isPaused = MutableStateFlow(false)
     private var midWorkoutHRR = MutableLiveData<List<Int>>(emptyList())
 
     var calculatingHRR = MutableStateFlow(false)
@@ -98,7 +104,12 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
         Log.v("HRR", "Monitoring Stopped")
     }
 
-    fun toggleIsPaused(){
+    fun toggleIsPaused(context: Context){
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
+
+        vibrator.vibrate(vibrationEffect)
+
         isPaused.value = !isPaused.value
         val maxHR = (211 - (0.64 * age.value!!).roundToInt()).toFloat()
 
@@ -114,6 +125,75 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
         }
     }
 
+    fun monitorAccelerometer(context: Context) {
+        var acceleration: Float
+        val measurements = mutableListOf<Float>()
+
+        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+        accelerometerListener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+                    val x = event.values[0]
+                    val y = event.values[1]
+                    val z = event.values[2]
+
+                    val magnitude = sqrt((x * x + y * y + z * z).toDouble()) - 9.81
+                    acceleration = magnitude.toFloat()
+
+                    measurements.add(acceleration)
+
+                    if (measurements.size > 200) {
+                        measurements.removeAt(0)
+                    }
+
+                    val averageAcceleration = measurements.average()
+
+                    if (averageAcceleration < 3) {
+                        if (!isPaused.value){
+                            toggleIsPaused(context)
+                        }
+                        isPaused.value = true
+                    }
+                    else{
+                        if (isPaused.value){
+                            toggleIsPaused(context)
+                        }
+                        isPaused.value = false
+                    }
+                }
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+        }
+
+        sensorManager.registerListener(
+            accelerometerListener,
+            accelerometer,
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+
+        Log.v("HRR", "Accelerometer Registered")
+    }
+
+    fun stopAccelerometer(){
+        Log.v("HeartRateMonitorViewModel", "stopAccelerometer called")
+        if (sensorManager == null) {
+            Log.v("HeartRateMonitorViewModel", "sensorManager is null")
+        } else if (accelerometerListener == null) {
+            Log.v("HeartRateMonitorViewModel", "accelerometerListener is null")
+        } else {
+            sensorManager?.unregisterListener(accelerometerListener)
+            Log.v("HeartRateMonitorViewModel", "accelerometerListener unregistered ${
+                sensorManager?.unregisterListener(
+                    accelerometerListener
+                )
+            
+            }")
+        }
+    }
+
     private fun calculateCaloriesBurned(){
         viewModelScope.launch {
             var user: User
@@ -121,7 +201,7 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
             CoroutineScope(Dispatchers.IO).launch{
                 user = userDao.getUserById("user")
                 val today = LocalDate.now()
-                val birthdate = user.birthday // assuming this is the LocalDate object from the database
+                val birthdate = user.birthday
 
                 age = today.year - birthdate.year
 
@@ -151,7 +231,11 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                         }
 
                         else{
-                            Log.v("Calorie Calculation", "Error in gender setting")
+                            if (heartRate.value != null){
+                                caloriesBurned.value = caloriesBurned.value?.plus(
+                                    ((-55.0969F + (0.6309F * heartRate.value!!) + (0.1988F * user.weight) + (0.2017F * age)) / 4.184F / 60) + ((-20.4022F + (0.4472F * heartRate.value!!) - (0.1263F * user.weight) + (0.074F * age)) / 4.184F / 60) / 2
+                                )
+                            }
                         }
                         delay(1000L)
                     }
@@ -213,5 +297,9 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                 }
             }
         }
+    }
+
+    fun setMaxProgress(){
+        _progress.value = 1f
     }
 }

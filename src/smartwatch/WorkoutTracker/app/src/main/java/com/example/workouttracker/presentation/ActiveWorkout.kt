@@ -1,5 +1,6 @@
 package com.example.workouttracker.presentation
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -39,7 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Icon
@@ -54,20 +54,23 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorViewModel, endWorkout: () -> Unit) {
+fun ActiveWorkoutPage(viewModel: HeartRateMonitorViewModel, endWorkout: () -> Unit) {
     val pagerState = rememberPagerState { 2 }
-    val isPaused = remember { mutableStateOf(false) }
-    val time = remember { mutableLongStateOf(0L) }
+    val activeTime = remember { mutableLongStateOf(0L) }
+    val totalTime = remember { mutableLongStateOf(0L) }
     val maxHeartRate = remember { mutableIntStateOf(0) }
     val heartRates = remember { mutableStateListOf<Int>() }
 
     val calories = viewModel.caloriesBurned.value
     val caloriesInt = calories?.roundToInt()
 
+    val isPaused = viewModel.isPaused
+
     val context = LocalContext.current
 
     LaunchedEffect(key1 = viewModel) {
         viewModel.startMonitoring(context)
+        viewModel.monitorAccelerometer(context)
     }
     Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
 
@@ -75,8 +78,9 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
         while (true) {
             delay(1000L)
             if (!isPaused.value) {
-                time.longValue++
+                activeTime.longValue++
             }
+            totalTime.longValue++
         }
     }
 
@@ -87,17 +91,16 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
 
     LaunchedEffect(Unit){
         CoroutineScope(Dispatchers.IO).launch {
-            val workout = Workout(null, currentDate, 0, emptyList(), emptyList())
+            val workout = Workout(null, currentDate, 0, 0, emptyList(), emptyList())
             workoutDao.insertWorkout(workout)
         }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        MonitorAccelerometer(isPaused, viewModel)
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> WorkoutViewPage(time, maxHeartRate, viewModel, heartRates, caloriesInt)
-                1 -> WorkoutSettingsPage(navController, isPaused, endWorkout, heartRates, workoutDao, time, caloriesInt)
+                0 -> WorkoutViewPage(activeTime, totalTime, maxHeartRate, viewModel, heartRates, caloriesInt)
+                1 -> WorkoutSettingsPage(endWorkout, heartRates, workoutDao, activeTime, totalTime, caloriesInt, viewModel, context)
             }
         }
         Box(
@@ -125,7 +128,8 @@ fun ActiveWorkoutPage(navController: NavController, viewModel: HeartRateMonitorV
 
 @Composable
 fun WorkoutViewPage(
-    time: MutableState<Long>,
+    activeTime: MutableState<Long>,
+    totalTime: MutableState<Long>,
     maxHeartRate: MutableIntState,
     viewModel: HeartRateMonitorViewModel,
     heartRates: MutableList<Int>,
@@ -162,7 +166,13 @@ fun WorkoutViewPage(
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Stopwatch(time)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Stopwatch(activeTime, true)
+            Stopwatch(totalTime, false)
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
@@ -204,25 +214,30 @@ fun WorkoutViewPage(
             }
         }
         Text(
-            if (heartRateRounded == null || heartRateRounded <= 0) "Reading..." else "$heartRateRounded BPM",
+            if (heartRateRounded == null ) "Reading..." else if ( heartRateRounded <= 0) "Sensor\nError" else "$heartRateRounded BPM",
             color = Color(0xFF9CF2F9),
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center
         )
     }
 }
 
 @Composable
 fun WorkoutSettingsPage(
-    navController: NavController,
-    isPaused: MutableState<Boolean>,
     endWorkout: () -> Unit,
     heartRates: MutableList<Int>,
     workoutDao: WorkoutDao,
-    time: MutableState<Long>,
-    caloriesInt: Int?
+    activeTime: MutableState<Long>,
+    totalTime: MutableState<Long>,
+    caloriesInt: Int?,
+    viewModel: HeartRateMonitorViewModel,
+    context: Context
 ) {
 
-    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0 ,emptyList(), emptyList())) }
+    val workout = remember { mutableStateOf(Workout(null, LocalDate.MIN, 0, 0 ,emptyList(), emptyList())) }
+
+    val isPaused by viewModel.isPaused.collectAsState()
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -235,16 +250,17 @@ fun WorkoutSettingsPage(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
-                    onClick = { isPaused.value = !isPaused.value },
+                    onClick = { viewModel.toggleIsPaused(context) },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9CF2F9))
                 ) {
                     Icon(
-                        imageVector = if (isPaused.value) Icons.Filled.PlayArrow else Icons.Filled.Pause,
-                        contentDescription = if (isPaused.value) "Resume" else "Pause"
+                        imageVector = if (isPaused) Icons.Filled.PlayArrow else Icons.Filled.Pause,
+                        contentDescription = if (isPaused) "Resume" else "Pause"
                     )
                 }
                 Text(
-                    if (isPaused.value) "Resume" else "Pause", modifier = Modifier
+                    if (isPaused) "Resume" else "Pause",
+                    modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .width(IntrinsicSize.Min), fontSize = 12.sp, textAlign = TextAlign.Center
                 )
@@ -255,11 +271,12 @@ fun WorkoutSettingsPage(
                 Button(
                     onClick = {
                         Log.v("WorkoutSettingsPage", "Heart rates: ${heartRates.toList()}")
-
                         CoroutineScope(Dispatchers.IO).launch {
+                            viewModel.stopAccelerometer()
                             workout.value = workoutDao.getAllWorkouts().first().last()
                             workout.value.heartRates = heartRates.toList()
-                            workout.value.time = time.value
+                            workout.value.activeTime = activeTime.value
+                            workout.value.totalTime = totalTime.value
                             if (caloriesInt != null) {
                                 workout.value.calories = caloriesInt
                             }
