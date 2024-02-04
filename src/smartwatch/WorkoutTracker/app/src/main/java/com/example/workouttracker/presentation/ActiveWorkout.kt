@@ -84,7 +84,6 @@ fun ActiveWorkoutPage(viewModel: HeartRateMonitorViewModel, endWorkout: () -> Un
     Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
 
     LaunchedEffect(isPausedValue) {
-        delay(5000L)
         if (isPaused.value) {
             snackbarHostState.showSnackbar(
                 message = "Workout paused",
