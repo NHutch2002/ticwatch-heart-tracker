@@ -37,7 +37,7 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     private val _progress = MutableLiveData(0f)
     val progress: LiveData<Float> get() = _progress
 
-    var isPaused = MutableStateFlow(false)
+    var isPaused = MutableStateFlow(true)
     private var midWorkoutHRR = MutableLiveData<List<Int>>(emptyList())
 
     var calculatingHRR = MutableStateFlow(false)
@@ -144,14 +144,16 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
 
                     measurements.add(acceleration)
 
-                    if (measurements.size > 200) {
+                    if (measurements.size > 300) {
                         measurements.removeAt(0)
                     }
 
                     val averageAcceleration = measurements.average()
 
-                    if (averageAcceleration < 3) {
+                    if (averageAcceleration < 2.75) {
+                        Log.v("HRR", "isPaused: ${isPaused.value}")
                         if (!isPaused.value){
+                            Log.v("HRR", "isPaused: ${isPaused.value}")
                             toggleIsPaused(context)
                         }
                         isPaused.value = true

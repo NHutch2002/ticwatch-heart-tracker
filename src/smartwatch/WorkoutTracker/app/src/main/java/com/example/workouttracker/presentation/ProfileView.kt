@@ -48,7 +48,7 @@ fun ProfileViewPage(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     val today = LocalDate.now()
-    val birthdate = user.birthday // assuming this is the LocalDate object from the database
+    val birthdate = user.birthday
 
     var age = today.year - birthdate.year
 

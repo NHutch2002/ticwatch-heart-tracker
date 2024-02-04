@@ -54,35 +54,36 @@ fun HeartRateReport(heartRates: List<Int>?, age: Int, totalTime: Long, navContro
     val normalisedEntries = arrayListOf<Int>()
     val excessReadingsPerBucket = (totalReadings - 2) % 28
 
-    val averageHeartRate = safeHeartRates.average().roundToInt()
+    if (safeHeartRates.isNotEmpty()){
+        val averageHeartRate = safeHeartRates.average().roundToInt()
 
-    if (safeHeartRates.size > 30){
-        normalisedEntries.add(safeHeartRates.first())
+        if (safeHeartRates.size > 30){
+            normalisedEntries.add(safeHeartRates.first())
 
-        var currentIndex = 1
-        for (i in 1..28){
-            val start = currentIndex
-            val end = start + bucketInterval + if (i <= excessReadingsPerBucket) 1 else 0
-            val average = safeHeartRates.subList(start, end).average()
-            normalisedEntries.add(average.roundToInt())
-            currentIndex = end
+            var currentIndex = 1
+            for (i in 1..28){
+                val start = currentIndex
+                val end = start + bucketInterval + if (i <= excessReadingsPerBucket) 1 else 0
+                val average = safeHeartRates.subList(start, end).average()
+                normalisedEntries.add(average.roundToInt())
+                currentIndex = end
+            }
+
+            normalisedEntries.add(safeHeartRates.last())
+
+            for (i in 0..29){
+                entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
+            }
         }
 
-        normalisedEntries.add(safeHeartRates.last())
-
-        for (i in 0..29){
-            entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
+        else {
+            normalisedEntries.addAll(safeHeartRates)
+            for (i in normalisedEntries.indices){
+                entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
+            }
         }
-    }
 
-    else {
-        normalisedEntries.addAll(safeHeartRates)
-        for (i in normalisedEntries.indices){
-            entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
-        }
-    }
 
-    if (entries.isNotEmpty()){
         val dataset = BarDataSet(entries, "Heart Rate")
         dataset.setDrawValues(false)
         dataset.color = android.graphics.Color.DKGRAY

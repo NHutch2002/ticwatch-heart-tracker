@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -22,6 +23,9 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -65,14 +69,36 @@ fun ActiveWorkoutPage(viewModel: HeartRateMonitorViewModel, endWorkout: () -> Un
     val caloriesInt = calories?.roundToInt()
 
     val isPaused = viewModel.isPaused
+    val isPausedValue by isPaused.collectAsState()
 
     val context = LocalContext.current
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
 
     LaunchedEffect(key1 = viewModel) {
         viewModel.startMonitoring(context)
         viewModel.monitorAccelerometer(context)
     }
+
     Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
+
+    LaunchedEffect(isPausedValue) {
+        delay(5000L)
+        if (isPaused.value) {
+            snackbarHostState.showSnackbar(
+                message = "Workout paused",
+                actionLabel = "Hide",
+                duration = SnackbarDuration.Short,
+            )
+        } else {
+            snackbarHostState.showSnackbar(
+                message = "Workout resumed",
+                actionLabel = "Hide",
+                duration = SnackbarDuration.Short,
+            )
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
         while (true) {
@@ -122,9 +148,18 @@ fun ActiveWorkoutPage(viewModel: HeartRateMonitorViewModel, endWorkout: () -> Un
         }
     }
 
-
-
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CustomSnackbar(
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxSize(),
+            isWorkoutPaused = isPausedValue
+        )
+    }
 }
+
+
 
 @Composable
 fun WorkoutViewPage(
@@ -299,4 +334,42 @@ fun WorkoutSettingsPage(
             }
         }
     }
+}
+
+
+@Composable
+fun CustomSnackbar(
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+    isWorkoutPaused: Boolean,
+    backgroundColor: Color = Color.Black.copy(alpha = 0.8f),
+) {
+    SnackbarHost(
+        hostState = snackbarHostState,
+        modifier = Modifier.fillMaxSize(),
+        snackbar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(60.dp)
+                    .background(color = backgroundColor),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = if (isWorkoutPaused) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(24.dp),
+                    tint = Color.White
+                )
+                Text(
+                    text = if (isWorkoutPaused) "Workout Paused" else "Workout Resumed",
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
+            }
+        }
+    )
 }

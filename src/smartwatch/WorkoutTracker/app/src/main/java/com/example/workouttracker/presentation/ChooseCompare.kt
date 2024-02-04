@@ -32,22 +32,25 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.flow.first
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.ceil
 
-// NEED TO ADD DATES TO THE HRR BUTTONS AS A POINT OF REFERENCE
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ChooseComparePage(navController: NavController, hrr1: String) {
     val db = AppDatabase.getInstance(LocalContext.current)
     val workoutDao = db.workoutDao()
     val workouts = remember { mutableStateOf(listOf<Workout>()) }
-    val HRRs = remember { mutableStateOf(listOf<List<Int>>()) }
+    val HRRs = remember { mutableStateOf(listOf<Pair<List<Int>, LocalDate>>()) }
 
     LaunchedEffect(Unit) {
         workouts.value = workoutDao.getAllWorkouts().first()
         workouts.value.forEach { workout ->
-            HRRs.value += splitListBySeparator(workout.HRRs, -1)
+            val HRRsWithDate = splitListBySeparator(workout.HRRs, -1).map { hrr ->
+                Pair(hrr, workout.date)
+            }
+            HRRs.value += HRRsWithDate
         }
     }
 
@@ -90,8 +93,7 @@ fun ChooseComparePage(navController: NavController, hrr1: String) {
                         val endIndex = (page + 1) * 2
                         val HRRsOnPage = HRRs.value.subList(startIndex, endIndex.coerceAtMost(HRRs.value.size))
 
-                        HRRsOnPage.forEach { HRR ->
-                            val dateFormatter = DateTimeFormatter.ofPattern("dd/MM")
+                        HRRsOnPage.forEach { (HRR, date) ->
                             Column(
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -110,7 +112,11 @@ fun ChooseComparePage(navController: NavController, hrr1: String) {
                                         color = Color.Black
                                     )
                                 }
-
+                                Text(
+                                    text = date.format(DateTimeFormatter.ofPattern("dd/MM")),
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }
@@ -124,10 +130,7 @@ fun ChooseComparePage(navController: NavController, hrr1: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = {
-                navController.navigate("main_menu")
-                Log.v("ChooseComparePage", "main_menu")
-                      },
+            onClick = { navController.navigate("main_menu") },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.DarkGray
             ),
@@ -140,8 +143,8 @@ fun ChooseComparePage(navController: NavController, hrr1: String) {
                 modifier = Modifier.size(18.dp)
             )
         }
-        Spacer(modifier = Modifier.height(30.dp))
-        if (workouts.value.size > 2) {
+        Spacer(modifier = Modifier.height(20.dp))
+        if (ceil(HRRs.value.size / 2.0).toInt() > 1) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)

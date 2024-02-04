@@ -73,7 +73,7 @@ fun WorkoutApp() {
         composable("workout_deletion_splashscreen") { WorkoutDeletionSplashscreen(navController) }
         composable("profile_deletion_splashscreen") { ProfileDeletionSplashscreen(navController) }
         composable("required_fields_splashscreen") { RequiredFieldsSplashScreen(navController) }
-        composable("heart_rate_info_screen") { HeartRateInfoScreen(navController) }
+        composable("heart_rate_info_screen") { HeartRateInfoScreen() }
         composable("hrr_info_screen") { HRRInfoScreen(navController) }
         composable("track_workout") { TrackWorkoutPage(navController) }
         composable("view_history") { ViewHistoryPage(navController) }

@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.wear.compose.material.Text
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.VerticalPager
@@ -24,7 +23,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HeartRateInfoScreen(navController: NavController) {
+fun HeartRateInfoScreen() {
 
     val verticalPagerState = rememberPagerState(initialPage = 0)
 
@@ -245,55 +244,3 @@ fun HeartRateInfoScreen(navController: NavController) {
         }
     }
 }
-
-//
-//LazyColumn{
-//    item {
-//        Text(
-//            text = "Heart Rate Zones",
-//            fontSize = 24.sp,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.fillMaxSize()
-//        )
-//    }
-//    item {
-//        Text(
-//            text = "Zone 1: 50-60% of max heart rate",
-//            fontSize = 18.sp,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.fillMaxSize()
-//        )
-//    }
-//    item {
-//        Text(
-//            text = "Zone 2: 60-70% of max heart rate",
-//            fontSize = 18.sp,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.fillMaxSize()
-//        )
-//    }
-//    item {
-//        Text(
-//            text = "Zone 3: 70-80% of max heart rate",
-//            fontSize = 18.sp,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.fillMaxSize()
-//        )
-//    }
-//    item {
-//        Text(
-//            text = "Zone 4: 80-90% of max heart rate",
-//            fontSize = 18.sp,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.fillMaxSize()
-//        )
-//    }
-//    item {
-//        Text(
-//            text = "Zone 5: 90-100% of max heart rate",
-//            fontSize = 18.sp,
-//            textAlign = TextAlign.Center,
-//            modifier = Modifier.fillMaxSize()
-//        )
-//    }
-//}

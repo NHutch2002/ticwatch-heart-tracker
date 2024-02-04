@@ -85,7 +85,7 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
 
 
     val today = LocalDate.now()
-    val birthdate = user.value.birthday // assuming this is the LocalDate object from the database
+    val birthdate = user.value.birthday
 
     var age = today.year - birthdate.year
 
@@ -176,12 +176,12 @@ fun HRRPage(viewModel: HeartRateMonitorViewModel, navController: NavController) 
     )
 
     val circularProgressScale by animateFloatAsState(
-        targetValue = if (measurementCompleted) 3f else 1f, // Scale up when completed
+        targetValue = if (measurementCompleted) 3f else 1f,
         animationSpec = TweenSpec(durationMillis = animationDuration),
         label = ""
     )
     val circularProgressOpacity by animateFloatAsState(
-        targetValue = if (measurementCompleted) 0f else 1f, // Fade out when completed
+        targetValue = if (measurementCompleted) 0f else 1f,
         animationSpec = TweenSpec(durationMillis = animationDuration),
         label = ""
     )

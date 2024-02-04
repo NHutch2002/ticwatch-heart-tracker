@@ -44,16 +44,6 @@ fun CircularProgress(
         )
 
 
-//        val startX = halfSize.width + innerRadius * cos(startAngle * PI / 180f)
-//        val startY = halfSize.height + innerRadius * sin(startAngle * PI / 180f)
-//
-//        drawCircle(
-//            color = Color.White,
-//            radius = strokeWidth.toPx(),
-//            center = Offset(startX.toFloat(), startY.toFloat())
-//        )
-
-
         val endAngle = sweep - 90f
         val endX = halfSize.width + innerRadius * cos(endAngle * PI / 180f)
         val endY = halfSize.height + innerRadius * sin(endAngle * PI / 180f)

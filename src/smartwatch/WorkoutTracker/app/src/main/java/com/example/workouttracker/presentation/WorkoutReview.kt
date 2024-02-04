@@ -57,8 +57,7 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
             user.value = userDao.getUserById("user")
 
             val today = LocalDate.now()
-            val birthdate = user.value.birthday // assuming this is the LocalDate object from the database
-
+            val birthdate = user.value.birthday
             age.intValue = today.year - birthdate.year
 
             if (today.monthValue < birthdate.monthValue ||
