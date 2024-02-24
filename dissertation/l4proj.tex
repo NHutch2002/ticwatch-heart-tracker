@@ -39,8 +39,8 @@
 % Please note that you are under no obligation to sign 
 % this declaration, but doing so would help future students.
 %
-%\def\consentname {My Name} % your full name
-%\def\consentdate {20 March 2018} % the date you agree
+\def\consentname {Nathan Hutchison} % your full name
+\def\consentdate {05 February 2024} % the date you agree
 %
 \educationalconsent
 
@@ -80,359 +80,186 @@
 % reset page numbering. Don't remove this!
 \pagenumbering{arabic} 
 
+\section{Motivation}
 
-Why should the reader care about what are you doing and what are you actually doing?
-\section{Guidance}
+In an era built on rapid technological advancements, there has been a recent explosion of innovative technology proving revolutionary in the monitoring and managing of an individual’s health. Fitness tracking technology has become an increasingly vast market, with a huge increase in people using fitness statistics to ensure they remain active and healthy in their day-to-day lives. However, while physical fitness can be easily measured through distance run or weight lifted, one aspect of fitness often overlooked is your heart health. 
 
-\textbf{Motivate} first, then state the general problem clearly. 
+Heart Rate Recovery (HRR) strongly indicates overall cardiovascular health and fitness. However many current fitness tracking applications strongly focus on tracking the physical activity itself through metrics such as distance run and lack HRR readings built in or make it so complex to view these readings that many users will be left unaware they even exist. 
 
-\section{Writing guidance}
-\subsection{Who is the reader?}
+By developing a smartwatch application that prioritises Heart Rate Recovery, I aim to bridge this gap in fitness tracking and bring heart health to the forefront of a user’s fitness tracking experience. This empowers individuals to have a clear and visual representation of their cardiovascular health, with the potential to lead to more effective workouts and a healthier lifestyle.
 
-This is the key question for any writing. Your reader:
+Furthermore, the convenience of having this application built into a smartwatch means users can view their Heart Rate Recovery at any time without having to use complex equipment or carry their phone about while exercising.
 
-\begin{itemize}
-    \item
-    is a trained computer scientist: \emph{don't explain basics}.
-    \item
-    has limited time: \emph{keep on topic}.
-    \item
-    has no idea why anyone would want to do this: \emph{motivate clearly}
-    \item
-    might not know \emph{anything} about your project in particular:
-    \emph{explain your project}.
-    \item
-    but might know precise details and check them: \emph{be precise and
-    strive for accuracy.}
-    \item
-    doesn't know or care about you: \emph{personal discussions are
-    irrelevant}.
-\end{itemize}
+\section{Aim}
 
-Remember, you will be marked by your supervisor and one or more members
-of staff. You might also have your project read by a prize-awarding
-committee or possibly a future employer. Bear that in mind.
+This project aims to develop a smartwatch application that allows users to intuitively track their Heart Rate Recovery during a workout, providing them with useful insight into their overall heart health. Results will be represented in visual graphs with a strong focus on the usability heuristics of the application. Within these graphs, there will also be feedback on the users' results, showing ideal values for their Heart Rate Recovery and Heart Rate during a workout. The application will store results in a database to allow users to see their progress and improvements over time, with a HRR comparison feature built in to compare different HRR readings
 
-\subsection{References and style guides}
-There are many style guides on good English writing. You don't need to
-read these, but they will improve how you write.
+\section{Outline}
+
+This report will address the issue of Heart Rate Recovery tracking, as well as general Heart Fitness. The breakdown of what each of the sections will expand is as follows:
 
 \begin{itemize}
-    \item
-    \emph{How to write a great research paper} \cite{Pey17} (\textbf{recommended}, even though you aren't writing a research paper)
-    \item
-    \emph{How to Write with Style} \cite{Von80}. Short and easy to read. Available online.
-    \item
-    \emph{Style: The Basics of Clarity and Grace} \cite{Wil09} A very popular modern English style guide.
-    \item
-    \emph{Politics and the English Language} \cite{Orw68}  A famous essay on effective, clear writing in English.
-    \item
-    \emph{The Elements of Style} \cite{StrWhi07} Outdated, and American, but a classic.
-    \item
-    \emph{The Sense of Style} \cite{Pin15} Excellent, though quite in-depth.
+    \item \textbf{Section 2 - Background Research}
+    \begin{itemize}
+        \item Looking into related existing applications, as well as investigating the background topics and related work in the field of Heart Fitness and Heart Rate Recovery
+    \end{itemize}
+    \item \textbf{Section 3 - Requirement Analysis}
+    \begin{itemize}
+        \item Breaking down the requirements for the finished application, including MoSCoW Requirements and some User Stories
+    \end{itemize}
+    \item \textbf{Section 4 - Design}
+    \begin{itemize}
+        \item Delving into the User Interface and the visuals of the application including interaction design, as well as looking more specifically at the System Architecture
+    \end{itemize}
+    \item \textbf{Section 5 - Implementation}
+    \begin{itemize}
+        \item Describing the approach to implementing the application, through the hardware configuration, the technologies used, and the algorithms for calculations before finishing with the results overview and graphical representation used
+    \end{itemize}
+    \item \textbf{Section 6 - Evaluation}
+    \begin{itemize}
+        \item Explaining the evaluation process for the application, including the auto-ethnography, the pilot study, and finally the conducted experiment through user studies
+    \end{itemize}
+    \item \textbf{Section 7 - Conclusion}
+    \begin{itemize}
+        \item Concluding the project and report as a whole, giving a summary of the work accomplished, before delving into the potential future work, and giving a brief final reflection on the project
+    \end{itemize}
 \end{itemize}
-
-\subsubsection{Citation styles}
-
-\begin{itemize}
-\item If you are referring to a reference as a noun, then cite it as: ``\citet{Orw68} discusses the role of language in political thought.''
-\item If you are referring implicitly to references, use: ``There are many good books on writing \citep{Orw68, Wil09, Pin15}.''
-\end{itemize}
-
-There is a complete guide on good citation practice by Peter Coxhead available here: \url{http://www.cs.bham.ac.uk/~pxc/refs/index.html}. 
-If you are unsure about how to cite online sources, please see this guide: \url{https://student.unsw.edu.au/how-do-i-cite-electronic-sources}.
-
-\subsection{Plagiarism warning}
-
-\begin{highlight_title}{WARNING}
-    
-    If you include material from other sources without full and correct attribution, you are commiting plagiarism. The penalties for plagiarism are severe.
-    Quote any included text and cite it correctly. Cite all images, figures, etc. clearly in the caption of the figure.
-\end{highlight_title}
 
 
 %==================================================================================================================================
 \chapter{Background}
-What did other people do, and how is it relevant to what you want to do?
-\section{Guidance}
-\begin{itemize}    
-    \item
-      Don't give a laundry list of references.
-    \item
-      Tie everything you say to your problem.
-    \item
-      Present an argument.
-    \item Think critically; weigh up the contribution of the background and put it in context.    
-    \item
-      \textbf{Don't write a tutorial}; provide background and cite
-      references for further information.
-\end{itemize}
+
+\section{Related Applications}
+
+\section{Background Topics}
+
+\section{Related Work}
 
 %==================================================================================================================================
-\chapter{Analysis/Requirements}
-What is the problem that you want to solve, and how did you arrive at it?
-\section{Guidance}
-Make it clear how you derived the constrained form of your problem via a clear and logical process. 
+\chapter{Requirement Analysis}
+
+This chapter introduces the requirements the application must tailor to in order to be successful. The requirements were gathered through weekly meetings with my supervisor Dr Sharon Ding. Throughout the project we maintained an agile approach to the requirements, where each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
+
+\section{Functional Requirements}
+
+Functional requirements define the features desired by end users. Prioritisation of these requirements is essential to ensure the development of the application is successful in such a short timeframe. I utilised the MoSCoW requirement prioritisation method (SOURCE), which involves separating the requirements into 4 categories:
+
+\begin{itemize}
+    \item Must Have 
+    \item Should Have
+    \item Could Have
+    \item Will Not Have
+\end{itemize}
+
+\subsection{Must Have}
+
+"Must Have" requirements specify the essential features for the application's functionality:
+
+\begin{itemize}
+    \item \textbf{Heart Rate Tracking} - The application must be able to track a user's heart rate
+    \item \textbf{Heart Rate Recovery Calculation} - The application must calculate the user's Heart Rate Recovery
+    \item \textbf{Historic HRR Views} - The user must have some way to see their previous Heart Rate Recovery 
+    \item \textbf{Visual Representation of HRR Readings} - The user must be able to visualise their Heart Rate Recovery
+\end{itemize}
+
+\subsection{Should Have}
+
+"Should Have" requirements specify important but not necessary features. These features still however add significant value:
+
+\begin{itemize}
+    \item \textbf{Fitness Tracking} - The application should allow for some form of fitness tracking
+    \item \textbf{Automatic HRR tracking throughout a workout} - The application should automatically track a user's HRR throughout a workout
+    \item \textbf{Feedback on what results mean for a user} - The application should give some form of feedback based on how good a HRR result is
+    \item \textbf{HRR Comparisons} - The application should allow for a direct comparison between two HRR measurements to be made 
+    
+\end{itemize}
+
+\subsection{Could Have}
+
+"Could Have" requirements are features that could slightly add to the overall user experience, but are not massively important:
+
+\begin{itemize}
+    \item \textbf{Fitness History} - The application could store historical fitness statistics for the user to review
+    \item \textbf{User Profile} - The application could have some form of profile building for a user
+\end{itemize}
+
+\subsection{Will Not Have}
+
+"Will Not Have" requirements are features that might improve the overall user experience, but are not a priority for the given time frame:
+
+\begin{itemize}
+    \item \textbf{Colour categorisation for multiple workout types} - In future, the application might have different colour schemes for different workout types
+    \item \textbf{Mobile App/Mobile-first Web App} - In future, the application might have a mobile/web application developed alongside to allow for additional functionality
+    \item \textbf{Web Server for storing results} - In future, the application might store information on a web server to allow for viewing results on multiple devices
+    \item \textbf{Support a variety of workouts} - In future, the application should host a variety of workouts to track
+\end{itemize}
+
+\section{Non-Functional Requirements}
+
+Non-functional requirements focus on the quality of the finished product, ensuring practicality in the real world. These include:
+
+\textbf{Performance} - The application is being developed on a smartwatch, meaning the performance of the application will be hindered by the smaller computational power in a smartwatch compared to a larger device such as a phone or a computer. It is important to ensure the finished product performs fluently with minimal latency across the system.
+
+\textbf{Portability} -  The application will be used primarily while on the move, such as during an exercise. This means the application needs to be as easy as possible to view and interact with on the move. This is a common design issue when developing applications on a smartwatch (TICWEAR DESIGN SOURCE)
+
+\textbf{Accuracy} - The application is attempting to give an insight into users' health based on their Heart Rate Recovery. If the values presented to the user are inaccurate it could lead to misleading or harmful information for the user
+
+\textbf{Reliability} - It is also important the application is reliable. The previously mentioned “Should Have” category discussed users being able to compare HRR readings. Similar to the reasoning above, if the values over time are vastly different it could lead to harmful interpretations from the user.
+
+\section{User Stories}
 
 %==================================================================================================================================
 \chapter{Design}
-How is this problem to be approached, without reference to specific implementation details? 
-\section{Guidance}
-Design should cover the abstract design in such a way that someone else might be able to do what you did, but with a different language or library or tool.
+
+\section{User Interface}
+
+\section{System Architecture}
 
 %==================================================================================================================================
 \chapter{Implementation}
-What did you do to implement this idea, and what technical achievements did you make?
-\section{Guidance}
-You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
 
+\section{Hardware Configuration}
 
+\section{Technologies}
 
-\section{General points}
+\subsection{Kotlin}
 
-These points apply to the whole dissertation, not just this chapter.
+\subsection{Jetpack Compose}
 
+\subsection{Room Database}
 
+\section{Algorithms}
 
-\subsection{Figures}
-\emph{Always} refer to figures included, like Figure \ref{fig:relu}, in the body of the text. Include full, explanatory captions and make sure the figures look good on the page.
-You may include multiple figures in one float, as in Figure \ref{fig:synthetic}, using \texttt{subcaption}, which is enabled in the template.
+\subsection{Heart Rate Recovery}
 
+\subsection{Auto-Pausing}
 
+\subsection{Calorific Expenditure Algorithm}
 
-% Figures are important. Use them well.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{images/relu.pdf}    
+\section{Results Overview}
 
-    \caption{In figure captions, explain what the reader is looking at: ``A schematic of the rectifying linear unit, where $a$ is the output amplitude,
-    $d$ is a configurable dead-zone, and $Z_j$ is the input signal'', as well as why the reader is looking at this: 
-    ``It is notable that there is no activation \emph{at all} below 0, which explains our initial results.'' 
-    \textbf{Use vector image formats (.pdf) where possible}. Size figures appropriately, and do not make them over-large or too small to read.
-    }
+\subsection{Graph Implementation}
 
-    % use the notation fig:name to cross reference a figure
-    \label{fig:relu} 
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/synthetic.png}
-        \caption{Synthetic image, black on white.}
-        \label{fig:syn1}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
-      %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/synthetic_2.png}
-        \caption{Synthetic image, white on black.}
-        \label{fig:syn2}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
-    %(or a blank line to force the subfigure onto a new line)    
-    \caption{Synthetic test images for edge detection algorithms. \subref{fig:syn1} shows various gray levels that require an adaptive algorithm. \subref{fig:syn2}
-    shows more challenging edge detection tests that have crossing lines. Fusing these into full segments typically requires algorithms like the Hough transform.
-    This is an example of using subfigures, with \texttt{subref}s in the caption.
-    }\label{fig:synthetic}
-\end{figure}
-
-\clearpage
-
-\subsection{Equations}
-
-Equations should be typeset correctly and precisely. Make sure you get parenthesis sizing correct, and punctuate equations correctly 
-(the comma is important and goes \textit{inside} the equation block). Explain any symbols used clearly if not defined earlier. 
-
-For example, we might define:
-\begin{equation}
-    \hat{f}(\xi) = \frac{1}{2}\left[ \int_{-\infty}^{\infty} f(x) e^{2\pi i x \xi} \right],
-\end{equation}    
-where $\hat{f}(\xi)$ is the Fourier transform of the time domain signal $f(x)$.
-
-\subsection{Algorithms}
-Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metropolis}.
-
-% NOTE: line ends are denoted by \; in algorithm2e
-\begin{algorithm}
-    \DontPrintSemicolon
-    \KwData{$f_X(x)$, a probability density function returing the density at $x$.\; $\sigma$ a standard deviation specifying the spread of the proposal distribution.\;
-    $x_0$, an initial starting condition.}
-    \KwResult{$s=[x_1, x_2, \dots, x_n]$, $n$ samples approximately drawn from a distribution with PDF $f_X(x)$.}
-    \Begin{
-        $s \longleftarrow []$\;
-        $p \longleftarrow f_X(x)$\;
-        $i \longleftarrow 0$\;
-        \While{$i < n$}
-        {
-            $x^\prime \longleftarrow \mathcal{N}(x, \sigma^2)$\;
-            $p^\prime \longleftarrow f_X(x^\prime)$\;
-            $a \longleftarrow \frac{p^\prime}{p}$\;
-            $r \longleftarrow U(0,1)$\;
-            \If{$r<a$}
-            {
-                $x \longleftarrow x^\prime$\;
-                $p \longleftarrow f_X(x)$\;
-                $i \longleftarrow i+1$\;
-                append $x$ to $s$\;
-            }
-        }
-    }
-    
-\caption{The Metropolis-Hastings MCMC algorithm for drawing samples from arbitrary probability distributions, 
-specialised for normal proposal distributions $q(x^\prime|x) = \mathcal{N}(x, \sigma^2)$. The symmetry of the normal distribution means the acceptance rule takes the simplified form.}\label{alg:metropolis}
-\end{algorithm}
-
-\subsection{Tables}
-
-If you need to include tables, like Table \ref{tab:operators}, use a tool like https://www.tablesgenerator.com/ to generate the table as it is
-extremely tedious otherwise. 
-
-\begin{table}[]
-    \caption{The standard table of operators in Python, along with their functional equivalents from the \texttt{operator} package. Note that table
-    captions go above the table, not below. Do not add additional rules/lines to tables. }\label{tab:operators}
-    %\tt 
-    \rowcolors{2}{}{gray!3}
-    \begin{tabular}{@{}lll@{}}
-    %\toprule
-    \textbf{Operation}    & \textbf{Syntax}                & \textbf{Function}                            \\ %\midrule % optional rule for header
-    Addition              & \texttt{a + b}                          & \texttt{add(a, b)}                                    \\
-    Concatenation         & \texttt{seq1 + seq2}                    & \texttt{concat(seq1, seq2)}                           \\
-    Containment Test      & \texttt{obj in seq}                     & \texttt{contains(seq, obj)}                           \\
-    Division              & \texttt{a / b}                          & \texttt{div(a, b) }  \\
-    Division              & \texttt{a / b}                          & \texttt{truediv(a, b) } \\
-    Division              & \texttt{a // b}                         & \texttt{floordiv(a, b)}                               \\
-    Bitwise And           & \texttt{a \& b}                         & \texttt{and\_(a, b)}                                  \\
-    Bitwise Exclusive Or  & \texttt{a \textasciicircum b}           & \texttt{xor(a, b)}                                    \\
-    Bitwise Inversion     & \texttt{$\sim$a}                        & \texttt{invert(a)}                                    \\
-    Bitwise Or            & \texttt{a | b}                          & \texttt{or\_(a, b)}                                   \\
-    Exponentiation        & \texttt{a ** b}                         & \texttt{pow(a, b)}                                    \\
-    Identity              & \texttt{a is b}                         & \texttt{is\_(a, b)}                                   \\
-    Identity              & \texttt{a is not b}                     & \texttt{is\_not(a, b)}                                \\
-    Indexed Assignment    & \texttt{obj{[}k{]} = v}                 & \texttt{setitem(obj, k, v)}                           \\
-    Indexed Deletion      & \texttt{del obj{[}k{]}}                 & \texttt{delitem(obj, k)}                              \\
-    Indexing              & \texttt{obj{[}k{]}}                     & \texttt{getitem(obj, k)}                              \\
-    Left Shift            & \texttt{a \textless{}\textless b}       & \texttt{lshift(a, b)}                                 \\
-    Modulo                & \texttt{a \% b}                         & \texttt{mod(a, b)}                                    \\
-    Multiplication        & \texttt{a * b}                          & \texttt{mul(a, b)}                                    \\
-    Negation (Arithmetic) & \texttt{- a}                            & \texttt{neg(a)}                                       \\
-    Negation (Logical)    & \texttt{not a}                          & \texttt{not\_(a)}                                     \\
-    Positive              & \texttt{+ a}                            & \texttt{pos(a)}                                       \\
-    Right Shift           & \texttt{a \textgreater{}\textgreater b} & \texttt{rshift(a, b)}                                 \\
-    Sequence Repetition   & \texttt{seq * i}                        & \texttt{repeat(seq, i)}                               \\
-    Slice Assignment      & \texttt{seq{[}i:j{]} = values}          & \texttt{setitem(seq, slice(i, j), values)}            \\
-    Slice Deletion        & \texttt{del seq{[}i:j{]}}               & \texttt{delitem(seq, slice(i, j))}                    \\
-    Slicing               & \texttt{seq{[}i:j{]}}                   & \texttt{getitem(seq, slice(i, j))}                    \\
-    String Formatting     & \texttt{s \% obj}                       & \texttt{mod(s, obj)}                                  \\
-    Subtraction           & \texttt{a - b}                          & \texttt{sub(a, b)}                                    \\
-    Truth Test            & \texttt{obj}                            & \texttt{truth(obj)}                                   \\
-    Ordering              & \texttt{a \textless b}                  & \texttt{lt(a, b)}                                     \\
-    Ordering              & \texttt{a \textless{}= b}               & \texttt{le(a, b)}                                     \\
-    % \bottomrule
-    \end{tabular}
-    \end{table}
-\subsection{Code}
-
-Avoid putting large blocks of code in the report (more than a page in one block, for example). Use syntax highlighting if possible, as in Listing \ref{lst:callahan}.
-
-\begin{lstlisting}[language=python, float, caption={The algorithm for packing the $3\times 3$ outer-totalistic binary CA successor rule into a 
-    $16\times 16\times 16\times 16$ 4 bit lookup table, running an equivalent, notionally 16-state $2\times 2$ CA.}, label=lst:callahan]
-    def create_callahan_table(rule="b3s23"):
-        """Generate the lookup table for the cells."""        
-        s_table = np.zeros((16, 16, 16, 16), dtype=np.uint8)
-        birth, survive = parse_rule(rule)
-
-        # generate all 16 bit strings
-        for iv in range(65536):
-            bv = [(iv >> z) & 1 for z in range(16)]
-            a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p = bv
-
-            # compute next state of the inner 2x2
-            nw = apply_rule(f, a, b, c, e, g, i, j, k)
-            ne = apply_rule(g, b, c, d, f, h, j, k, l)
-            sw = apply_rule(j, e, f, g, i, k, m, n, o)
-            se = apply_rule(k, f, g, h, j, l, n, o, p)
-
-            # compute the index of this 4x4
-            nw_code = a | (b << 1) | (e << 2) | (f << 3)
-            ne_code = c | (d << 1) | (g << 2) | (h << 3)
-            sw_code = i | (j << 1) | (m << 2) | (n << 3)
-            se_code = k | (l << 1) | (o << 2) | (p << 3)
-
-            # compute the state for the 2x2
-            next_code = nw | (ne << 1) | (sw << 2) | (se << 3)
-
-            # get the 4x4 index, and write into the table
-            s_table[nw_code, ne_code, sw_code, se_code] = next_code
-
-        return s_table
-
-\end{lstlisting}
+\subsection{Heart Rate Recovery Comparison}
 
 %==================================================================================================================================
 \chapter{Evaluation} 
-How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
 
-\section{Guidance}
-\begin{itemize}
-    \item
-        Ask specific questions that address the general problem.
-    \item
-        Answer them with precise evidence (graphs, numbers, statistical
-        analysis, qualitative analysis).
-    \item
-        Be fair and be scientific.
-    \item
-        The key thing is to show that you know how to evaluate your work, not
-        that your work is the most amazing product ever.
-\end{itemize}
+\section{Auto-Ethnography}
 
-\section{Evidence}
-Make sure you present your evidence well. Use appropriate visualisations, reporting techniques and statistical analysis, as appropriate.
+\section{Pilot Study}
 
-If you visualise, follow the basic rules, as illustrated in Figure \ref{fig:boxplot}:
-\begin{itemize}
-\item Label everything correctly (axis, title, units).
-\item Caption thoroughly.
-\item Reference in text.
-\item \textbf{Include appropriate display of uncertainty (e.g. error bars, Box plot)}
-\item Minimize clutter.
-\end{itemize}
-
-See the file \texttt{guide\_to\_visualising.pdf} for further information and guidance.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=1.0\linewidth]{images/boxplot_finger_distance.pdf}    
-
-    \caption{Average number of fingers detected by the touch sensor at different heights above the surface, averaged over all gestures. Dashed lines indicate
-    the true number of fingers present. The Box plots include bootstrapped uncertainty notches for the median. It is clear that the device is biased toward 
-    undercounting fingers, particularly at higher $z$ distances.
-    }
-
-    % use the notation fig:name to cross reference a figure
-    \label{fig:boxplot} 
-\end{figure}
+\section{User Studies}
 
 
 %==================================================================================================================================
 \chapter{Conclusion}    
-Summarise the whole project for a lazy reader who didn't read the rest (e.g. a prize-awarding committee).
-\section{Guidance}
-\begin{itemize}
-    \item
-        Summarise briefly and fairly.
-    \item
-        You should be addressing the general problem you introduced in the
-        Introduction.        
-    \item
-        Include summary of concrete results (``the new compiler ran 2x
-        faster'')
-    \item
-        Indicate what future work could be done, but remember: \textbf{you
-        won't get credit for things you haven't done}.
-\end{itemize}
+
+\section{Summary}
+
+\section{Future Work}
+
+\section{Final Reflection}
 
 %==================================================================================================================================
 %
