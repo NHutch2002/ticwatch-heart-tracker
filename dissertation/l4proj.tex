@@ -138,7 +138,7 @@ This report will address the issue of Heart Rate Recovery tracking, as well as g
 %==================================================================================================================================
 \chapter{Requirement Analysis}
 
-This chapter introduces the requirements the application must tailor to in order to be successful. The requirements were gathered through weekly meetings with my supervisor Dr Sharon Ding. Throughout the project we maintained an agile approach to the requirements, where each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
+This chapter introduces the requirements the application must tailor to in order to be successful. The requirements were gathered through weekly meetings with my supervisor Dr Sharon Ding. Throughout the project, we maintained an agile approach to the requirements where each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
 
 \section{Functional Requirements}
 
@@ -188,10 +188,10 @@ Functional requirements define the features desired by end users. Prioritisation
 "Will Not Have" requirements are features that might improve the overall user experience, but are not a priority for the given time frame:
 
 \begin{itemize}
-    \item \textbf{Colour categorisation for multiple workout types} - In future, the application might have different colour schemes for different workout types
-    \item \textbf{Mobile App/Mobile-first Web App} - In future, the application might have a mobile/web application developed alongside to allow for additional functionality
-    \item \textbf{Web Server for storing results} - In future, the application might store information on a web server to allow for viewing results on multiple devices
-    \item \textbf{Support a variety of workouts} - In future, the application should host a variety of workouts to track
+    \item \textbf{Support a variety of workouts} - In future, the application might host a variety of workouts to track.
+    \item \textbf{Colour categorisation for multiple workout types} - In future, the application might have different colour schemes for different workout types.
+    \item \textbf{Web Server for storing results} - In future, the application might store information on a web server to allow for viewing results on multiple devices.
+    \item \textbf{Mobile App/Mobile-first Web App} - In future, the application might have a mobile/web application developed alongside to allow for additional functionality.
 \end{itemize}
 
 \section{Non-Functional Requirements}
@@ -222,9 +222,23 @@ Non-functional requirements focus on the quality of the finished product, ensuri
 
 \section{Technologies}
 
-\subsection{Kotlin}
+\subsection{Kotlin vs Java}
 
-\subsection{Jetpack Compose}
+Historically, Android apps have primarily been developed in Java, the official language of Android Development since Android’s inception in 2008. However, since the release of Kotlin more and more developers have made the change over from Java for feature development.
+
+Kotlin is a statically typed, high-level programming language officially released in 2016 by JetBrains, the company behind the popular Integrated Development Environments (IDEs) IntelliJ and PyCharm (SOURCE). Kotlin was developed with the idea it would become a “better language” than Java ([SOURCE](https://www.jrebel.com/blog)). It remains a younger programming language compared to similar long-term languages such as Java however, was already announced as the preferred programming language for Android development by Google at the Google I/O Conference in 2019.
+
+Kotlin is strongly influenced by Java syntactically while simplifying some of Java’s constructs such as semicolons to end a statement and getter and setter methods. The concise nature of Kotlin - through features such as type inference - allows for around 20\% less code to provide more functionality according to Medium ([SOURCE](https://medium.com/@johnkorly/kotlin-vs-java-performance-drill-down-which-to-choose-2514bdf91916)). Another key benefit of choosing Kotlin is reliability. Due to the nature of static types and null checking in Kotlin, it is reported that Google Home saw a 33\% decrease in NullPointerExceptions after changing over development to Kotlin, with the top 1,000 apps on the Google Play Store having 20\% fewer crashes per user on average ([SOURCE](https://medium.com/androiddevelopers/fewer-crashes-and-more-stability-with-kotlin-b606c6a6ac04)). Ultimately, Kotlin is now the chosen development language by several major international companies such as Netflix, Slack and X due to its benefits over Java however, that doesn’t mean Kotlin doesn’t have its drawbacks.
+
+One of the main difficulties I was wary of was the age of the language. As previously mentioned Kotlin was first stably released in February 2016, just over 20 years after the first Java release in 1996. This immaturity in comparison to Java causes less documentation and general community when trying to solve a problem. In general, when finding a bug in your code you are much more likely to find a solution developing in Java compared to Kotlin. FIND ANOTHER NEGATIVE POINT TO BOOST THIS LAST PARAGRAPH
+
+\subsection{Jetpack Compose vs XML}
+
+Android user interface (UI) development has undergone several changes and improvements over the years. Initially, it was standard to build UIs with XML, a markup language that defines the layout and appearance of UI elements. Using XML allowed developers to separate the layout from the logic of the application and reuse whole components made of XML, similar to many popular modern Web Application frameworks such as React and Flutter. However, XML also had several drawbacks such as its verbosity and inability to support dynamic changing UIs that change for different events. In 2019, Google announced their experiment to solve some of these issues through a project named Jetpack Compose.  It was further refined across two years before reaching its first stable release in July 2021. Since then it has evolved into the recommended way to build Android UI by Google.
+
+Jetpack Compose is a “modern UI toolkit” that aims to simplify the UI development process in Android. It allows for all the functionality of XML and more while maintaining the conciseness of Kotlin programming. In 2020 (CHECK THIS), the TV show tracking Android application ‘Tivi’ went through a migration of an XML-based layout approach to Jetpack Compose and saw a 41\% decrease in Android Package (APK) when using Jetpack Compose. They also report a 76\% decrease in XML lines as well as an 8\% decrease in Kotlin lines across the project while maintaining a very similar application layout. Finally, they also found a 29\% reduction in build time after converting the project to Jetpack Compose. Moving away from statistical improvements, Jetpack Compose also easily allows for dynamic rendering through the use of states. With all the performance improvement and concise nature of Jetpack Compose, alongside the dynamic rendering necessary for my application, Jetpack Compose was the clear choice
+
+However, Jetpack Compose isn’t without its challenges and difficulties. Regardless of the layout framework chosen - XML or Jetpack Compose - they were both new frameworks however, XML is much more similar to previous layout technologies I’ve used such as HTML and CSS. This likely required a slightly longer time to practice and master Jetpack Compose than if I chose to develop in XML. This learning curve is worsened by the lack of documentation and resources available in comparison to XML ([SOURCE](https://medium.com/@gaga.lomidze/xml-vs-jetpack-compose-advantages-and-disadvantages-538ceee28dbd)) due to how new the framework is.
 
 \subsection{Room Database}
 
