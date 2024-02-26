@@ -34,7 +34,7 @@ fun UserSettingsPage(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Hello Nathan!", fontSize = 24.sp)
+        Text(text = "User Settings", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
         Row (
             modifier = Modifier.fillMaxWidth(),

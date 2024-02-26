@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -65,7 +64,6 @@ fun WorkoutReviewPage(navController: NavController, workoutId: String) {
                 age.intValue -= 1
             }
 
-            Log.v("WorkoutReview", workout.value.heartRates.toString())
         }
     }
 

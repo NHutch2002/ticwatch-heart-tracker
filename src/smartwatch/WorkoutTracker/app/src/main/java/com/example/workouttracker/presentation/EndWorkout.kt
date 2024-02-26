@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
@@ -95,17 +94,14 @@ fun EndWorkoutPage(navController: NavController, viewModel: HeartRateMonitorView
     }
 
     LaunchedEffect(Unit){
-        Log.v("WorkoutReview", "Waiting for workout to be updated")
 
         var isFinished = false
 
         if (viewModel.progress.value == 0f && (viewModel.heartRate.value ?: 0f) >= 90){
-            Log.v("WorkoutReview", "Starting HRR measurement")
             viewModel.startHRRMeasurementIfStationary()
         }
 
         else if (viewModel.progress.value!! == 0f && (viewModel.heartRate.value ?: 0f) < 90){
-            Log.v("WorkoutReview", "Not high enough heart rate to start HRR measurement")
             viewModel.setMaxProgress()
         }
 

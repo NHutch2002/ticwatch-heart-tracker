@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -69,12 +68,6 @@ fun HRRBarChart(heartRateRecoverySamples: List<Int>?, navController: NavControll
     for (i in 0..29){
         entries.add(BarEntry(i.toFloat(), normalisedEntries[i].toFloat()))
     }
-
-    Log.v("HRRBarChart", "Entries: $normalisedEntries")
-    if (heartRateRecoverySamples != null) {
-        Log.v("HRRBarChart", "Unchanged Entries: ${heartRateRecoverySamples.size}")
-    }
-    Log.v("HRRBarChart", "Unchanged Entries: $heartRateRecoverySamples")
 
     if (entries.isNotEmpty()) {
 

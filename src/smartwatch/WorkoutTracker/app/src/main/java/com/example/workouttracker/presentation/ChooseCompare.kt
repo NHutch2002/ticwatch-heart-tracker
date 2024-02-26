@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -104,7 +103,6 @@ fun ChooseComparePage(navController: NavController, hrr1: String) {
                                         backgroundColor = Color.Cyan
                                     )
                                 ){
-                                    Log.v("ChooseComparePage", "HRR: ${HRR.first().toInt()} ${HRR.last().toInt()} ${HRR.first().toInt() - HRR.last().toInt()}")
                                     Text(
                                         text = "${HRR.first().toInt() - HRR.last().toInt()}",
                                         fontSize = 18.sp,

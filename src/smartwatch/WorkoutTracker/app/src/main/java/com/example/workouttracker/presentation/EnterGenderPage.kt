@@ -1,6 +1,5 @@
 package com.example.workouttracker.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,7 +53,6 @@ fun EnterGenderPage(navController: NavController){
         withContext(Dispatchers.IO) {
             val user = userDao.getAllUsers().first()
             if (user.isNotEmpty()){
-                Log.v("EnterGenderPage", "user: ${user.first().gender}")
                 when (user.first().gender) {
                     "male" -> {
                         isMale = true

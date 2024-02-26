@@ -8,7 +8,6 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -74,14 +73,11 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
         calculateCalories.value = true
         calculateCaloriesBurned()
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        Log.v("HRR", "Sensor Registered")
-        Log.v("HRR", "Sensor Manager: $sensorManager")
         val heartRateSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_HEART_RATE)
 
         heartRateListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
                 if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
-                    Log.v("HRR", "Heart Rate: ${event.values[0]}")
                     heartRate.value = event.values[0]
                     if (event.values[0] > peakHeartRate.value!!) {
                         peakHeartRate.value = event.values[0].roundToInt()
@@ -101,7 +97,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     fun stopMonitoring() {
         calculateCalories.value = false
         sensorManager?.unregisterListener(heartRateListener)
-        Log.v("HRR", "Monitoring Stopped")
     }
 
     fun toggleIsPaused(context: Context){
@@ -113,11 +108,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
         isPaused.value = !isPaused.value
         val maxHR = (211 - (0.64 * age.value!!).roundToInt()).toFloat()
 
-        Log.v("HRR", "Toggling isPaused - ${isPaused.value}")
-
-        Log.v("HRR", "Heart Rate: ${heartRate.value}")
-        Log.v("HRR", "Max HR: $maxHR")
-        Log.v("HRR", "Age: ${age.value}")
         if (heartRate.value != null && age.value != 0) {
             if (isPaused.value && heartRate.value!! >= (maxHR * 0.5)) {
                 startHRRMeasurementIfStationary()
@@ -151,9 +141,7 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                     val averageAcceleration = measurements.average()
 
                     if (averageAcceleration < 2.75) {
-                        Log.v("HRR", "isPaused: ${isPaused.value}")
                         if (!isPaused.value){
-                            Log.v("HRR", "isPaused: ${isPaused.value}")
                             toggleIsPaused(context)
                         }
                         isPaused.value = true
@@ -176,23 +164,11 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
             SensorManager.SENSOR_DELAY_NORMAL
         )
 
-        Log.v("HRR", "Accelerometer Registered")
     }
 
     fun stopAccelerometer(){
-        Log.v("HeartRateMonitorViewModel", "stopAccelerometer called")
-        if (sensorManager == null) {
-            Log.v("HeartRateMonitorViewModel", "sensorManager is null")
-        } else if (accelerometerListener == null) {
-            Log.v("HeartRateMonitorViewModel", "accelerometerListener is null")
-        } else {
+        if (sensorManager != null && accelerometerListener != null) {
             sensorManager?.unregisterListener(accelerometerListener)
-            Log.v("HeartRateMonitorViewModel", "accelerometerListener unregistered ${
-                sensorManager?.unregisterListener(
-                    accelerometerListener
-                )
-            
-            }")
         }
     }
 
@@ -212,7 +188,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                     age -= 1
                 }
                 CoroutineScope(Dispatchers.Main).launch{
-                    Log.v("Calorie Calculation", "Gender is ${user.gender}")
                     while (calculateCalories.value!!){
 
                         if (user.gender == "male") {
@@ -249,10 +224,8 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
     fun startHRRMeasurementIfStationary() {
         _progress.value = 0f
         midWorkoutHRR.value = midWorkoutHRR.value?.plus(peakHeartRate.value!!)
-        Log.v("HRR", "Added Peak Heart Rate to midWorkoutHRR: ${midWorkoutHRR.value}")
         viewModelScope.launch {
             if (isPaused.value) {
-                Log.v("HRR", "Starting Measurement")
 
                 calculatingHRR.value = true
 
@@ -270,7 +243,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                     }
                     if (!isPaused.value) {
                         midWorkoutHRR.value = emptyList()
-                        Log.v("HRR", "Measurement Cancelled")
                         calculatingHRR.value = false
                         return@launch
                     }
@@ -288,7 +260,6 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                 midWorkoutHRR.value = midWorkoutHRR.value?.plus(-1)
                 peakHeartRate.value = 0
                 calculatingHRR.value = false
-                Log.v("HRR", "Measurement Complete!!")
                 CoroutineScope(Dispatchers.IO).launch {
                     workout = workoutDao.getAllWorkouts().first().last()
                     workout.HRRs = workout.HRRs.plus(midWorkoutHRR.value!!)

@@ -1,7 +1,6 @@
 package com.example.workouttracker.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -80,8 +79,6 @@ fun ActiveWorkoutPage(viewModel: HeartRateMonitorViewModel, endWorkout: () -> Un
         viewModel.startMonitoring(context)
         viewModel.monitorAccelerometer(context)
     }
-
-    Log.d("ActiveWorkoutPage", "ViewModel instantiated: $viewModel")
 
     LaunchedEffect(isPausedValue) {
         if (isPaused.value) {
@@ -171,7 +168,6 @@ fun WorkoutViewPage(
 ) {
 
     val heartRate by viewModel.heartRate.collectAsState()
-    Log.d("WorkoutViewPage", "Heart rate: $heartRate")
     val heartRateRounded = heartRate?.roundToInt()
 
 
@@ -180,7 +176,6 @@ fun WorkoutViewPage(
             val heartRateForDatabase = viewModel.heartRate.value?.roundToInt()
             if (heartRateForDatabase != null){
                 heartRates.add(heartRateForDatabase)
-                Log.v("WorkoutViewPage", "Heart Rate Added: $heartRateForDatabase")
                 delay(5000L)
             }
             else{
@@ -304,7 +299,6 @@ fun WorkoutSettingsPage(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
                     onClick = {
-                        Log.v("WorkoutSettingsPage", "Heart rates: ${heartRates.toList()}")
                         CoroutineScope(Dispatchers.IO).launch {
                             viewModel.stopAccelerometer()
                             workout.value = workoutDao.getAllWorkouts().first().last()
@@ -315,7 +309,6 @@ fun WorkoutSettingsPage(
                                 workout.value.calories = caloriesInt
                             }
                             workoutDao.updateWorkout(workout.value)
-                            Log.v("WorkoutSettingsPage", "Inserted workout: $workout")
                             endWorkout()
                         }
 

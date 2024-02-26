@@ -3,7 +3,6 @@ package com.example.workouttracker.presentation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -82,8 +81,6 @@ fun WorkoutApp() {
             val workoutId = backStackEntry.arguments?.getString("workoutId")
             if (workoutId != null) {
                 WorkoutReviewPage(navController, workoutId)
-            } else {
-                Log.v("WorkoutApp", "workoutId was null")
             }
         }
         composable("hrr_comparison/{hrr1}/{hrr2}") { backStackEntry ->
@@ -91,16 +88,12 @@ fun WorkoutApp() {
             val hrr2 = backStackEntry.arguments?.getString("hrr2")
             if (hrr1 != null && hrr2 != null) {
                 HRRComparisonPage(navController, hrr1, hrr2)
-            } else {
-                Log.v("WorkoutApp", "workout1Id or workout2Id was null")
             }
         }
         composable("choose_compare/{heartRateRecoverySamples}") { backStackEntry ->
             val heartRateRecoverySamples = backStackEntry.arguments?.getString("heartRateRecoverySamples")
             if (heartRateRecoverySamples != null) {
                 ChooseComparePage(navController, heartRateRecoverySamples)
-            } else {
-                Log.v("WorkoutApp", "heartRateRecoverySamples was null")
             }
         }
 
