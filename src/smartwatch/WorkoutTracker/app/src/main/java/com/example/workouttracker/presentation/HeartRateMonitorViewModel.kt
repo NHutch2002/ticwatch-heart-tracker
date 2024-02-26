@@ -249,7 +249,7 @@ class HeartRateMonitorViewModel(application: Application) : ViewModel() {
                     heartRate.value?.let {
                         tempHeartRates.add(it.roundToInt())
                         if (tempHeartRates.size >= 25) {
-                            midWorkoutHRR.value = midWorkoutHRR.value?.plus(tempHeartRates.first())
+                            midWorkoutHRR.value = midWorkoutHRR.value?.plus(tempHeartRates.average().roundToInt())
                             tempHeartRates.clear()
                         }
                     }
