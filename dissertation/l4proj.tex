@@ -246,9 +246,73 @@ However, Jetpack Compose isn’t without its challenges and difficulties. Regard
 
 \subsection{Heart Rate Recovery}
 
-\subsection{Auto-Pausing}
+The main algorithm the application is built around is the Heart Rate Recovery algorithm. This is handled in the form of a function that, when called upon, will track the user’s heart rate over the space of a minute and return the list of results. The reasoning behind returning a list of results is so heart rates can be plotted in a smooth bar chart for the user to help visualise this change in heart rate. This algorithm is run asynchronously to maintain app usability and navigation while these measurements and calculations are happening. 
+
+To breakdown the algorithm, these are the steps that happen once the function is called:
+
+
+\begin{enumerate}
+    \item All variables are initialised. This includes setting the progress variable to 0 and adding the user’s maximum heart rate to the HRR heart rate list as the beginning heart rate.
+    \item Then comes a supposedly infinite while loop with a few break conditions:
+    \begin{itemize}
+        \item If the loop has been running for greater than or equal to 60 seconds then break from the while loop
+        \item If user movement has been detected during a HRR reading then reset all variables changed and break out of the function entirely
+    \end{itemize}
+    This loop is repeated every 10 milliseconds to update the progress variable smoothly, as discussed in section *ENTER SECTION NUMBER HERE*
+    \item During these 60 seconds, heart rate values are added to a new temporary list every 10 milliseconds. Once this list has reached 25 elements in length, the average of these values is added to the bigger HRR heart rate list and the temporary list is reset. This allows for one heart rate to be stored every 250 milliseconds. I found this to be a good balance of capturing variance in the sensor data without overwhelming the database by storing excessive data
+    \item After 60 seconds have elapsed the HRR heart rate list holds the values from the reading. The separating value ‘-1’ is added to the list to be used as a separating value, due to the impossibility of -1 ever appearing in the data itself. The peak heart rate is reset to 0 to be used for the next reading.
+    \item Finally, the workout object is updated in the database to reflect this new HRR reading. This is done by collecting the most recent workout object, which will always be the current workout, and then appending the gathered data to the end of the list to maintain any previous readings.
+\end{enumerate}
+
+When the application requires individual HRR readings, the entire list of heart rates can be collected from the workout object. This list is then split with the -1 separators previously inserted, with each sub-list being a separate HRR reading. The list is passed into the graphing function to display to the user, with the actual HRR value being displayed as the first value stored in the list - being the user’s peak heart rate explained in step 1 - minus the final stored heart rate - being the user’s heart rate after one minute.
+
+
+\subsection{Automating HRR Measurements}
+
+The algorithm behind automating HRR measurements is an extension of the auto-pausing functionality, dependent on accelerometer data for movement detection. This functionality was implemented in such a way that whenever the user takes a break, the application will automatically detect this and - where the break extends the minute in length required for a HRR reading - will record a HRR reading in the background that can be reviewed at a later stage.
+
+The movement detection algorithm is implemented as follows:
+
+\begin{enumerate}
+    \item Whenever the accelerometer sensor is updated - approximately every 10 milliseconds - the magnitude of the acceleration is calculated. This is done with the following formula:
+
+    $$
+    \sqrt{x^2 + y^2 + z^2} - 9.81
+    $$
+    
+    Where $x$, $y$ and $z$ represent the three axes of direction. Note the subtraction of 9.81 is to counteract acceleration due to gravity
+    \item The magnitude is then added to a measurement list. To keep this list to a standard size, whenever this list exceeds 300 readings, the first reading is removed. Due to the nature of a sensor updates approximately every 10 milliseconds, the measurement list stores approximately a 3-second window of acceleration magnitudes. The average of this list is then calculated, with this value representing the user’s movement across the 3 seconds.
+    \item If this average acceleration value drops below the threshold value of 2.75, the application assumes the user to be taking a break. When this happens, the application triggers a vibration to indicate to the user the change in status. 
+    \item The application then calculates the theoretical maximum heart rate (POTENTIAL FOR A SOURCE HERE) of the user. Then, ensuring the application is still in a paused state and the current heart rate is greater than half of the theoretical maximum for the user, the application triggers an intermediate HRR reading
+\end{enumerate}
+
+Both of the algorithm’s hyperparameters - the threshold value for stopping movement (at 2.75) and the number of readings stored at once from the accelerometer (at 300) - were tuned through the auto-ethnography, with further feedback to optimise the accuracy gathered through the pilot and user studies
 
 \subsection{Calorific Expenditure Algorithm}
+
+The final algorithm explained in detail is the calorific expenditure calculation, used to accumulate the calories burned during a workout. The algorithm heavily relies on the information provided by the user at the profile creation stage, including their weight, age and gender. This calculation is based on (ENTER SOURCE HERE).
+
+The algorithm is implemented as follows:
+
+\begin{enumerate}
+    \item Upon a user starts a workout, the function for calculating calories is called. The algorithm acquires the user’s details from the database and calculates the user’s age from their birthday.
+    \item Once the algorithm has the user’s details, it enters a while loop with the condition that the state variable calculateCalories is set to true. This state variable is initialised as true and only set to false once a user has finished their workout. Within this while loop, the calories burned across one second is calculated. There are three different calculations the application can use, dependant on the gender selected by the user at the time of profile creation:
+    \begin{itemize}
+        \item Where the user has selected male, the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
+        $$
+            \frac{-55.0969 + (0.6309 \times H) + (0.1988 \times W) + (0.2017 \times A)}{4.184 \times 60}
+        $$
+        \item Where the user has selected female, the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
+        $$
+            \frac{-20.4022 + (0.4472 \times H) + (0.1263 \times W) + (0.074 \times A)}{4.184 \times 60}
+        $$
+        \item Where the user has selected other, the calculation is determined as the average of the results of the previous two equations. While this solution is not necessarily the most accurate method of measuring calories in this circumstance, according to ([Calculating TDEE/BMR for Transgender or Non-Binary Individuals – ABC Trainerize Help Center](https://help.trainerize.com/hc/en-us/articles/16950447732372-Calculating-TDEE-BMR-for-Transgender-or-Non-Binary-Individuals)) there is “currently no calculation or guideline that does not use sex assigned at birth” to do this calculation, therefore, I believed it to be the best solution to ensure my application caters to as many people as possible.
+    \end{itemize}
+
+    \item The result of this calculation is then added to a running total, with this running total being accessible to the frontend of the application to display to the user and store in the database upon workout completion. This while loop is repeated once a second to ensure frequent updates of the current calorie count.
+    
+\end{enumerate}
+
 
 \section{Results Overview}
 
