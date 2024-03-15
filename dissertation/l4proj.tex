@@ -218,9 +218,27 @@ Non-functional requirements focus on the quality of the finished product, ensuri
 %==================================================================================================================================
 \chapter{Implementation}
 
-\section{Hardware Configuration}
+This chapter describes the implementation methods and techniques used throughout the development of the application. It discusses the hardware and software configuration for development, before discussing the algorithms implemented and concluding with the data visualisations displayed to users.
+
+\section{Development Environment}
+
+Development for this project was carried out on the Mobvoi TicWatch Pro 3 GPS, an Android-based smartwatch with the Google Wear OS operating system. The smartwatch includes several sensors accessible through simple API calls built into Android, allowing me to interact freely with the Heart Rate Monitor and Accelerometer as discussed in later sections. 
+
+Application development was carried out on Android 9 “Pie”, corresponding to Wear OS 2.26. Later through the evaluation process, an updated version of Android was tested also ensuring the app remained fully functional on Android 11 “R” with Wear OS 3.5.
+
+The IDE used for the project was Android Studio, the official IDE for Android development built by JetBrains as an extension from IntelliJ. Android Studio has many great features out of the box that ease development, such as the ability to run device emulators to see changes and debug issues quickly without having to download the application to the watch, as well as real-time linting and quick fixes to help spot mistakes or redundancies in code. Another major benefit of developing on Android Studio was the built-in Android Debug Bridge (ADB) - part of the Android Software Development Kit (SDK) - that allows Android Studio to directly connect to the TicWatch over WiFi to send application packages to the watch to be installed.
 
 \section{Technologies}
+
+When deciding on technologies, there were three main areas of concern:
+
+\begin{itemize}
+    \item A well-documented and modern programming language to develop the application
+    \item A reliable and robust layout framework to make the application as user-friendly as possible
+    \item A synchronous and efficient database structure to store data
+\end{itemize}
+
+In this section, I will explore the different considerations when selecting the chosen technologies. This includes a brief history of the various technologies, before moving on to the standout features that prompted me to use them and the drawbacks I remained aware of while developing with them
 
 \subsection{Kotlin vs Java}
 
@@ -242,14 +260,58 @@ However, Jetpack Compose isn’t without its challenges and difficulties. Regard
 
 \subsection{Room Database}
 
+Android development has always relied on SQLite - a lightweight and efficient relational database management system - for applications storing data. It is a powerful tool that is well-suited for small to medium-scale projects, known for being reliable and efficient. However, dealing directly with SQLite can be complicated, relying on a lot of boilerplate code to work effectively (SOURCE).
+
+The Room Database is an Android library that simplifies data persistence (SOURCE). It is used as a layer of abstraction over SQLite, maintaining efficiency while reducing the complexity of database interactions. Room is an Object Relational Mapping (ORM) library, meaning it maps database objects directly to Java objects to be interacted with in our code. This greatly reduces the need for boilerplate code when developing a database system. 
+
+Room also has the added benefit of built-in compile-time SQL validation. This means that Room ensures the SQL operations throughout the application are valid, rather than having to debug a crash that would be standard with using an SQLite approach.
+
+Room has three main components:
+
+\begin{itemize}
+    \item \textbf{Entity} - An Entity as the name suggests represents an entity in the database. In my application, there are two entities used - a ‘User’ and a ‘Workout’ entity. This is responsible for defining the data types and the structure of the object, allowing for convenient reading and manipulation by Kotlin code when necessary
+    \item \textbf{Data Access Object (DAO)} - DAOs are responsible for the interactions with the database. It translates functions called in the Kotlin code into SQL requests, allowing for efficient access to the database whenever it is required
+    \item \textbf{Database} - The Database object holds the actual database, and is responsible for instantiating the database upon the launch of the application. It is the main part of the component stack allowing for data persistence, even when the application is closed or the device powers off
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/RoomDatabaseStructure.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
 \section{Algorithms}
+
+Algorithms are the backbone of functionality within my application, processing and reacting to data to calculate and present detailed results to the user. This chapter will investigate the three algorithms imperative to functionality:
+
+\begin{itemize}
+    \item \textbf{Heart Rate Recovery Algorithm} - The core algorithm that, when called upon, stores and calculates the change in a user’s heart rate across a minute. The algorithm stores these heart rates as a list in the database to be used in the results section
+    \item \textbf{Automatic Pausing/Automatic HRR Algorithm} - An algorithm essential for the functionality of measuring HRR during a workout. This allows for the detection of a break in the workout, where if this break is greater than a minute in length an extra HRR reading can be taken automatically.
+    \item \textbf{Calorific Expenditure Algorithm} - An algorithm used to track the calories burned by the user during a workout. Another useful health metric based on age, weight, gender and heart rate that further helps a user understand how intense their exercise was.
+\end{itemize}
+
+These algorithms were implemented in an Android ViewModel as previously discussed in chapter (ENTER CHAPTER HERE) so the calculations can happen in the background and do not prevent the user from using and navigating the application.
+
+There are a few other processes reliant on these algorithms not further explained, one of which is the updating of the progress variable. This progress variable is a measure of the completion percentage of a HRR reading, stored as a floating point number and updated throughout the HRR algorithm. The progress is used during the results section, described in section (ENTER CHAPTER NUMBER HERE), and allows for a progress-bar style update to the user to visualise how far through their HRR reading they are.
+
+The Automatic Pausing functionality described in the automating HRR measurements subsection describes setting the application state to paused or resumed depending on the movement of the device. This application state determines the difference between the Active Time - the time a user is actively moving for - and the Total Duration of a workout - the total time since the workout started. This allows a user to get a more accurate understanding of how long they have been working out.
+
+Finally, the application makes use of theoretical maximum heart rate. This is determined by (SOURCE) as a reliable method to approximate the maximum heart rate of the user, based on their age. It is implemented with the following function:
+
+$$
+MaxHR = 211 - (0.64 \times A)
+$$
+
+Where $A$ is the user’s age.
 
 \subsection{Heart Rate Recovery}
 
 The main algorithm the application is built around is the Heart Rate Recovery algorithm. This is handled in the form of a function that, when called upon, will track the user’s heart rate over the space of a minute and return the list of results. The reasoning behind returning a list of results is so heart rates can be plotted in a smooth bar chart for the user to help visualise this change in heart rate. This algorithm is run asynchronously to maintain app usability and navigation while these measurements and calculations are happening. 
 
-To breakdown the algorithm, these are the steps that happen once the function is called:
+The algorithm is dependent on the heart rate sensor, another function implemented in the ViewModel. The function registers a listener to the heart rate sensor and then detects any updates from the heart rate sensor. It also keeps track of the peak heart rate that can be used in the HRR calculation, as described in step 1 below. 
 
+To breakdown the algorithm, these are the steps that happen once the function is called:
 
 \begin{enumerate}
     \item All variables are initialised. This includes setting the progress variable to 0 and adding the user’s maximum heart rate to the HRR heart rate list as the beginning heart rate.
@@ -296,7 +358,7 @@ The algorithm is implemented as follows:
 
 \begin{enumerate}
     \item Upon a user starts a workout, the function for calculating calories is called. The algorithm acquires the user’s details from the database and calculates the user’s age from their birthday.
-    \item Once the algorithm has the user’s details, it enters a while loop with the condition that the state variable calculateCalories is set to true. This state variable is initialised as true and only set to false once a user has finished their workout. Within this while loop, the calories burned across one second is calculated. There are three different calculations the application can use, dependant on the gender selected by the user at the time of profile creation:
+    \item Once the algorithm has the user’s details, it enters a while loop with the condition that the state variable calculateCalories is set to true. This state variable is initialised as true and only set to false once a user has finished their workout. Within this while loop, the calories burned across one second are calculated. There are three different calculations the application can use, depending on the gender selected by the user at the time of profile creation:
     \begin{itemize}
         \item Where the user has selected male, the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
         $$
@@ -314,11 +376,110 @@ The algorithm is implemented as follows:
 \end{enumerate}
 
 
-\section{Results Overview}
+\section{Visualising Results}
 
-\subsection{Graph Implementation}
+To present HRR reading results to the user I used a graphical representation, with the main aim of this approach to allow users to visualise complex numbers as a clear and easy-to-understand graph. Tableau (https://www.tableau.com/data-insights/data-visualization/advantages-disadvantages) states that using graphs for data visualisation allows users to more easily comprehend results compared to just showing numbers, leading to a quicker absorption of knowledge.
 
-\subsection{Heart Rate Recovery Comparison}
+There are three different categories of graphs implemented within my project, all implemented as bar charts:
+
+\begin{itemize}
+    \item \textbf{Heart Rate Recovery} - A representation of the user’s falling heart rate across a minute-long period
+    \item \textbf{Heart Rate Range} - A representation of the user’s heart rate throughout their workout, plotted against the duration of their exercise
+    \item \textbf{HRR Comparison} - A comparison graph that plots two Heart Rate Recovery measurements, chosen by the user, to display the difference between the two results.
+\end{itemize}
+
+The graphs were implemented using the MPAndroidChart library (LINK TO GITHUB HERE). I chose to use this graphing package due to its high level of customisability through a custom renderer. This renderer was implemented slightly differently for each of the graphs mentioned above. In general, it was used to give users more information than just a standard bar chart, where I could highlight target “zones” or differentiate two separate sets of results. MPAndroidChart graphs also have a built-in animation for rendering the bar charts, plotting the results chronologically to further emphasise the progression of readings. 
+
+\subsection{Heart Rate Recovery Graph}
+
+Heart Rate Recovery is the first graph a user sees after they complete a workout. To plot the graph, the first step involves a bucketing process, to normalise the HRR list provided into standardised 30 values. This is a necessary step to maintain the graph styling across the app regardless of the raw values stored in the database. It averages the readings across the graph and gives the user a good overview of how their heart rate varied over the minute-long period. 
+
+To implement this, I first extracted the start and end values from the list, as these were key for calculating the actual heart rate recovery. Heart rate recovery is the peak heart rate minus the heart rate after a minute, therefore we want these exact values not to be impacted by the bucketing process. The rest of the values in the raw list are then processed to fill in the other 28 different values. The bucket size is calculated by dividing the length of the list minus the first and last values by 28, rounding down to the nearest whole number. The remainder is separated across the starting buckets until the index is the size of the remainder. Here is an example of how this works in practice, with a list size of 168 values:
+
+\begin{itemize}
+    \item Remove the first and last values of the HRR list for the first and last values in the graph
+    \item Divide the remaining 166 by 28 = 5 with remainder of 26
+    \item Bucket size of 6 for the first 26 buckets, and 5 for the remaining 2
+    \item Take a sublist of the HRR list for the bucket, and add the average as a value to be plotted on the graph
+\end{itemize}
+
+Once the list has been normalised to 30 values through the bucketing process, the graph is then plotted. The x-axis shows the progress of time, showing 0s and 60s at the two ends of the measurement. The y-axis shows the heart rate values, allowing users to see the heart rate values throughout the measurement. Above the graph is the actual HRR value, calculated by subtracting the first and last heart rate stored in the HRR list.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/HRRGraph.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+As well as the heart rates plotted on the graph, there are also some highlighted zones. These are used in both the Heart Rate Recovery and Heart Rate Range graphs to provide users with more information at a glance on how their readings compare to what is expected. In the case of HRR, there are three different zones:
+
+\begin{itemize}
+    \item \textbf{Zone 1 (Low HRR)} - This level indicates a recovery of less than 13 BPM, associated with poor fitness and athletic performance
+    \item \textbf{Zone 2 (Healthy HRR)} - This level indicates a recovery between 13 and 25 BPM, associated with an overall average fitness and athletic performance
+    \item \textbf{Zone 3 (High HRR)} - This level indicates a recovery greater than 25 BPM, associated with improved fitness and athletic performance
+\end{itemize}
+
+These zones are possible thanks to the custom renderer, mentioned in section (ENTER SECTION NUMBER HERE). They are calculated and plotted synchronously with the rest of the graph, coloured semi-transparently to prevent the colours from over-cluttering the graph and confusing users. Users can understand what each of the zones indicates by clicking the information icon, located at the top-right of the graph.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/CopmbinedHRRZones.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+At the top of the graph, there is also another icon top-left. This icon allows the user into the HRR Comparison page, discussed further in section (ENTER SECTION NUMBER HERE)
+
+\subsection{Heart Rate Range Graph}
+
+When swiping along from the HRR bar chart, you are met with another bar chat showing the Heart Rate of the user across their workout. The implementation of this graph begins in the same way as the HRR bar chart, where the long list of heart rates retrieved from the database is normalised into 30 average values representing the whole workout. This is achieved with an identical bucketing process as described above.
+
+As well as the heart rates, the graph also has a feint grey horizontal line plotted, representing the user’s average heart rate. This value is calculated from the list of heart rates gathered from the database to ensure it takes into account the whole workout. The average heart rate value is displayed above the line as another way for users to understand the intensity of their workout.
+
+The x-axis represents the user’s total workout duration, retrieved from the database, with the different heart rate values being plotted on the y-axis. Above the graph, the heart rate range is shown in the format “{Minimum Heart Rate} - {Maximum Heart Rate} BPM”.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/HRRangeGraph.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+There are six different highlighted zones representing different levels of heart rate intensity:
+
+\begin{itemize}
+    \item \textbf{Zone 1 (Sedentary)} - This level indicates a heart rate less than 50\% of your theoretical maximum heart rate, representing a healthy resting heart rate
+    \item \textbf{Zone 2 (Very Light)} - This level represents 50-60\% of your theoretical maximum heart rate, great for improving overall health and helping recovery
+    \item \textbf{Zone 3 (Light)} - This level represents 60-70\% of your theoretical maximum heart rate, great for improving basic endurance and fat-burning
+    \item \textbf{Zone 4 (Moderate)} - This level represents 70-80\% of your theoretical maximum heart rate, great for improving aerobic fitness
+    \item \textbf{Zone 5 (Hard)} - This level represents 80-90\% of your theoretical maximum heart rate, great for increasing maximum performance
+    \item \textbf{Zone 6 (Extreme)} - This level represents 90-100\% of your theoretical maximum heart rate, great for developing maximum performance and speed
+\end{itemize}
+
+These zones have a different colour scheme to the HRR zones, however maintain a similar semi-transparent approach and are again achievable through the custom renderer. There is an information icon located at the top-right of the graph that allows users to understand what each of the coloured zones represents.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HRZonesCombined.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{HRR Comparison}
+
+To compare HRR readings previously, users would have to flick between two different readings potentially even in different workouts. It was also often difficult to compare that way due to the different heart rate values in a HRR reading changing the y-axis scale. The HRR comparison page fixes this problem, giving users a simple graph to directly compare two HRR readings from any of their workouts.
+
+Once a user has clicked on the comparison icon, as described at the end of section (ENTER SECTION NUMBER HERE), to compare another measurement to the one their currently on. The user can swipe through all the HRR readings the watch has stored on the database across all their workouts, including the current one. Clicking on another reading then provides the comparison between the selected measurement and the current one through a graph shown below.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/HRRCompareGraph.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+The plotting of the graph is done almost identically to the HRR bar chart, except for two HRR lists. These two lists are given a separate colour scheme, one red and the other blue, to differentiate between the two plots. By plotting on the same graph, it fixes the issue of scaling while also being able to compare the heart rates across the minute-long interval. Above the graph, the two HRR values are shown, with coloured indicators as the key for the graph. Swiping across also allows users to see the two readings plotted individually if they want to look closer at one of the two measurements.
 
 %==================================================================================================================================
 \chapter{Evaluation} 
