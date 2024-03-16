@@ -158,7 +158,7 @@ Functional requirements define the features desired by end users. Prioritisation
 \begin{itemize}
     \item \textbf{Heart Rate Tracking} - The application must be able to track a user's heart rate
     \item \textbf{Heart Rate Recovery Calculation} - The application must calculate the user's Heart Rate Recovery
-    \item \textbf{Historic HRR Views} - The user must have some way to see their previous Heart Rate Recovery 
+    \item \textbf{Historic HRR Views} - The user must have some way to see their previous Heart Rate Recovery measurements
     \item \textbf{Visual Representation of HRR Readings} - The user must be able to visualise their Heart Rate Recovery
 \end{itemize}
 
@@ -192,6 +192,7 @@ Functional requirements define the features desired by end users. Prioritisation
     \item \textbf{Colour categorisation for multiple workout types} - In future, the application might have different colour schemes for different workout types.
     \item \textbf{Web Server for storing results} - In future, the application might store information on a web server to allow for viewing results on multiple devices.
     \item \textbf{Mobile App/Mobile-first Web App} - In future, the application might have a mobile/web application developed alongside to allow for additional functionality.
+    \item \textbf{Goal Setting for workouts} - In future, the application might have a goal setting functionality, allowing users to set a goal to achieve in their chosen workout. For example, setting that they want to run 5 kilometres before finishing.
 \end{itemize}
 
 \section{Non-Functional Requirements}
@@ -206,14 +207,161 @@ Non-functional requirements focus on the quality of the finished product, ensuri
 
 \textbf{Reliability} - It is also important the application is reliable. The previously mentioned “Should Have” category discussed users being able to compare HRR readings. Similar to the reasoning above, if the values over time are vastly different it could lead to harmful interpretations from the user.
 
-\section{User Stories}
-
 %==================================================================================================================================
 \chapter{Design}
 
+For some users this could be their first experience using a smartwatch application, therefore it was essential to design the application to be as intuitive as possible. 
+
+There were four main considerations when approaching the user interface that will be discussed further:
+
+\begin{itemize}
+    \item \textbf{Application Flow Design} - Exploring the design of user flows throughout the application.
+    \item \textbf{User Interface} - Discussing the initial prototyping of the user interface, including how users will interact and navigate through the application.
+    \item \textbf{System Architecture} - Exploring the design of the chosen system architecture for the project
+    \item \textbf{Database Design} - Explaining the structure, entities and relationships of the database
+\end{itemize}
+
+\section{Application Flow Design}
+
+An key aspect to consider when developing the application was how a user would go from opening the application to viewing a HRR reading. The flow of the application was a key factor to understand before starting development. The application has three main flows for the user to take, each accessible from the Home Page seen when the user launches the application as seen below.
+
+The first and main application flow is to record a workout and measure the user’s HRR. This begins with the user selecting the workout they want to do - currently this is just running however, this is where the opportunity for additional workout options would be as discussed in section (ENTER SECTION NUMBER HERE). The application will then enter a multiple-page “Active Workout” display, consisting of two pages that can be swiped between. One page will display the current workout metrics, while the other page acts as a settings page with options to pause or end the workout. Selecting to end the workout then takes the user to another multiple-page “Post-Workout” display. Here the user will be able to see information about their heart rate recovery, heart rate, and more generic workout metrics, as well as being able to return to the home page. This can be visualised in a flow chart, displayed in Figure 4.1 below.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/WorkoutFlow.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+The application also has to allow users to view their previous HRR measurements as defined in the Must Have requirements (ENTER SECTION NUMBER HERE). This is accomplished by clicking the “Health History” button. The app navigates to a multiple-page health history display where all the user’s workouts are shown. Clicking on one of these workouts will then allow you to view the same three pages as the post-workout section in the workout flow, with the possibility for multiple HRRs to be shown. This flow can be seen in Figure 4.2 below.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HealthHistoryFlow.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+Finally, the application also has a settings flow to allow for database modification. Accessible by clicking the settings icon on the home page, the application navigates to allow a choice between deleting workouts or viewing the set-up profile. If the user selects delete workouts, all workouts stored on the watch are deleted. Otherwise, clicking view profile will display the currently stored user information. This can either be edited - where the user passes through the profile builder described more in section (ENTER SECTION NUMBER HERE) to modify the database - or deleted - deleting the stored user from the database and navigating to set up a new profile. This can be seen in Figure 4.3 below.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/UserSettingFlow.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
 \section{User Interface}
 
+When initially approaching the challenge of developing prototype designs, I developed wireframes on Figma. Figma is a very useful tool for developing wireframes quickly by sketching a rough idea of how the application was going to look, with the added ability of creating user interactions. However, it was agreed upon early between me and my supervisor - Dr Sharon Ding - that it would be more beneficial to develop the design directly on the smartwatch itself. This would allow the testing of the user interaction alongside the design to ensure intuitiveness and clarity. It also gave me a more accurate scale to work on when developing the design, rather than developing on a much larger monitor. This also meant the design was one of the key focuses of the evaluation process, discussed further in section (ENTER SECTION NUMBER HERE)
+
+To discuss the final design I’ll break down the application into the three separate flows, discussed earlier in section (ENTER SECTION NUMBER HERE). 
+
+\subsection{Active Workout}
+
+The active workout flow consists of six main pages, being:
+
+\begin{itemize}
+    \item \textbf{Select a Workout} - A basic page with buttons allowing the user to select a workout type. Currently this only displays running, however as stated in (ENTER SECTION NUMBER HERE) this is where other workout types would be added.
+    \item \textbf{Active Workout} - The page users see while tracking a workout. This page design is discussed further below (ENTER SECTION NUMBER HERE).
+    \item \textbf{HRR Measurement in Progress} - A timed page that shows the user their progress during a HRR reading. This is also discussed further in section (ENTER SECTION NUMBER HERE)
+    \item \textbf{HRR Measurement} - The page a user sees 60 seconds after ending their workout. It shows the user a graph representation of their Heart Rate Recovery, discussed further in section (ENTER SECTION NUMBER HERE)
+    \item \textbf{Heart Rate Range} -  A page showing the user their heart rate across the span of their workout. The graph design and implementation are discussed further in (ENTER SECTION NUMBER HERE)
+    \item \textbf{Workout Metrics} - A simple page giving users other information from their workout, such as calories burned, active time and more. It’s also key navigationally for allowing users to return to the home page once their workout is complete.
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/ActiveWorkoutCombined.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsubsection{Active Workout}
+
+Upon users selecting their workout, they are met with the Active Workout page. The design for this page was a statistic-focused approach, giving the user as much information as possible without over-cluttering the screen. The workout was separated into five sections:
+
+\begin{itemize}
+    \item Two timers at the top of the screen that show users their active moving time and total workout duration. These timers were assumed to be intuitive, however caused some confusion at the evaluation stage (ENTER SECTION NUMBER HERE)
+    \item The user’s peak heart rate throughout their workout is shown on the left.
+    \item An icon in the centre show the user what type of workout they are tracking, in the case of my prototype this is always going to be running
+    \item An active calorie tracker on the right shows how many calories the user burned during their workout
+    \item The user’s current heart rate, displayed at the bottom of the screen
+\end{itemize}
+
+There is also a progress bar surrounding the display, showing a user how close they are to completing a goal they set before the workout such as a target distance or time.
+
+The user can interact with this page through the horizontal pagination of the application, allowing users to swipe along to reveal the workout settings. This workout settings page is a simple page consisting of a play/pause button and an end workout button. The circles seen at the bottom of the design give users a prompt that more content is available than what the initial active workout page shows, according to (ENTER SOURCE HERE). 
+
+\subsection{Health History}
+
+The health history flow also consists of six pages, with two of these being nearly identical to some pages described above:
+
+\begin{itemize}
+    \item \textbf{Select a Workout} - This allows users to select a database-stored workout to review. This is set up with a horizontal pagination to show two workouts per page, with circles acting as a page indicator at the bottom to give context to the user of the number of workouts stored. Each workout shows the date the workout was completed below so users can understand what each workout is.
+    \item \textbf{HRR Measurement} - The design of this page is identical to the design seen on the active workout page, however has a few navigational differences. This page allows users to view all of their HRR readings recorded during the workout if any more have been taken. The graph also has a “Compare” icon in the top left, where selecting this opens the HRR Select page for users to compare results. This is done to accomplish “HRR Comparisons” discussed as a Should Have requirement in section (ENTER SECTION NUMBER HERE)
+    \item \textbf{Heart Rate Range} - This page is entirely identical to the Heart Rate Range page displayed to the user at the end of a workout, described in section (ENTER SECTION NUMBER HERE)
+    \item \textbf{Workout Metrics} - Similarly this design is also identical to the page described above, with the only slight navigational difference being the home button navigates to the Select a Workout Page rather than the application home page.
+    \item \textbf{HRR Select Compare Page} - This page is designed similarly to the Select a Workout Page, however contains the HRR measurements in the buttons themselves to give users more context on what the measurement they are comparing the result against was like.
+    \item \textbf{HRR Compare} - The comparison page shows two different HRR measurements plotted on a graph for easy comparison. The specific design and implementation of the graph are discussed more in section (ENTER SECTION NUMBER HERE). This page uses horizontal pagination once again, allowing users to swipe across to view each of the results individually with the same design as the HRR measurement described in the previous section, finishing with a return to compare button that allows users to return to the  HRR Select Compare Page
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/HealthHistoryCombined.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{User Settings}
+
+The user settings flow contains seven pages, with a few of these pages being very similar in design to one another:
+
+\begin{itemize}
+    \item \textbf{User Settings Page} - The landing page when a user enters the user settings flow. It is designed with a simple display of two buttons, one for viewing the profile and one for deleting the workout. The colours are plain here to prevent a user from doing an unintentional and irreversible action, such as a database deletion
+    \item \textbf{Profile View Page} - This page displays the stored information about the user: their age, weight and gender. This is displayed as a list at the top of the page to make it easy for users to see if their information is correct.
+    \item \textbf{Are You Sure Page} - This page asks the user if they are sure they want to continue with their action, with a simple ‘Yes’ button - with a tick icon - or ‘No’ button - with a cross icon. This layout was chosen to keep consistent with existing technologies, where it is standard to have “confirm” on the right and “cancel” on the left (ENTER SOURCE HERE). There are two different versions of this page with identical designs that pose different questions - one for deleting workouts and one for deleting profiles.
+    \item \textbf{Enter Birthday Page} - Here users can enter their birthday to be used for calculating their age at a later stage. Having the user enter their birthday rather than their age directly means the application can automatically update the user’s age rather than requiring them to change it every year. This page is designed with three buttons arranged horizontally, labelled “Day”, “Month” and “Year” respectively. Each of these buttons is associated with a drop-down menu that allows users to select a date. Finally, there is a green button at the bottom with a tick icon, indicating to the user to confirm their choice with this button once they have entered their birthday.
+    \item \textbf{Enter Weight Page} - This page allows users to enter their weight. The design is inspired by the Enter Birthday Page to keep consistency across the profile-building process. The page has a button linked to a drop-down menu in the centre of the screen, showing the scale of “kg” next to it. Finally, the same green tick button is at the bottom, allowing users to confirm their selection once they have entered their weight.
+    \item \textbf{Select Gender Page} - Here users can select their gender, choosing between “Male”, “Female” or “Other”. The buttons contain the respective icons for each of the genders. When a user selects one of the buttons it inverts the colours, highlighting the selected choice. The consistent design across the profile building is then maintained, with the green tick button in the same position at the bottom of the screen to confirm the choice.
+    \item \textbf{Successfully Deleted Page} - A basic splash screen that displays for 2 seconds, showing the user a confirmation message that the deletion was successful - either “Profile Successfully Deleted!” or “Workouts Successfully Deleted!”
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/UserSettingsCombined.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
 \section{System Architecture}
+
+The application is structured around the Model-View-ViewModel (MVVM) architecture, containing three core components:
+
+\begin{itemize}
+    \item \textbf{Model} - This layer represents the core data structures, including sensor data gathered. It is also responsible for retrieving and updating data from the database.
+    \item \textbf{View} - This layer presents the UI to the user, modified by the ViewModel layer
+    \item \textbf{ViewModel} - This serves as an intermediatory layer between the View and the Model, retrieving information from the Model and presenting it to the View to update the UI accordingly. It contains classes that handle data and perform calculations, as well as handling sensor management.
+\end{itemize}
+
+\section{Database Design}
+
+The project database has a simple design, with only two entities required for the implementation:
+
+\begin{itemize}
+    \item A \textbf{“User”} object - holding all of the information about the user required for calculations discussed in section (ENTER SECTION NUMBER HERE)
+    \item A \textbf{“Workout”} object - holding all of the information regarding workout length, date, and heart rate information throughout the workout
+\end{itemize}
+
+The relation of these objects does not require foreign keys in the database design. This is because there can only ever be one user object that all workout objects are inherently related to. It was still however important to have unique identifiers for each of the objects, being the primary keys of the entities. For the User object, this identifier is a name field, which is always set to “user” for referencing later. For the Workout object, the identifier is an auto-incrementing ID number.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/ERDiagram.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
 
 %==================================================================================================================================
 \chapter{Implementation}
@@ -422,9 +570,9 @@ As well as the heart rates plotted on the graph, there are also some highlighted
 
 These zones are possible thanks to the custom renderer, mentioned in section (ENTER SECTION NUMBER HERE). They are calculated and plotted synchronously with the rest of the graph, coloured semi-transparently to prevent the colours from over-cluttering the graph and confusing users. Users can understand what each of the zones indicates by clicking the information icon, located at the top-right of the graph.
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=1\linewidth]{dissertation//dissImages/CopmbinedHRRZones.png}
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/CombinedHRRZones.png}
     \caption{Enter Caption}
     \label{fig:enter-label}
 \end{figure}
