@@ -129,11 +129,59 @@ This report will address the issue of Heart Rate Recovery tracking, as well as g
 %==================================================================================================================================
 \chapter{Background}
 
-\section{Related Applications}
-
 \section{Background Topics}
 
-\section{Related Work}
+\subsection{Heart Rate Recovery}
+
+Heart Rate Recovery (HRR) is a measure of the heart’s ability to decrease to a normal heart rate after completing an intense exercise. It is calculated as the difference between the peak heart rate achieved at the peak intensity of the workout and the heart rate one minute after completing the exercise. 
+
+While HRR is still an actively researched area, early studies found a direct correlation between a low HRR and an increase in risk of mortality. A study published in 1999 by New England Journal of Medicine (ENTER SOURCE HERE) found that a HRR of less than 13 beats per minute (BPM) was abnormal, with 26\% of experiment participants falling under this category. They found that across six years, individuals with a low HRR of 13 bpm or less had double the risk of dying. This includes adjusting for several confounding variables such as age and history of coronary artery disease.
+
+A later study by Nishime et. al (2000) (ENTER SOURCE HERE) backs up these findings, showing that a HRR of less than 13 bpm doubled the 5-year mortality of participants, with a 6-fold increase in 5-year mortality when participants had a HRR less than 10 bpm.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/BackgroundHRR.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Theoretical Maximum Heart Rate}
+
+Theoretical maximum heart rate (HR\textsubscript{max}) describes the approximate plateau of heart rate when a person exercises at their highest intensity. It is often used clinically as the backbone of calculating exercise intensity and the strain on the heart of a patient. 
+
+‘Age-predicted maximal heart rate in healthy subjects: The HUNT Fitness Study’ by Nes, M. et. al (2012) investigates the validity of various formulae for calculating a person’s HR\textsubscript{max}. It compares the following calculations:
+
+\begin{itemize}
+    \item The Traditional Method of calculating HR\textsubscript{max} proposed by Fox et. al (1971) ENTER SOURCE HERE: $$HR_{max} = 220 - Age$$
+    \item Tanaka formula (ENTER SOURCE HERE - 2001): $$HR_{max} = 208 - (0.7 x Age)$$
+    \item Gulati formula (ENTER SOURCE HERE - 2010): $$HR_{max} = 206 - (0.88 x Age)$$
+\end{itemize}
+
+As well as proposing and comparing a new regression equation: $HR_{max} = 211 - (0.64 x Age)$
+
+The study found a clear decrease in HR\textsubscript{max} with an increase in the participant’s age. Some other covariates also impacted the HR\textsubscript{max} of a participant, such as body mass index (BMI) - where participants classed as obese (with a BMI ≥ 30) had a modestly decreased HR\textsubscript{max} compared to people in the overweight and normal weight groups. It did however find that the rate of decline in HR\textsubscript{max} by age was not significantly impacted by covariates such as smoking status, gender or physical activity status.
+
+My application can use the proposed formula as an accurate way of estimating the users HR\textsubscript{max} using their age. This will allow me to estimate workout intensity and represent this to the user.
+
+
+\subsection{Smartwatch Application Development}
+
+Developing an application for a smartwatch can result in many challenges, as noted by Ramezani, R. et. al (ENTER SOURCE HERE). The paper ‘Developing a Smartwatch-Based Healthcare Application: Notes to Consider’ outlines a case study of developing an Android healthcare application on a smartwatch for remote monitoring of geriatric patients, discussing the main challenges and design insights in the process.
+
+The study explores several challenges hindering them through their development process, with the most notable being:
+
+\begin{itemize}
+    \item \textbf{Battery Life} - Smartwatches often have a limited battery life in comparison to other mobile devices. It is important to ensure my application limits its battery consumption wherever possible. This was a main area of concern regarding the Auto-Ethnography (ENTER SECTION NUMBER HERE)
+    \item \textbf{Application Termination} - Non-native Android applications are often terminated by the smartwatch’s operating system (OS) to preserve battery life, disrupting continuous monitoring. When developing my application, it was essential to ensure health monitoring services were operating as a foreground service to prevent the OS doze mode from interfering
+    \item \textbf{User Interaction} - The smaller screens and interfaces of smartwatches can cause difficulty in user interactions. It was essential to ensure the design of interactions and navigation throughout the apps was simple and intuitive to prevent user frustration
+    \item \textbf{Sensor Configuration} - Personalising the collection and processing of sensor data for different individuals can be a complex task, ensuring correct calculations are carried out for each person. This is something I had to take into consideration when designing the profile building within the application and how the stored user data can be used to assist the accuracy of calculations
+\end{itemize}
+
+
+\section{Related Applications}
+
+
 
 %==================================================================================================================================
 \chapter{Requirement Analysis}
