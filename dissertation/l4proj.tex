@@ -162,7 +162,7 @@ As well as proposing and comparing a new regression equation: $HR_{max} = 211 - 
 
 The study found a clear decrease in HR\textsubscript{max} with an increase in the participant’s age. Some other covariates also impacted the HR\textsubscript{max} of a participant, such as body mass index (BMI) - where participants classed as obese (with a BMI ≥ 30) had a modestly decreased HR\textsubscript{max} compared to people in the overweight and normal weight groups. It did however find that the rate of decline in HR\textsubscript{max} by age was not significantly impacted by covariates such as smoking status, gender or physical activity status.
 
-My application can use the proposed formula as an accurate way of estimating the users HR\textsubscript{max} using their age. This will allow me to estimate workout intensity and represent this to the user.
+My application can use the proposed formula as an accurate way of estimating the user's HR\textsubscript{max} using their age. This will allow me to estimate workout intensity and represent this to the user.
 
 
 \subsection{Smartwatch Application Development}
@@ -172,7 +172,7 @@ Developing an application for a smartwatch can result in many challenges, as not
 The study explores several challenges hindering them through their development process, with the most notable being:
 
 \begin{itemize}
-    \item \textbf{Battery Life} - Smartwatches often have a limited battery life in comparison to other mobile devices. It is important to ensure my application limits its battery consumption wherever possible. This was a main area of concern regarding the Auto-Ethnography (ENTER SECTION NUMBER HERE)
+    \item \textbf{Battery Life} - Smartwatches often have limited battery life in comparison to other mobile devices. It is important to ensure my application limits its battery consumption wherever possible. This was a main area of concern regarding the Auto-Ethnography (ENTER SECTION NUMBER HERE)
     \item \textbf{Application Termination} - Non-native Android applications are often terminated by the smartwatch’s operating system (OS) to preserve battery life, disrupting continuous monitoring. When developing my application, it was essential to ensure health monitoring services were operating as a foreground service to prevent the OS doze mode from interfering
     \item \textbf{User Interaction} - The smaller screens and interfaces of smartwatches can cause difficulty in user interactions. It was essential to ensure the design of interactions and navigation throughout the apps was simple and intuitive to prevent user frustration
     \item \textbf{Sensor Configuration} - Personalising the collection and processing of sensor data for different individuals can be a complex task, ensuring correct calculations are carried out for each person. This is something I had to take into consideration when designing the profile building within the application and how the stored user data can be used to assist the accuracy of calculations
@@ -181,12 +181,37 @@ The study explores several challenges hindering them through their development p
 
 \section{Related Applications}
 
+\subsection{Fitbit}
 
+Fitbit was a pioneer in the fitness-tracking community, boasting 40\% of the wearable devices market share in 2017 according to Statista ([Global wearables market share 2014-2022 | Statista](https://www.statista.com/statistics/515640/quarterly-wearables-shipments-worldwide-market-share-by-vendor/)). However, more recently Fitbit have seen a major decline in their worldwide shipments in comparison to previous years. Business of Apps ([Fitbit Revenue and Usage Statistics (2024) - Business of Apps](https://www.businessofapps.com/data/fitbit-statistics/)) reported a 13\% decrease in their global unit sales in 2022 compared with the previous year. Notably, the company’s revenue is also taking a hit, with a 4.1\% decrease in the same period. However with 120 million registered users and 37 million reportedly using the app at least once a week, it still maintains its fair share of the market.
+
+Fitbit devices have a similar heart rate monitor as found in most wearable devices, known as an optical heart rate sensor. This matched with the timekeeping functionality means it has all of the capabilities of calculating a user’s heart rate recovery however, it is still a major health-indicating feature it lacks. This has led to user dissatisfaction, as noted in this Fitbit community post from 2023 stating “Still looking for this feature in 2023. now I need to pay for an external app to view the data that Fitbit already has…for a fitness tracker this is a joke” ([Re: Recovery heart rate ? - Fitbit Community](https://community.fitbit.com/t5/Get-Moving/Recovery-heart-rate/m-p/5425796/highlight/true#M67358)). This shows a clear gap for an application tailored towards automatic heart rate recovery measurements. Users want an intuitive and straightforward way for users to find their heart rate recovery and take important steps to manage their health based on the data presented.
+
+\subsection{Apple Watch - HealthKit Repository}
+
+Since the successful launch of the Apple Watch in 2015, Apple has consistently been a major player in the smartwatch market. According to Statista ([Global smartwatch shipments market share 2023 | Statista](https://www.statista.com/statistics/910862/worldwide-smartwatch-shipment-market-share/)), it has consistently been the top-selling individual vendor quarterly from 2018 through to Q3 of 2023, with the device sales continuously topping 20\% of global smartwatch shipments. While the Apple Watch is more tailored as a smartwatch than a fitness tracker, 92\% of smartwatch users are reported to use a smartwatch to track and maintain health and fitness, with 88\% stating it assisted in achieving fitness goals.
+
+Apple Watch’s native workout and heart rate app are responsible for user fitness tracking and heart rate tracking respectively, all part of the Apple HealthKit repository. The Apple Watch does track the user’s heart rate recovery however, it cannot display historical records of heart rate recovery on the watch itself. HRR measurements are only available for the user to view on their watch on the day they complete their workout. The mobile ‘Fitness’ app does provide a historical record of data, however lacks a result comparison feature. The HRR graph presented by the app is very basic and provides no feedback as to what a user’s result means for their health. More than anything, it is very complicated to find this HRR information for a previous workout, with it being stated as “a lesser-known health metric that’s tracked by Apple Watch” ([Apple Watch heart rate recovery: What it is and how to track - 9to5Mac](https://9to5mac.com/2022/04/05/apple-watch-heart-rate-recovery/))
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/AppleWatchHRR.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+This presents a clear opportunity to build an application that maintains the automatic HRR tracking of the Apple Watch while also adding some key missing features, notably:
+
+\begin{itemize}
+    \item Historical view of HRR
+    \item Comparison of HRR measurements
+    \item Explanation of what a user’s HRR means for them
+\end{itemize}
 
 %==================================================================================================================================
 \chapter{Requirement Analysis}
 
-This chapter introduces the requirements the application must tailor to in order to be successful. The requirements were gathered through weekly meetings with my supervisor Dr Sharon Ding. Throughout the project, we maintained an agile approach to the requirements where each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
+This chapter introduces the requirements the application must satisfy to  be classed as successful. The requirements were gathered through weekly meetings with my supervisor Dr Sharon Ding. Throughout the project, we maintained an agile approach to the requirements where each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
 
 \section{Functional Requirements}
 
@@ -684,8 +709,62 @@ The plotting of the graph is done almost identically to the HRR bar chart, excep
 
 \section{Pilot Study}
 
+The pilot study aimed to evaluate the real-world functionality and practicality of the application on a smaller scale to detect usability and functionality issues early. The study involved myself and an external evaluator analysing the application’s performance during exercise. Any issues found during the pilot study could be rectified early to ensure the broader user study was fluent. 
+
+The pilot study was carried out in an hour-long football session. This allowed me to stress test the application, where the large number of breaks in running and more generally the amount of data being collected and processed by the application would give a thorough overview of the functionality and performance over extended periods.
+
+Feedback from the pilot study was gathered through word-of-mouth. I asked the evaluator about their understanding of the application, questioning if there was any time they did not understand what to do or what was going on. 
+
+Upon the first attempt at running the pilot study, I noticed that after approximately half an hour the watch had only tracked 5 seconds. This was a bug never previously experienced through the auto-ethnography and it was key to fix before the wider user studies. This problem was related to the WakeLock functionality within Android. When carrying out the auto-ethnography, the application was connected to my laptop for debugging and therefore the application never entered a ‘dose’ state, where the processor puts non-native apps to sleep to save resources. However, the pilot study was carried out disconnected from my laptop, meaning the application could easily be put into this ‘dose’ state. This interfered with the sensor data necessary to update the application and caused the auto-pausing functionality described in section (ENTER SECTION NUMBER HERE) to function incorrectly. This issue was mitigated by ensuring the application acquired an Android WakeLock when a user started a new workout, preventing the application from entering this ‘dose’ state and maintaining the application’s functionality. After the unsuccessful first attempt of running a pilot study, this issue was checked in the following week as part of my second attempt at a pilot study.
+
+There were another two key points raised with the second iteration of pilot testing:
+
+\begin{itemize}
+    \item The time tracked on the smartwatch felt inaccurate compared to how long exercising for, with one hour of football equating to 25 minutes of activity according to the watch
+    \item The evaluator also reported the watch “gave some weird vibrations” and he “couldn’t understand the meaning of these vibrations”
+\end{itemize}
+
+This prompted another two fixes for the application before the user studies. 
+
+Firstly, the accuracy for detecting movement was adequately accurate when running at a fair pace, however was too strict when running at lighter paces. To address this, I reduced the hyperparameter determining the amount of movement required to class as being stopped, as well as increasing the time window it averages the movement across from 2 seconds to 3 seconds. This overall caused a slight but significant decrease in the sensitivity to users taking breaks and had a much more desired effect from the algorithm at slower speeds.
+
+It was clear to see how the vibrations could be confusing to a user not aware of how the background system works, and it was an oversight to assume users would understand what a vibration indicated. To address this, I implemented an overlay that would trigger if some movement was detected. Whenever the toggle for changing the isPaused state - mentioned in section (ENTER SECTION NUMBER HERE) - it would also trigger the launch of this overlay, telling the user they had either paused or continued their workout. This overlay could then work alongside the vibrations already providing feedback to the user.
+
+Once these final issues were rectified, I was ready to plan and carry out the wider user study to gather more feedback.
+
 \section{User Studies}
 
+\subsection{Aims}
+
+The user study aimed to assess several components of the application, presenting evidence for future work and design changes to be made. The main aim of the application as stated in section (ENTER SECTION NUMBER HERE) is to provide a way for users to intuitively track their heart rate recovery. This is quite a large area to assess, so has been broken down into three smaller components to help answer the main question:
+
+\begin{enumerate}
+    \item Evaluating the intuitiveness of the design of the application. As stated in section (ENTER SECTION NUMBER HERE), for some of my evaluators this was their first time using a smartwatch. It should be the case that they can use the application relatively intuitively based on similar applications on other mobile devices. This includes the design of the application and graphs but also the navigation and interaction for the users
+    \item Evaluating the clarity of certain features and functionality designed to boost the user's understanding of their HRR and heart health. One of the main issues identified with the Apple Watch’s approach to HRR was how hidden the feature was for users to find, as noted in section (ENTER SECTION NUMBER HERE). It was important to try and design the application to avoid falling into the same trap
+    \item Evaluating the usefulness and practicality of the application. While this application was only initially designed with running in mind, it would be useful to see how it performs when put under a variety of different workouts and exercises. Part of my future work will look at assessing this performance to expand the available workouts, as well as fixing any features people felt were missing from the application.
+\end{enumerate}
+
+\subsection{Experiment Design}
+
+The experiment involved users taking a Mobvoi TicWatch Pro 3 with the application pre-installed and in a “fresh install” state, meaning the application appeared as it would for its first download. This gave users the full experience of setting up the application for themselves. Users were assigned two separate tasks to complete while tracking a workout with the watch application:
+
+\begin{enumerate}
+    \item Completing a 10-minute run with a 2-minute break 5 minutes in, meaning they would run for five minutes, stop for two, then run for another five.
+    \item Another unspecified exercise for any length of period, to assess the performance of other workout types
+\end{enumerate}
+Following the completion of these two exercises, users were then tasked with completing a survey that covered three main areas:
+
+\begin{itemize}
+    \item Intuitive Design questions - Assessing the intuitiveness of the design and navigation throughout the application
+    \item Task-based questions - Assessing the user’s ability to interpret results and find knowledge-boosting features
+    \item Application Practicality questions - Assessing the usefulness of the application and the performance of the application on the other exercise carried out by the us
+\end{itemize}
+
+Each of these areas would provide valuable insight into our aims outline in section (ENTER SECTION NUMBER HERE)
+
+\subsection{Results}
+
+\subsection{Analysis and Discussion}
 
 %==================================================================================================================================
 \chapter{Conclusion}    
