@@ -7,6 +7,10 @@
 % put any additional packages here
 %
 
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
 \begin{document}
 
 %==============================================================================
@@ -300,30 +304,13 @@ An key aspect to consider when developing the application was how a user would g
 
 The first and main application flow is to record a workout and measure the user’s HRR. This begins with the user selecting the workout they want to do - currently this is just running however, this is where the opportunity for additional workout options would be as discussed in section (ENTER SECTION NUMBER HERE). The application will then enter a multiple-page “Active Workout” display, consisting of two pages that can be swiped between. One page will display the current workout metrics, while the other page acts as a settings page with options to pause or end the workout. Selecting to end the workout then takes the user to another multiple-page “Post-Workout” display. Here the user will be able to see information about their heart rate recovery, heart rate, and more generic workout metrics, as well as being able to return to the home page. This can be visualised in a flow chart, displayed in Figure 4.1 below.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/WorkoutFlow.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
-\end{figure}
+
 
 The application also has to allow users to view their previous HRR measurements as defined in the Must Have requirements (ENTER SECTION NUMBER HERE). This is accomplished by clicking the “Health History” button. The app navigates to a multiple-page health history display where all the user’s workouts are shown. Clicking on one of these workouts will then allow you to view the same three pages as the post-workout section in the workout flow, with the possibility for multiple HRRs to be shown. This flow can be seen in Figure 4.2 below.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HealthHistoryFlow.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
-\end{figure}
+
 
 Finally, the application also has a settings flow to allow for database modification. Accessible by clicking the settings icon on the home page, the application navigates to allow a choice between deleting workouts or viewing the set-up profile. If the user selects delete workouts, all workouts stored on the watch are deleted. Otherwise, clicking view profile will display the currently stored user information. This can either be edited - where the user passes through the profile builder described more in section (ENTER SECTION NUMBER HERE) to modify the database - or deleted - deleting the stored user from the database and navigating to set up a new profile. This can be seen in Figure 4.3 below.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/UserSettingFlow.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
-\end{figure}
 
 \section{User Interface}
 
@@ -709,11 +696,15 @@ The plotting of the graph is done almost identically to the HRR bar chart, excep
 
 \section{Pilot Study}
 
+\subsection{Overview}
+
 The pilot study aimed to evaluate the real-world functionality and practicality of the application on a smaller scale to detect usability and functionality issues early. The study involved myself and an external evaluator analysing the application’s performance during exercise. Any issues found during the pilot study could be rectified early to ensure the broader user study was fluent. 
 
 The pilot study was carried out in an hour-long football session. This allowed me to stress test the application, where the large number of breaks in running and more generally the amount of data being collected and processed by the application would give a thorough overview of the functionality and performance over extended periods.
 
 Feedback from the pilot study was gathered through word-of-mouth. I asked the evaluator about their understanding of the application, questioning if there was any time they did not understand what to do or what was going on. 
+
+\subsection{Results}
 
 Upon the first attempt at running the pilot study, I noticed that after approximately half an hour the watch had only tracked 5 seconds. This was a bug never previously experienced through the auto-ethnography and it was key to fix before the wider user studies. This problem was related to the WakeLock functionality within Android. When carrying out the auto-ethnography, the application was connected to my laptop for debugging and therefore the application never entered a ‘dose’ state, where the processor puts non-native apps to sleep to save resources. However, the pilot study was carried out disconnected from my laptop, meaning the application could easily be put into this ‘dose’ state. This interfered with the sensor data necessary to update the application and caused the auto-pausing functionality described in section (ENTER SECTION NUMBER HERE) to function incorrectly. This issue was mitigated by ensuring the application acquired an Android WakeLock when a user started a new workout, preventing the application from entering this ‘dose’ state and maintaining the application’s functionality. After the unsuccessful first attempt of running a pilot study, this issue was checked in the following week as part of my second attempt at a pilot study.
 
@@ -760,9 +751,62 @@ Following the completion of these two exercises, users were then tasked with com
     \item Application Practicality questions - Assessing the usefulness of the application and the performance of the application on the other exercise carried out by the us
 \end{itemize}
 
-Each of these areas would provide valuable insight into our aims outline in section (ENTER SECTION NUMBER HERE)
+Each of these areas would provide valuable insight into our aims outlined in section (ENTER SECTION NUMBER HERE)
 
 \subsection{Results}
+
+A total of 7 participants were gathered from a convenience sample, all of which completed all aspects of the evaluation. 6 participants fell under the age range of 18-24 years, with the remaining falling under the 25-34 range. All 7 participants identify as male. Most of the participants have a strong technical background with 6 studying a computing-related degree, with the remaining having no background in computing.
+
+Quantitative questions were evaluated against the Likert scale, with 1 being a strongly negative response and 5 being a strongly positive response. Each question had the scale labelled more specifically to ensure a clear understanding of the scale for the respondent.
+
+\noindent\mbox{}\\
+\subsubsection{Intuitive Design Questions}
+\noindent\mbox{}\\
+
+When asked about the navigational process throughout the application, participants found the process very intuitive. Regarding the question “How easy do you find the application to navigate?”, all participants answered above a rating of 4, with one participant reviewing it a 5. Users also found the application to be consistent with similar mobile applications, with an average rating of 4 across all participants (standard deviation = 0.40)
+
+Another key aim of the study was to assess the design and clarity of the graphs presented at the end of a workout. Evaluators reported an average score of 3.86 when considering how easy the post-workout graphs (HRR and HR range) were to understand (standard deviation = 0.99). The respondents also reviewed the clarity of the graph colours at a very high average rating of 4.43 (standard deviation = 0.73).
+
+Participant’s opinions on the vibrations given by the system when toggling between a ‘paused’ and ‘resumed’ state were very mixed however generally the vibrations were not appreciated with an average rating of just 2.86 (standard deviation = 1.25).
+
+\noindent\mbox{}\\
+\subsubsection{Post-Exercise Task-Based Questions}
+\noindent\mbox{}\\
+
+Based on the responses to the task-based questions, I could gather whether or not the user had correctly completed or interpreted what the task required. The tasks set to complete were as follows:
+
+\begin{itemize}
+    \item \textbf{Task 1} required users to state their average heart rate during their running exercise. This is shown as a grey line with a value, as explained in section (ENTER SECTION NUMBER HERE).
+    \item \textbf{Task 2} asked users to state the intensity zone this average heart rate fell under.
+    \item \textbf{Task 3} asked users what percentage band of their theoretical maximum heart rate this fell under.
+    \item \textbf{Task 4} asked users what their different HRR measurements were, ensuring they knew that the application stored multiple HRR readings for a workout
+    \item \textbf{Task 5} asked users to complete a comparison of two different HRR readings, prompting them to navigate to the HRR compare feature described in section (ENTER SECTION NUMBER HERE)
+    \item \textbf{Task 6} asked users what their active running time and total exercise duration was throughout the run
+\end{itemize}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{l|ccccccc|r}
+        \hline  
+        Participant no. & 1 & 2 & 3 & 4 & 5 & 6 & 7 & Task Completion \\
+        \hline
+        Task 1 & \cmark & \cmark & \cmark & \xmark & ?* & \cmark & \cmark & 5/7 (71.4\%)\\
+        Task 2 & \cmark & \cmark & \cmark & \cmark & ?* & \cmark & \cmark & 6/7 (85.7\%)\\
+        Task 3 & \cmark & \cmark & \cmark & \cmark & ?* & \cmark & \xmark & 6/7 (85.7\%)\\
+        Task 4 & \xmark & \cmark & \xmark & \xmark & \cmark & \cmark & \xmark & 3/7 (42.9\%)\\
+        Task 5 & \xmark & \cmark & \xmark & \cmark & \cmark & \cmark & \xmark & 4/7 (57/1\%)\\
+        Task 6 & \cmark** & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark** & 6/7 (85.7\%)    
+        \hline
+    \end{tabular}
+\end{table}
+
+\noindent\mbox{}\\
+\subsubsection{Application Practicality}
+\noindent\mbox{}\\
+
+The overall concept of the application received high praise from evaluators, with an average review of 4.71 (standard deviation = 0.45). This goes hand in hand with how important participants found their heart health information while working out, with an average review of 4.0 (standard deviation = 1.41)
+
+The auto-pausing functionality proved divisive for participants, with the highest variance in results across all the quantitative questions asked. The average review of the effectiveness was 2.86 with a huge standard deviation of 1.46
 
 \subsection{Analysis and Discussion}
 
@@ -785,25 +829,26 @@ Each of these areas would provide valuable insight into our aims outline in sect
 
 \chapter{Appendices}
 
-Typical inclusions in the appendices are:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/WorkoutFlow.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
 
-\begin{itemize}
-\item
-  Copies of ethics approvals (required if obtained)
-\item
-  Copies of questionnaires etc. used to gather data from subjects.
-\item
-  Extensive tables or figures that are too bulky to fit in the main body of
-  the report, particularly ones that are repetitive and summarised in the body.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HealthHistoryFlow.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
 
-\item Outline of the source code (e.g. directory structure), or other architecture documentation like class diagrams.
-
-\item User manuals, and any guides to starting/running the software.
-
-\end{itemize}
-
-\textbf{Don't include your source code in the appendices}. It will be
-submitted separately.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/UserSettingFlow.pdf}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
 
 \end{appendices}
 
