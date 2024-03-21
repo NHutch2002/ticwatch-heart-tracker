@@ -1,41 +1,54 @@
-# Readme
+# Heart Rate Recovery for Fitness on a Smartwatch
 
-Put a brief description of your code here. This should at least describe the file structure.
+## File Structure
 
-## Build instructions
+The root directory for the project can be found at:
 
-**You must** include the instructions necessary to build and deploy this project successfully. If appropriate, also include 
-instructions to run automated tests. 
+`..\src\smartwatch\WorkoutTracker\` 
 
-### Requirements
+This includes the Gradle build files, responsible for compiling and downloading dependencies
 
-List the all of the pre-requisites software required to set up your project (e.g. compilers, packages, libraries, OS, hardware)
+The Kotlin files responsible for the function of the application are stored in:
 
-For example:
+`..\src\smartwatch\WorkoutTracker\app\src\main\java\com\example\workouttracker\presentation` 
 
-* Python 3.7
-* Packages: listed in `requirements.txt` 
-* Tested on Windows 10
+This contains all of the Kotlin files available to view
 
-or another example:
+## Requirements
 
-* Requires Raspberry Pi 3 
-* a Linux host machine with the `arm-none-eabi` toolchain (at least version `x.xx`) installed
-* a working LuaJIT installation > 2.1.0
+There are only two requirements for the project to run as expected
 
-### Build steps
+- Android Studio Iguana*
+- Mobvoi TicWatch Pro 3 GPS smartwatch with Android 11 “R” installed*
 
-List the steps required to build software. 
+*Note -  The application *could* work on other devices or Android/Android Studio versions, however this is a known working installation method for the libraries the application is reliant on
 
-Hopefully something simple like `pip install -e .` or `make` or `cd build; cmake ..`. In
-some cases you may have much more involved setup required.
+## Build Instructions
 
-### Test steps
+To build the application:
 
-List steps needed to show your software works. This might be running a test suite, or just starting the program; but something that could be used to verify your code is working correctly.
+- Launch Android Studio
+- Click the hamburger menu in the top-left of the screen
+- Hover over `Build` > `Build Bundle(s) / APK(s)`
+- Click `Build APK(s)`
 
-Examples:
+This will install all the required dependencies and create an Android Package (APK) to be installed onto the watch.
 
-* Run automated tests by running `pytest`
-* Start the software by running `bin/editor.exe` and opening the file `examples/example_01.bin`
+The resulting APK can be found at:
 
+`..\src\smartwatch\WorkoutTracker\app\build\outputs\apk\debug\app-debug.apk`
+
+At this time, Gradle will also ensure correctness in code, logging any errors in the build process. This can also be done without building the application to an APK by clicking F9, or the hammer icon located on the top ribbon
+
+## Running Instructions
+
+- To debug the application on the watch, connect your laptop/PC and the TicWatch to the same Wi-Fi network.
+- Ensure the watch is in developer mode, by going into “Settings”, then “System”, then “About”, then “Versions”, then clicking on the “Build Number” 7 times consecutively
+- Turn on “ADB Debugging” and “Wireless Debugging” in the Developer Settings
+- Launch Android Studio and open the “Workout Tracker” folder
+- On Android Studio, navigate to “Device Manager” from the right hand ribbon
+- Click on the Wi-Fi symbol to Debug over Wi-Fi
+- Click on the “Pair using pairing code”
+    - From experience, this can unfortunately be temperamental. If the smartwatch isn’t shown try restarting Android Studio, or disconnect and reconnect to Wi-Fi
+- Select your device and enter the pairing code, shown on the watch
+- Once the watch is connect, you can click the Play icon on the device to build and install the application to the watch
