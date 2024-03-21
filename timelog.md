@@ -216,4 +216,75 @@
 
 * Backdating Timelog
 * Investigating Android Room Database Structure
-* Conntinuing on Shared ViewModel implementation
+* Continuing on Shared ViewModel implementation
+
+# Semester 2
+
+## Week 1 - 8th January - 14th January - 12 Hours
+
+* Added mid-workout HRR reading functionality
+* Added multiple HRR readings to view
+* Modified HRR save values to prevent excessive data
+* Modified Database for storing mulitple HRR
+
+## Week 2 - 15th January - 21st January - 15 Hours
+
+* Added Calorie calculation and modified database to store
+* Edit Profile Flow completed
+* Added zonal highlighting for graphs
+
+## Week 3 - 22nd January - 28th January - 14 Hours
+
+* Added HRR Comparison Feature
+* Modified Workout object for active time and total time
+* Added other to gender, including calorie calculation
+* Plot Average HR
+* Added Are you sure pages to actions
+
+## Week 4 - 29th January - 4th February - 18 Hours
+
+* Running Pilot Study
+* Fixing WakeLock issue
+* Added Paused/Resumed pop up
+* Finalising App Development for User Studies to Start
+
+## Week 5 - 5th February - 11th February - 14 Hours 
+
+* Created Consent Form, Intro Script, etc for user studies 
+* Running User Studies
+* Started Diss Introduction Section
+
+## Week 6 - 12th February - 18th February - 20 Hours
+
+* Finished Diss Intro Section
+* Started Requirement Analysis
+* Continuing running user studies
+
+## Week 7 - 19th February - 25th February - 12 Hours
+
+* Continuing running user studies
+* Finished Requirement Analysis
+
+## Week 8 - 26th February - 3rd March - 15 Hours
+
+* Continuing running user studies
+* Removed Debugging Logs from code for submission
+* Started Implementation Section
+
+
+## Week 9 - 4th March - 10th March - 20 Hours
+
+* Continuing Implementation Section
+* Completed User Studies
+
+## Week 10 - 11th March - 17th March - 36 Hours
+
+* Completed Background Research Section
+* Finished Implementation Section
+
+## Week 11 - 18th March - 22nd March - 40 Hours
+
+* Finishing Evaluation Section
+* Finalising Dissertation Draft
+* Reading Over and Correcting Dissertation Draft
+* Recording Presentation Video
