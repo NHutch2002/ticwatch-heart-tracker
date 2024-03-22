@@ -17,20 +17,28 @@
 %% METADATA
 \title{Heart Rate Recovery Tracking for Fitness on a Smartwatch}
 \author{Nathan Hutchison}
-\date{February 2, 2024}
+\date{March 22, 2024}
 
 \maketitle
 
 %==============================================================================
 %% ABSTRACT
 \begin{abstract}
-    Every abstract follows a similar pattern. Motivate; set aims; describe work; explain results.
-    \vskip 0.5em
-    ``XYZ is bad. This project investigated ABC to determine if it was better. 
-    ABC used XXX and YYY to implement ZZZ. This is particularly interesting as XXX and YYY have
-    never been used together. It was found that  
-    ABC was 20\% better than XYZ, though it caused rabies in half of subjects.''
+    Heart Rate Recovery (HRR) is a key indicator of athletic capabilities and cardiovascular health. However, many people are unaware of their heart health. This project addresses this issue through the development of a HRR tracking smartwatch application. The application is designed intuitively to allow for simple access to HRR. The application includes algorithms for multiple HRR readings during one workout through the functionality to detect when a user is stopped and start a HRR measurement automatically. The results are represented graphically with clearly coloured target zones for the user to aim for, as well as the ability to compare results to track changes over time. The two-tier evaluation found that the application was effective in bridging the gap left by current applications with the desire to want to use a similar application in the real world, but also raised some key areas for future work such as supporting a larger variety of workouts and a collaborative mobile application.
 \end{abstract}
+
+
+%==============================================================================
+
+\chapter*{Acknowledgements}
+
+I would like to express my sincere gratitude to my supervisor Dr. Xianghua (Sharon) Ding for providing continuous support and guidance throughout. Your valuable feedback and advice was essential for the successful of this project.
+
+I would also like to thank my friends, Turki and Ahmed, for constantly keeping my spirits high and encouraging me through the ups and downs.
+
+Finally, I would like to dedicate this to my Mum, Dad and Sister for always pushing me to achieve the best I can and supporting me through the last 17 years of education. Without your encouragement, none of this would have been possible!
+
+
 
 %==============================================================================
 
@@ -44,7 +52,7 @@
 % this declaration, but doing so would help future students.
 %
 \def\consentname {Nathan Hutchison} % your full name
-\def\consentdate {05 February 2024} % the date you agree
+\def\consentdate {22 March 2024} % the date you agree
 %
 \educationalconsent
 
@@ -88,48 +96,48 @@
 \section{Motivation}
 \label{sec:motivation}
 
-In an era built on rapid technological advancements, there has been a recent explosion of innovative technology proving revolutionary in the monitoring and managing of an individual’s health. Fitness tracking technology has become an increasingly vast market, with a huge increase in people using fitness statistics to ensure they remain active and healthy in their day-to-day lives. However, while physical fitness can be easily measured through distance run or weight lifted, one aspect of fitness often overlooked is your heart health. 
+In an era characterised by rapid technological advancements, there has been a recent surge of innovative technology proving revolutionary in the monitoring and managing of an individual’s health. The market for fitness tracking technology has expanded considerably, with a substantial increase in people using fitness statistics to maintain an active and healthy lifestyle. However, while physical fitness can be easily measured through distance run or weight lifted, one aspect of fitness often overlooked is your heart health. 
 
-Heart Rate Recovery (HRR) strongly indicates overall cardiovascular health and fitness. However many current fitness tracking applications strongly focus on tracking the physical activity itself through metrics such as distance run and lack HRR readings built in or make it so complex to view these readings that many users will be left unaware they even exist. 
+Heart Rate Recovery (HRR) is a strong indicator of general cardiovascular health and fitness. However, many current fitness tracking applications primarily focus on tracking the physical activity itself, neglecting incorporating HRR readings. Furthermore, those that do include HRR readings often make it so complex to view these readings that many users are left unaware they even exist. 
 
-By developing a smartwatch application that prioritises Heart Rate Recovery, I aim to bridge this gap in fitness tracking and bring heart health to the forefront of a user’s fitness tracking experience. This empowers individuals to have a clear and visual representation of their cardiovascular health, with the potential to lead to more effective workouts and a healthier lifestyle.
+By developing a smartwatch application that prioritises Heart Rate Recovery, I aim to bridge this gap in fitness tracking and bring heart health to the forefront of a user’s fitness tracking experience. This empowers individuals with a clear and visual representation of their cardiovascular health, with the potential to lead to more effective workouts and an overall healthier lifestyle.
 
-Furthermore, the convenience of having this application built into a smartwatch means users can view their Heart Rate Recovery at any time without having to use complex equipment or carry their phone about while exercising.
+Furthermore, the convenience of having this application built into a smartwatch allows users to view their Heart Rate Recovery at any time eliminating the need for complex equipment or having to carry their phone about while exercising.
 
 \section{Aim}
 \label{sec:aim}
 
-This project aims to develop a smartwatch application that allows users to intuitively track their Heart Rate Recovery during a workout, providing them with useful insight into their overall heart health. Results will be represented in visual graphs with a strong focus on the usability heuristics of the application. Within these graphs, there will also be feedback on the users' results, showing ideal values for their Heart Rate Recovery and Heart Rate during a workout. The application will store results in a database to allow users to see their progress and improvements over time, with a HRR comparison feature built in to compare different HRR readings
+The aim of this project is to develop a smartwatch application that enables users to intuitively track their Heart Rate Recovery (HRR) during a workout, providing valuable insights into their overall heart health. The results will be displayed in visual graphs with a strong focus on the usability heuristics of the application. These graphs will also provide feedback on the users' results, indicating ideal values for their Heart Rate Recovery and Heart Rate during a workout. The application will store results in a database to allow users to see their progress and improvements over time, with built-in a HRR comparison feature to compare different HRR readings.
 
 \section{Outline}
 \label{sec:outline}
 
-This report will address the issue of Heart Rate Recovery tracking, as well as general Heart Fitness. The breakdown of what each of the sections will expand is as follows:
+This report will address the process of designing and implementing this Heart Rate Recovery tracking application. The breakdown of what each section will explore is as follows:
 
 \begin{itemize}
-    \item \textbf{Section 2 - Background Research}
+    \item \textbf{Section 2 - Background}
     \begin{itemize}
-        \item Looking into related existing applications, as well as investigating the background topics and related work in the field of Heart Fitness and Heart Rate Recovery
+        \item Exploring related existing applications, as well as investigating the background topics and related work in the field of Heart Rate Recovery, Fitness Tracking and Smartwatch Development.
     \end{itemize}
     \item \textbf{Section 3 - Requirement Analysis}
     \begin{itemize}
-        \item Breaking down the requirements for the finished application, including MoSCoW Requirements and some User Stories
+        \item Breaking down the requirements for the finished application, including MoSCoW Requirements and Non-Functional Requirements.
     \end{itemize}
     \item \textbf{Section 4 - Design}
     \begin{itemize}
-        \item Delving into the User Interface and the visuals of the application including interaction design, as well as looking more specifically at the System Architecture
+        \item Delving into the visual appearance of the User Interface (UI) explaining the design of application flow and navigational approach, as well as exploring the system architecture and database design.
     \end{itemize}
     \item \textbf{Section 5 - Implementation}
     \begin{itemize}
-        \item Describing the approach to implementing the application, through the hardware configuration, the technologies used, and the algorithms for calculations before finishing with the results overview and graphical representation used
+        \item Describing the approach to implementing the application, through the development environment, the technologies used, and the algorithms for calculations before finishing with the results overview and graphical representation used.
     \end{itemize}
     \item \textbf{Section 6 - Evaluation}
     \begin{itemize}
-        \item Explaining the evaluation process for the application, including the auto-ethnography, the pilot study, and finally the conducted experiment through user studies
+        \item Explaining the evaluation process for the application, including the small-scale pilot study and the wider-scale user studies.
     \end{itemize}
     \item \textbf{Section 7 - Conclusion}
     \begin{itemize}
-        \item Concluding the project and report as a whole, giving a summary of the work accomplished, before delving into the potential future work, and giving a brief final reflection on the project
+        \item Concluding the project and report as a whole by delving into the potential future work, before giving a summary of the work accomplished.
     \end{itemize}
 \end{itemize}
 
@@ -146,43 +154,42 @@ This report will address the issue of Heart Rate Recovery tracking, as well as g
 
 Heart Rate Recovery (HRR) is a measure of the heart’s ability to decrease to a normal heart rate after completing an intense exercise. It is calculated as the difference between the peak heart rate achieved at the peak intensity of the workout and the heart rate one minute after completing the exercise. 
 
-While HRR is still an actively researched area, early studies found a direct correlation between a low HRR and an increase in risk of mortality. A study published in 1999 by New England Journal of Medicine \cite{Cole1999HeartRate}. found that a HRR of less than 13 beats per minute (BPM) was abnormal, with 26\% of experiment participants falling under this category. They found that across six years, individuals with a low HRR of 13 bpm or less had double the risk of dying. This includes adjusting for several confounding variables such as age and history of coronary artery disease.
+While HRR is still an actively researched area, early studies found a direct correlation between a low HRR and an increase in risk of mortality. A study published in 1999 by New England Journal of Medicine \cite{Cole1999HeartRate} found that a HRR of less than 13 beats per minute (BPM) was abnormal, with 26\% of experiment participants falling under this category. They found that across six years, individuals with a low HRR of 13 BPM or less had double the risk of dying. This risk increase is adjusted for several confounding variables such as age and history of coronary artery disease.
 
-A later study by \cite{HRR2000} backs up these findings, showing that a HRR of less than 13 bpm doubled the 5-year mortality of participants, with a 6-fold increase in 5-year mortality when participants had a HRR less than 10 bpm.
+A later study by \cite{HRR2000} backs up these findings, showing that a HRR of less than 13 BPM doubled the 5-year mortality of participants. They also found a 6-fold increase in 5-year mortality when participants had a HRR of less than 10 BPM seen in Figure \ref{fig:backgroundhrr}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\linewidth]{dissertation//dissImages/BackgroundHRR.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \caption{\cite{HRR2000} study showing 5-year mortality plotted against Heart Rate Recovery}
+    \label{fig:backgroundhrr}
 \end{figure}
 
 \subsection{Theoretical Maximum Heart Rate}
 \label{sec:backgroundmaxhr}
 
-Theoretical maximum heart rate (HR\textsubscript{max}) describes the approximate plateau of heart rate when a person exercises at their highest intensity. It is often used clinically as the backbone of calculating exercise intensity and the strain on the heart of a patient. 
+Theoretical maximum heart rate (HR\textsubscript{max}) describes the approximate plateau of a person's heart rate when they exercise at their highest intensity. It is often used clinically as the backbone of calculating exercise intensity and the strain on a patient's heart. 
 
 ‘Age-predicted maximal heart rate in healthy subjects: The HUNT Fitness Study’ by \cite{NesHRmax} investigates the validity of various formulae for calculating a person’s HR\textsubscript{max}. It compares the following calculations:
 
 \begin{itemize}
     \item The Traditional Method of calculating HR\textsubscript{max} proposed by \cite{foxHRmax}: $$HR_{max} = 220 - Age$$
-    \item Tanaka formula \cite{TANAKAHRmax}: $$HR_{max} = 208 - (0.7 x Age)$$
-    \item Gulati formula \cite{GulatiHRmax}: $$HR_{max} = 206 - (0.88 x Age)$$
+    \item Tanaka formula (\cite{TANAKAHRmax}): $$HR_{max} = 208 - (0.7 \times Age)$$
+    \item Gulati formula (\cite{GulatiHRmax}): $$HR_{max} = 206 - (0.88 \times Age)$$
 \end{itemize}
 
-As well as proposing and comparing a new regression equation: $HR_{max} = 211 - (0.64 x Age)$
+As well as proposing and comparing a new regression equation: $HR_{max} = 211 - (0.64 \times Age)$
 
 The study found a clear decrease in HR\textsubscript{max} with an increase in the participant’s age. Some other covariates also impacted the HR\textsubscript{max} of a participant, such as body mass index (BMI) - where participants classed as obese (with a BMI ≥ 30) had a modestly decreased HR\textsubscript{max} compared to people in the overweight and normal weight groups. It did however find that the rate of decline in HR\textsubscript{max} by age was not significantly impacted by covariates such as smoking status, gender or physical activity status.
 
-My application can use the proposed formula as an accurate way of estimating the user's HR\textsubscript{max} using their age. This will allow me to estimate workout intensity and represent this to the user.
-
+My application can use the proposed formula to accurately estimate a user's HR\textsubscript{max} according to their age. This will allow me to understand the workout intensity and represent this to the user.
 
 \subsection{Smartwatch Application Development}
 \label{sec:backgroundwatchdev}
 
 Developing an application for a smartwatch can result in many challenges, as noted by \cite{RamezaniDevelopingWatch}. The paper ‘Developing a Smartwatch-Based Healthcare Application: Notes to Consider’ outlines a case study of developing an Android healthcare application on a smartwatch for remote monitoring of geriatric patients, discussing the main challenges and design insights in the process.
 
-The study explores several challenges hindering them through their development process, with the most notable being:
+The study explores several challenges that hindered them through their development process, with the most notable being:
 
 \begin{itemize}
     \item \textbf{Battery Life} - Smartwatches often have limited battery life in comparison to other mobile devices. It is important to ensure my application limits its battery consumption wherever possible.
@@ -191,6 +198,7 @@ The study explores several challenges hindering them through their development p
     \item \textbf{Sensor Configuration} - Personalising the collection and processing of sensor data for different individuals can be a complex task, ensuring correct calculations are carried out for each person. This is something I had to take into consideration when designing the profile building within the application and how the stored user data can be used to assist the accuracy of calculations
 \end{itemize}
 
+These are all important aspects carefully considered while developing the application.
 
 \section{Related Applications}
 \label{sec:relatedapps}
@@ -198,42 +206,42 @@ The study explores several challenges hindering them through their development p
 \subsection{Fitbit}
 \label{sec:fitbit}
 
-Fitbit was a pioneer in the fitness-tracking community, boasting 40\% of the wearable devices market share in 2017 according to \cite{MarketShare2023}. However, more recently Fitbit have seen a major decline in their worldwide shipments in comparison to previous years. \cite{Fitbit2024} reported a 13\% decrease in their global unit sales in 2022 compared with the previous year. Notably, the company’s revenue is also taking a hit, with a 4.1\% decrease in the same period. However with 120 million registered users and 37 million reportedly using the app at least once a week, it still maintains its fair share of the market.
+Fitbit is a pioneer in the fitness-tracking community, boasting 40\% of the wearable devices market share in 2017 according to \cite{MarketShare2023}. However, more recently Fitbit have seen a major decline in their worldwide shipments, where \cite{Fitbit2024} reported a 13\% decrease in their global unit sales in 2022 compared with the previous year. Notably, the company’s revenue is also taking a hit, with a 4.1\% decrease in the same period. However with 120 million registered users and 37 million reportedly using the app at least once a week (\cite{Fitbit2024}), it still maintains its fair share of the wearable device market.
 
-Fitbit devices have a similar heart rate monitor as found in most wearable devices, known as an optical heart rate sensor. This matched with the timekeeping functionality means it has all of the capabilities of calculating a user’s heart rate recovery however, it is still a major health-indicating feature it lacks. This has led to user dissatisfaction, as noted in this Fitbit community post from 2023 stating “Still looking for this feature in 2023. now I need to pay for an external app to view the data that Fitbit already has…for a fitness tracker this is a joke” \cite{FitbitReview}. This shows a clear gap for an application tailored towards automatic heart rate recovery measurements. Users want an intuitive and straightforward way for users to find their heart rate recovery and take important steps to manage their health based on the data presented.
+Fitbit devices have a similar heart rate monitor as found in most wearable devices, known as an optical heart rate sensor. Pairing this with the timekeeping functionality ensures it has all of the capabilities of calculating a user’s heart rate recovery, however still it lacks this a major health-indicating feature. This has led to user dissatisfaction, as noted in this Fitbit community post from 2023 stating “Still looking for this feature in 2023. now I need to pay for an external app to view the data that Fitbit already has…for a fitness tracker this is a joke” (\cite{FitbitReview}). This shows a clear gap for an application tailored towards automatic heart rate recovery measurements. Users want an intuitive and straightforward way for users to find their heart rate recovery and take important steps to manage their health based on the data presented.
 
 \subsection{Apple Watch - HealthKit Repository}
 \label{sec:applewatch}
 
-Since the successful launch of the Apple Watch in 2015, Apple has consistently been a major player in the smartwatch market. According to \cite{MarketShare2024}, it has consistently been the top-selling individual vendor quarterly from 2018 through to Q3 of 2023, with the device sales continuously topping 20\% of global smartwatch shipments. While the Apple Watch is more tailored as a smartwatch than a fitness tracker, 92\% of smartwatch users are reported to use a smartwatch to track and maintain health and fitness, with 88\% stating it assisted in achieving fitness goals.
+Since the successful launch of the Apple Watch in 2015, Apple has consistently been a major player in the smartwatch market. According to \cite{MarketShare2024} it has consistently been the top-selling individual company every quarter from the beginning of 2018 through to Q3 of 2023, with its device sales continuously topping 20\% of global smartwatch shipments. While the Apple Watch is more tailored as a general smartwatch than specifically a fitness tracker, 92\% of smartwatch users are reported to use a smartwatch to track and maintain health and fitness, with 88\% stating it assisted in achieving fitness goals (\cite{Shewale_2023}).
 
-Apple Watch’s native workout and heart rate app are responsible for user fitness tracking and heart rate tracking respectively, all part of the Apple HealthKit repository. The Apple Watch does track the user’s heart rate recovery however, it cannot display historical records of heart rate recovery on the watch itself. HRR measurements are only available for the user to view on their watch on the day they complete their workout. The mobile ‘Fitness’ app does provide a historical record of data, however lacks a result comparison feature. The HRR graph presented by the app is very basic and provides no feedback as to what a user’s result means for their health. More than anything, it is very complicated to find this HRR information for a previous workout, with it being stated as “a lesser-known health metric that’s tracked by Apple Watch”, \cite{AppleHRR}
+Apple Watch’s native workout and heart rate app are responsible for fitness and heart rate tracking respectively, all part of the Apple HealthKit repository. The Apple Watch does track the user’s heart rate recovery through this however, it does not display historical records of heart rate recovery on the watch itself. HRR measurements are only available for the user to view on their watch for the day they complete their workout. The mobile-based ‘Fitness’ app does provide a historical record of HRR data, however lacks a result comparison feature. The HRR graph presented by the app is very basic and provides no feedback as to what a user’s result means for their health, as can be seen in Figure \ref{fig:applehrr}. More than anything, it is very complicated to find this HRR information for a previous workout, with it being stated as “a lesser-known health metric that’s tracked by Apple Watch”, \cite{AppleHRR}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/AppleWatchHRR.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.6\linewidth]{dissertation//dissImages/AppleWatchHRR.png}
+    \caption{Post-Workout Heart Rate Recovery graph from Apple Fitness mobile application}
+    \label{fig:applehrr}
 \end{figure}
 
 This presents a clear opportunity to build an application that maintains the automatic HRR tracking of the Apple Watch while also adding some key missing features, notably:
 
 \begin{itemize}
-    \item Historical view of HRR
-    \item Comparison of HRR measurements
-    \item Explanation of what a user’s HRR means for them
+    \item Historical view of HRR.
+    \item Comparison of HRR measurements.
+    \item Explanation of what a user’s HRR means for them.
 \end{itemize}
 
 %==================================================================================================================================
 \chapter{Requirement Analysis}
 \label{sec:requirements}
 
-This chapter introduces the requirements the application must satisfy to be classed as successful. The requirements were gathered through weekly meetings with my supervisor Dr Sharon Ding. Throughout the project, we maintained an agile approach to the requirements where each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
+This chapter introduces the requirements the application must satisfy to be classed as a success. The requirements were gathered through weekly meetings with my supervisor, Dr Sharon Ding. Throughout the project we maintained an agile approach to the requirements, where at each meeting the progress and challenges were reviewed and minor adjustments to requirements could be made. The final requirements were then categorised into “Functional” and “Non-Functional” requirements as follows
 
 \section{Functional Requirements}
 \label{sec:functionalreqs}
 
-Functional requirements define the features desired by end users. Prioritisation of these requirements is essential to ensure the development of the application is successful in such a short timeframe. I utilised the MoSCoW requirement prioritisation method (SOURCE), which involves separating the requirements into 4 categories:
+Functional requirements define the features desired by end users. Prioritisation of these requirements is essential to ensure successful development of the application in such a short timeframe. I utilised the MoSCoW requirement prioritisation method (\cite{Brush_2023}), which involves separating the requirements into 4 categories:
 
 \begin{itemize}
     \item Must Have 
@@ -248,10 +256,10 @@ Functional requirements define the features desired by end users. Prioritisation
 "Must Have" requirements specify the essential features for the application's functionality:
 
 \begin{itemize}
-    \item \textbf{Heart Rate Tracking} - The application must be able to track a user's heart rate
-    \item \textbf{Heart Rate Recovery Calculation} - The application must calculate the user's Heart Rate Recovery
-    \item \textbf{Historic HRR Views} - The user must have some way to see their previous Heart Rate Recovery measurements
-    \item \textbf{Visual Representation of HRR Readings} - The user must be able to visualise their Heart Rate Recovery
+    \item \textbf{Heart Rate Tracking} - The application must be able to track a user's heart rate.
+    \item \textbf{Heart Rate Recovery Calculation} - The application must calculate the user's Heart Rate Recovery.
+    \item \textbf{Historic HRR Views} - The user must have some way to see their previous Heart Rate Recovery measurements.
+    \item \textbf{Visual Representation of HRR Readings} - The user must be able to visualise their Heart Rate Recovery measurements.
 \end{itemize}
 
 \subsection{Should Have}
@@ -260,34 +268,34 @@ Functional requirements define the features desired by end users. Prioritisation
 "Should Have" requirements specify important but not necessary features. These features still however add significant value:
 
 \begin{itemize}
-    \item \textbf{Fitness Tracking} - The application should allow for some form of fitness tracking
-    \item \textbf{Automatic HRR tracking throughout a workout} - The application should automatically track a user's HRR throughout a workout
-    \item \textbf{Feedback on what results mean for a user} - The application should give some form of feedback based on how good a HRR result is
-    \item \textbf{HRR Comparisons} - The application should allow for a direct comparison between two HRR measurements to be made 
+    \item \textbf{Fitness Tracking} - The application should allow for some form of fitness tracking.
+    \item \textbf{Automatic HRR tracking throughout a workout} - The application should automatically track a user's HRR during a workout.
+    \item \textbf{Feedback on what results mean for a user} - The application should give some form of feedback based on how good a HRR measurement is.
+    \item \textbf{HRR Comparisons} - The application should allow for a direct comparison between two HRR measurements to be made.
     
 \end{itemize}
 
 \subsection{Could Have}
 \label{sec:couldhave}
 
-"Could Have" requirements are features that could slightly add to the overall user experience, but are not massively important:
+"Could Have" requirements are features that could slightly add to the overall user experience, but are not overly important:
 
 \begin{itemize}
-    \item \textbf{Fitness History} - The application could store historical fitness statistics for the user to review
-    \item \textbf{User Profile} - The application could have some form of profile building for a user
+    \item \textbf{Fitness History} - The application could store historical fitness statistics for the user to review.
+    \item \textbf{User Profile} - The application could have some form of profile building for a user.
 \end{itemize}
 
 \subsection{Will Not Have}
 \label{sec:willnothave}
 
-"Will Not Have" requirements are features that might improve the overall user experience, but are not a priority for the given time frame:
+"Will Not Have" requirements are features that may improve the overall user experience, but are not a priority for the given time frame:
 
 \begin{itemize}
     \item \textbf{Support a variety of workouts} - In future, the application might host a variety of workouts to track.
-    \item \textbf{Colour categorisation for multiple workout types} - In future, the application might have different colour schemes for different workout types.
-    \item \textbf{Web Server for storing results} - In future, the application might store information on a web server to allow for viewing results on multiple devices.
-    \item \textbf{Mobile App/Mobile-first Web App} - In future, the application might have a mobile/web application developed alongside to allow for additional functionality.
-    \item \textbf{Goal Setting for workouts} - In future, the application might have a goal setting functionality, allowing users to set a goal to achieve in their chosen workout. For example, setting that they want to run 5 kilometres before finishing.
+    \item \textbf{Colour categorisation for multiple workout types} - In future, the application might have different colour themes for different workout types.
+    \item \textbf{Web Server for storing results} - In future, the application might store information on a web server, allowing viewing of results on multiple devices.
+    \item \textbf{Mobile App/Mobile-first Web App} - In future, the application might have a mobile/web application developed alongside, allowing for additional functionality.
+    \item \textbf{Goal-setting for workouts} - In future, the application might have a goal-setting functionality, allowing users to set a goal to aim for during their chosen workout. For example, they could set that they want to run 5 kilometres.
 \end{itemize}
 
 \section{Non-Functional Requirements}
@@ -297,48 +305,44 @@ Non-functional requirements focus on the quality of the finished product, ensuri
 
 \textbf{Performance} - The application is being developed on a smartwatch, meaning the performance of the application will be hindered by the smaller computational power in a smartwatch compared to a larger device such as a phone or a computer. It is important to ensure the finished product performs fluently with minimal latency across the system.
 
-\textbf{Portability} -  The application will be used primarily while on the move, such as during an exercise. This means the application needs to be as easy as possible to view and interact with on the move. This is a common design issue when developing applications on a smartwatch (TICWEAR DESIGN SOURCE)
+\textbf{Portability} -  The application will be used primarily while on the move, such as during an exercise. This means the application needs to be as easy and intuitive as possible when viewing and interacting with it on the move. This is a common design issue when developing applications on a smartwatch \cite{TicDesign}.
 
-\textbf{Accuracy} - The application is attempting to give an insight into users' health based on their Heart Rate Recovery. If the values presented to the user are inaccurate it could lead to misleading or harmful information for the user
+\textbf{Accuracy} - The application attempts to give an insight into users' health based on their Heart Rate Recovery. If the values presented to the user are inaccurate it could lead to misleading or harmful information for the user.
 
-\textbf{Reliability} - It is also important the application is reliable. The previously mentioned “Should Have” category discussed users being able to compare HRR readings. Similar to the reasoning above, if the values over time are vastly different it could lead to harmful interpretations from the user.
+\textbf{Reliability} - It is also important the application is reliable. The previously mentioned “Should Have” category discussed users' ability to compare HRR readings. Similar to the reasoning above, if compared values are vastly different it could lead to harmful interpretations from the user.
 
 %==================================================================================================================================
 \chapter{Design}
 \label{sec:design}
 
-For some users this could be their first experience using a smartwatch application, therefore it was essential to design the application to be as intuitive as possible. 
+For some users this could be their first experience using a smartwatch application, therefore designing the application to be as intuitive as possible was essential. 
 
-There were four main considerations when approaching the user interface that will be discussed further:
+There were four main considerations when designing the user interface that will be discussed further:
 
 \begin{itemize}
     \item \textbf{Application Flow Design} - Exploring the design of user flows throughout the application.
-    \item \textbf{User Interface} - Discussing the initial prototyping of the user interface, including how users will interact and navigate through the application.
-    \item \textbf{System Architecture} - Exploring the design of the chosen system architecture for the project
-    \item \textbf{Database Design} - Explaining the structure, entities and relationships of the database
+    \item \textbf{User Interface} - Discussing the final design of the user interface, including how users will interact and navigate with the application.
+    \item \textbf{System Architecture} - Exploring the design of the system architecture for the project.
+    \item \textbf{Database Design} - Explaining the structure of the database, breaking down the entities and relationships.
 \end{itemize}
 
 \section{Application Flow Design}
 \label{sec:appflow}
 
-A key aspect to consider when developing the application was how a user would go from opening the application to viewing a HRR reading. The flow of the application was a key factor to understand before starting development. The application has three main flows for the user to take, each accessible from the Home Page seen when the user launches the application as seen below.
+A key consideration when developing the application was imagining how a user would go from opening the application to viewing a HRR reading. The flow of the application was a key factor to understand before starting development. The application has three main flows for the user to take, each accessible from the Home Page displayed when the user launches the application.
 
-The first and main application flow is to record a workout and measure the user’s HRR. This begins with the user selecting the workout they want to do - currently this is just running however, this is where the opportunity for additional workout options would be as discussed in section \ref{sec:futurework}. The application will then enter a multiple-page “Active Workout” display, consisting of two pages that can be swiped between. One page will display the current workout metrics, while the other page acts as a settings page with options to pause or end the workout. Selecting to end the workout then takes the user to another multiple-page “Post-Workout” display. Here the user will be able to see information about their heart rate recovery, heart rate, and more generic workout metrics, as well as being able to return to the home page. This can be visualised in a flow chart, displayed in Figure 4.1 below.
+The first and main application flow is responsible for recording a workout and measuring the user’s HRR. This begins with the user selecting the workout they want to do - currently this is just running, however this is where additional workout categories could be added as discussed in section \ref{sec:futurework}. The application will then enter a multiple-page “Active Workout” display, consisting of two pages that can be horizontally swiped between. One page will display the current workout metrics, while the other page acts as a settings page for the workout - with options to pause or end the workout. Selecting to end the workout then takes the user to another multiple-page “Post-Workout” display. Here the user will be able to see information about their heart rate recovery, heart rate, and more generic workout metrics, as well as being able to return back to the home page. This can be visualised in a flow chart, shown in appendix \ref{fig:workoutflow}.
 
+The application also allows users to view their previous HRR measurements as defined in the Must Have requirements in section \ref{sec:musthave}. This is accomplished by clicking the “Health History” button. The app navigates to a multiple-page health history display where all the user’s workouts are shown. Clicking on one of these workouts will then allow you to view the same three pages as the "Post-Workout" display explained in the workout flow previously, with the possibility for multiple HRRs to be shown. This flow can be seen in appendix \ref{fig:healthhistoryflow}.
 
-
-The application also has to allow users to view their previous HRR measurements as defined in the Must Have requirements in section \ref{sec:musthave}. This is accomplished by clicking the “Health History” button. The app navigates to a multiple-page health history display where all the user’s workouts are shown. Clicking on one of these workouts will then allow you to view the same three pages as the post-workout section in the workout flow, with the possibility for multiple HRRs to be shown. This flow can be seen in Figure 4.2 below.
-
-
-
-Finally, the application also has a settings flow to allow for database modification. Accessible by clicking the settings icon on the home page, the application navigates to allow a choice between deleting workouts or viewing the set-up profile. If the user selects delete workouts, all workouts stored on the watch are deleted. Otherwise, clicking view profile will display the currently stored user information. This can either be edited - where the user passes through the profile builder described more in section \ref{sec:usersettings} to modify the database - or deleted - deleting the stored user from the database and navigating to set up a new profile. This can be seen in Figure 4.3 below.
+Finally, the application also has a settings flow to allow for database modification. This is accessible by clicking the settings icon on the home page, where the application navigates to allow a choice between deleting workouts or viewing the current set-up profile. If the user selects delete workouts, all workouts stored on the watch are deleted. Otherwise, clicking view profile will display the currently stored user information. This can either be edited - where the user passes through the profile builder described more in section \ref{sec:usersettings} to modify the database - or deleted - deleting the stored user from the database and navigating to set up a new profile. This can be seen in appendix \ref{fig:usersettingsflow}.
 
 \section{User Interface}
 \label{sec:ui}
 
-When initially approaching the challenge of developing prototype designs, I developed wireframes on Figma. Figma is a very useful tool for developing wireframes quickly by sketching a rough idea of how the application was going to look, with the added ability of creating user interactions. However, it was agreed upon early between me and my supervisor - Dr Sharon Ding - that it would be more beneficial to develop the design directly on the smartwatch itself. This would allow the testing of the user interaction alongside the design to ensure intuitiveness and clarity. It also gave me a more accurate scale to work on when developing the design, rather than developing on a much larger monitor. This also meant the design was one of the key focuses of the evaluation process, discussed further in section \ref{sec:userstudyaims}.
+When initially approaching the challenge of developing prototype designs, I developed wireframes on Figma. Figma is a useful tool for quickly developing wireframes by sketching a rough idea of how the application is going to look, with the added ability to create user interactions. However, it was agreed upon early between me and my supervisor - Dr. Sharon Ding - that it would be beneficial to develop the design directly on the smartwatch rather than continue with desktop-based prototypes. This allowed for testing of user interactions while designing to ensure intuitiveness and clarity throughout the application. It also gave me a more accurate scale to work with when developing the design, rather than developing on a much larger monitor. Due to this design not having an intial evaluation, it was one of the key focuses of the final evaluation process, discussed further in section \ref{sec:userstudyaims}.
 
-To discuss the final design I’ll break down the application into the three separate flows, discussed earlier in section \ref{sec:appflow}. 
+The final design can be broken down into the three separate flows discussed earlier in section \ref{sec:appflow}. 
 
 \subsection{Active Workout}
 \label{sec:activeworkout}
@@ -346,20 +350,15 @@ To discuss the final design I’ll break down the application into the three sep
 The active workout flow consists of six main pages, being:
 
 \begin{itemize}
-    \item \textbf{Select a Workout} - A basic page with buttons allowing the user to select a workout type. Currently this only displays running, however as explained in \ref{sec:futurework} this is where other workout types would be added.
-    \item \textbf{Active Workout Page} - The page users see while tracking a workout. This page design is discussed further below \ref{sec:activeworkoutsubsection}.
-    \item \textbf{HRR Measurement in Progress} - A timed page that shows the user their progress during a HRR reading. The circular design of this page is inspired by \cite{TicDesign}
+    \item \textbf{Select a Workout} - A basic page with buttons allowing the user to select a workout type. Currently, this only displays running, however as explained in \ref{sec:futurework} this is where other workout types would be added.
+    \item \textbf{Active Workout Page} - The page users see while tracking a workout. This page design is discussed further below.
+    \item \textbf{HRR Measurement in Progress} - A timed page that shows the user their progress during a HRR reading, with a circular progress bar design inspired by \cite{TicDesign}
     \item \textbf{HRR Measurement} - The page a user sees 60 seconds after ending their workout. It shows the user a graph representation of their Heart Rate Recovery, discussed further in section \ref{sec:hrrgraph}
-    \item \textbf{Heart Rate Range} -  A page showing the user their heart rate across the span of their workout. The graph design and implementation are discussed further in \ref{sec:hrrangegraph}
-    \item \textbf{Workout Metrics} - A simple page giving users other information from their workout, such as calories burned, active time and more. It’s also key navigationally for allowing users to return to the home page once their workout is complete.
+    \item \textbf{Heart Rate Range} -  A page showing the user their heart rate during their workout. The graph design and implementation are discussed further in \ref{sec:hrrangegraph}
+    \item \textbf{Workout Metrics} - A basic page giving users other information from their workout, including calories burned, active time and more. It’s also key for navigation, allowing users to return to the home page after their workout.
 \end{itemize}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=1\linewidth]{dissertation//dissImages/ActiveWorkoutCombined.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
-\end{figure}
+These designs can be seen in Figure \ref{fig:activeworkoutdesign} below.
 
 \noindent\mbox{}\\
 \subsubsection{Active Workout Page}
@@ -381,25 +380,34 @@ There is also a progress bar surrounding the display, showing a user how close t
 
 The user can interact with this page through the horizontal pagination of the application, allowing users to swipe along to reveal the workout settings. This workout settings page is a simple page consisting of a play/pause button and an end workout button. The circles seen at the bottom of the design give users a prompt that more content is available than what the initial active workout page shows, according to \cite{PageIndicators}. 
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.88\linewidth]{dissertation//dissImages/ActiveWorkoutCombined.png}
+    \caption{A combination of all screens visible in the active workout flow. From left to right, top to bottom: "Select a Workout", "Active Workout Page", "HRR Measurement in Progress", "HRR Measurement", "Heart Rate Range", "Workout Metrics"}
+    \label{fig:activeworkoutdesign}
+\end{figure}
+
 \subsection{Health History}
 \label{sec:healthhistory}
 
 The health history flow also consists of six pages, with two of these being nearly identical to some pages described above:
 
 \begin{itemize}
-    \item \textbf{Select a Workout} - This allows users to select a database-stored workout to review. This is set up with a horizontal pagination to show two workouts per page, with circles acting as a page indicator at the bottom to give context to the user of the number of workouts stored. Each workout shows the date the workout was completed below so users can understand what each workout is.
-    \item \textbf{HRR Measurement} - The design of this page is identical to the design seen on the active workout page, however has a few navigational differences. This page allows users to view all of their HRR readings recorded during the workout if any more have been taken. The graph also has a “Compare” icon in the top left, where selecting this opens the HRR Select page for users to compare results. This is done to accomplish “HRR Comparisons” discussed as a Should Have requirement in section \ref{sec:shouldhave}
+    \item \textbf{Choose a Workout} - This allows users to select a database-stored workout to review. This is set up with a horizontal pagination to show two workouts per page, with circles acting as a page indicator at the bottom to give context to the user of the number of workouts stored. Each workout shows the date the workout was completed below so users can understand what each workout is.
+    \item \textbf{HRR Measurement} - The design of this page is identical to the design seen on the active workout page, however with a few navigational differences. This page allows users to view all of their HRR readings recorded during the workout if any more have been taken. The graph also has a “Compare” icon in the top left, where selecting this opens the HRR Select page for users to compare results. This is done to accomplish “HRR Comparisons” discussed as a Should Have requirement in section \ref{sec:shouldhave}
     \item \textbf{Heart Rate Range} - This page is entirely identical to the Heart Rate Range page displayed to the user at the end of a workout, described in section \ref{sec:hrrangegraph}
-    \item \textbf{Workout Metrics} - Similarly this design is also identical to the page described above, with the only slight navigational difference being the home button navigates to the Select a Workout Page rather than the application home page.
-    \item \textbf{HRR Select Compare Page} - This page is designed similarly to the Select a Workout Page, however contains the HRR measurements in the buttons themselves to give users more context on what the measurement they are comparing the result against was like.
+    \item \textbf{Workout Metrics} - Similarly, this design is also identical to the page described above with the only slight navigational difference being the home button navigates to the Select a Workout Page rather than the application home page.
+    \item \textbf{HRR Select Compare Page} - This page is designed similarly to the Select a Workout Page, however it now contains the HRR measurements in the buttons themselves to give users more context on what the measurement they are comparing the result against was like.
     \item \textbf{HRR Compare} - The comparison page shows two different HRR measurements plotted on a graph for easy comparison. The specific design and implementation of the graph are discussed more in section \ref{sec:hrrcomparison}. This page uses horizontal pagination once again, allowing users to swipe across to view each of the results individually with the same design as the HRR measurement described in the previous section, finishing with a return to compare button that allows users to return to the  HRR Select Compare Page
 \end{itemize}
 
+These designs can be seen below in Figure \ref{fig:healthhistorydesign}
+
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\linewidth]{dissertation//dissImages/HealthHistoryCombined.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.88\linewidth]{dissertation//dissImages/HealthHistoryCombined.png}
+    \caption{A combination of all screens visible in the health history flow. From left to right, top to bottom: "Choose a Workout", "HRR Measurement", "Heart Rate Range", "Workout Metrics", "HRR Select Compare Page", "HRR Compare"}
+    \label{fig:healthhistorydesign}
 \end{figure}
 
 \subsection{User Settings}
@@ -408,20 +416,22 @@ The health history flow also consists of six pages, with two of these being near
 The user settings flow contains seven pages, with a few of these pages being very similar in design to one another:
 
 \begin{itemize}
-    \item \textbf{User Settings Page} - The landing page when a user enters the user settings flow. It is designed with a simple display of two buttons, one for viewing the profile and one for deleting the workout. The colours are plain here to prevent a user from doing an unintentional and irreversible action, such as a database deletion
+    \item \textbf{User Settings Page} - The landing page when a user enters the user settings flow. It is designed with a simple display of two buttons, one for viewing the profile and one for deleting the workout. The colours are plain here to prevent a user from doing an unintentional and irreversible action, such as a database deletion.
     \item \textbf{Profile View Page} - This page displays the stored information about the user: their age, weight and gender. This is displayed as a list at the top of the page to make it easy for users to see if their information is correct.
     \item \textbf{Are You Sure Page} - This page asks the user if they are sure they want to continue with their action, with a simple ‘Yes’ button - with a tick icon - or ‘No’ button - with a cross icon. This layout was chosen to keep consistent with existing technologies. There are two different versions of this page with identical designs that pose different questions - one for deleting workouts and one for deleting profiles.
     \item \textbf{Enter Birthday Page} - Here users can enter their birthday to be used for calculating their age at a later stage. Having the user enter their birthday rather than their age directly means the application can automatically update the user’s age rather than requiring them to change it every year. This page is designed with three buttons arranged horizontally, labelled “Day”, “Month” and “Year” respectively. Each of these buttons is associated with a drop-down menu that allows users to select a date. Finally, there is a green button at the bottom with a tick icon, indicating to the user to confirm their choice with this button once they have entered their birthday.
     \item \textbf{Enter Weight Page} - This page allows users to enter their weight. The design is inspired by the Enter Birthday Page to keep consistency across the profile-building process. The page has a button linked to a drop-down menu in the centre of the screen, showing the scale of “kg” next to it. Finally, the same green tick button is at the bottom, allowing users to confirm their selection once they have entered their weight.
     \item \textbf{Select Gender Page} - Here users can select their gender, choosing between “Male”, “Female” or “Other”. The buttons contain the respective icons for each of the genders. When a user selects one of the buttons it inverts the colours, highlighting the selected choice. The consistent design across the profile building is then maintained, with the green tick button in the same position at the bottom of the screen to confirm the choice.
-    \item \textbf{Successfully Deleted Page} - A basic splash screen that displays for 2 seconds, showing the user a confirmation message that the deletion was successful - either “Profile Successfully Deleted!” or “Workouts Successfully Deleted!”
+    \item \textbf{Successfully Deleted Page} - A basic splash screen that displays for 2 seconds, showing the user a confirmation message that the deletion was successful - either “Profile Successfully Deleted!” or “Workouts Successfully Deleted!”.
 \end{itemize}
+
+A selection of some of the more complex pages in this flow can be seen below in Figure \ref{fig:usersettingsdesign}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\linewidth]{dissertation//dissImages/UserSettingsCombined.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.88\linewidth]{dissertation//dissImages/UserSettingsCombined.png}
+    \caption{A combination of all screens visible in the health history flow. From left to right, top to bottom: "User Settings Page", "Profile View Page", "Are You Sure Page", "Enter Birthday Page", "Enter Weight Page", "Select Gender Page"}
+    \label{fig:usersettingsdesign}
 \end{figure}
 
 \section{System Architecture}
@@ -447,11 +457,13 @@ The project database has a simple design, with only two entities required for th
 
 The relation of these objects does not require foreign keys in the database design. This is because there can only ever be one user object that all workout objects are inherently related to. It was still however important to have unique identifiers for each of the objects, being the primary keys of the entities. For the User object, this identifier is a name field, which is always set to “user” for referencing later. For the Workout object, the identifier is an auto-incrementing ID number.
 
+This can be seen below in Figure \ref{fig:erdiagram}
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.75\linewidth]{dissertation//dissImages/ERDiagram.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \caption{An Entity-Relationship (ER) Diagram of the Database Structure}
+    \label{fig:erdiagram}
 \end{figure}
 
 %==================================================================================================================================
@@ -463,11 +475,11 @@ This chapter describes the implementation methods and techniques used throughout
 \section{Development Environment}
 \label{sec:devenv}
 
-Development for this project was carried out on the Mobvoi TicWatch Pro 3 GPS, an Android-based smartwatch with the Google Wear OS operating system. The smartwatch includes several sensors accessible through simple API calls built into Android, allowing me to interact freely with the Heart Rate Monitor and Accelerometer as discussed in later sections. 
+Project development was carried out on the Mobvoi TicWatch Pro 3 GPS, an Android-based smartwatch with the Google Wear OS operating system. The smartwatch includes several sensors, accessible through simple API calls built into Android. This allowed me to interact freely with the Heart Rate Monitor and Accelerometer discussed throughout this chapter. 
 
-Application development was carried out on Android 9 “Pie”, corresponding to Wear OS 2.26. Later through the evaluation process, an updated version of Android was tested also ensuring the app remained fully functional on Android 11 “R” with Wear OS 3.5.
+Development was carried out on Android 9 “Pie”, corresponding to Wear OS 2.26. Later through the evaluation process, an updated version of Android was tested, ensuring the app remained fully functional on Android 11 “R” with Wear OS 3.5.
 
-The IDE used for the project was Android Studio, the official IDE for Android development built by JetBrains as an extension from IntelliJ. Android Studio has many great features out of the box that ease development, such as the ability to run device emulators to see changes and debug issues quickly without having to download the application to the watch, as well as real-time linting and quick fixes to help spot mistakes or redundancies in code. Another major benefit of developing on Android Studio was the built-in Android Debug Bridge (ADB) - part of the Android Software Development Kit (SDK) - that allows Android Studio to directly connect to the TicWatch over WiFi to send application packages to the watch to be installed.
+The Integrated Development Environment (IDE) used for the project was Android Studio, the official IDE for Android development built by JetBrains as an extension from IntelliJ. Android Studio had many great features out of the box that eased development, such as the ability to run device emulators to see changes and debug issues quickly without having to download the application to the watch, as well as real-time linting and quick fixes to help spot mistakes or redundancies in code. Another major benefit of developing with Android Studio was the built-in Android Debug Bridge (ADB) - part of the Android Software Development Kit (SDK) - that allowed Android Studio to directly connect to the TicWatch over WiFi to install application packages on the watch.
 
 \section{Technologies}
 \label{sec:technologies}
@@ -475,61 +487,63 @@ The IDE used for the project was Android Studio, the official IDE for Android de
 When deciding on technologies, there were three main areas of concern:
 
 \begin{itemize}
-    \item A well-documented and modern programming language to develop the application
-    \item A reliable and robust layout framework to make the application as user-friendly as possible
-    \item A synchronous and efficient database structure to store data
+    \item A well-documented and modern programming language to develop the application.
+    \item A reliable and robust layout framework to make the application as user-friendly as possible.
+    \item A synchronous and efficient database management method to store data effectively.
 \end{itemize}
 
-In this section, I will explore the different considerations when selecting the chosen technologies. This includes a brief history of the various technologies, before moving on to the standout features that prompted me to use them and the drawbacks I remained aware of while developing with them
+This section explores the different considerations when selecting the chosen technologies. This includes a brief history of the various technologies, before moving on to the standout features that encouraged their use and the drawbacks I remained aware of during development.
 
 \subsection{Kotlin vs Java}
 \label{sec:kotlinvsjava}
 
-Historically, Android apps have primarily been developed in Java, the official language of Android Development since Android’s inception in 2008. However, since the release of Kotlin more and more developers have made the change over from Java for feature development.
+Historically, Android apps have primarily been developed in Java, with it being the official language of Android Development since Android’s inception in 2008. However, since the release of Kotlin, an increasing number of developers have transitioned from Java to Kotlin for their feature development process.
 
-Kotlin is a statically typed, high-level programming language officially released in 2016 by JetBrains, the company behind the popular Integrated Development Environments (IDEs) IntelliJ and PyCharm (SOURCE). Kotlin was developed with the idea it would become a “better language” than Java ([SOURCE](https://www.jrebel.com/blog)). It remains a younger programming language compared to similar long-term languages such as Java however, was already announced as the preferred programming language for Android development by Google at the Google I/O Conference in 2019.
+Kotlin is a statically typed, high-level programming language officially released in 2016 by JetBrains, the company behind the popular IDEs IntelliJ and PyCharm (\cite{Breslav_2016}). Kotlin was developed with the main ideology that it would become a “better language” than Java. It remains a younger programming language compared to similar long-term languages like Java, however it was already announced as the preferred programming language for Android development by Google at the Google I/O Conference 2019 (\cite{Haase_2019}).
 
-Kotlin is strongly influenced by Java syntactically while simplifying some of Java’s constructs such as semicolons to end a statement and getter and setter methods. The concise nature of Kotlin - through features such as type inference - allows for around 20\% less code to provide more functionality according to Medium ([SOURCE](https://medium.com/@johnkorly/kotlin-vs-java-performance-drill-down-which-to-choose-2514bdf91916)). Another key benefit of choosing Kotlin is reliability. Due to the nature of static types and null checking in Kotlin, it is reported that Google Home saw a 33\% decrease in NullPointerExceptions after changing over development to Kotlin, with the top 1,000 apps on the Google Play Store having 20\% fewer crashes per user on average ([SOURCE](https://medium.com/androiddevelopers/fewer-crashes-and-more-stability-with-kotlin-b606c6a6ac04)). Ultimately, Kotlin is now the chosen development language by several major international companies such as Netflix, Slack and X due to its benefits over Java however, that doesn’t mean Kotlin doesn’t have its drawbacks.
+Kotlin is strongly influenced by Java syntactically while simplifying some of Java’s constructs, such as semicolons to end a statement and getter and setter methods. The concise nature of Kotlin - through features such as type inference - allows for a 20\% code reduction while providing more functionality according to \cite{Korly_2019}. Another key benefit of choosing Kotlin is reliability. Due to the nature of static types and null checking in Kotlin, it is reported that Google Home saw a 33\% decrease in NullPointerExceptions after transitioning development to Kotlin, with the top thousand apps on the Google Play Store having 20\% fewer crashes per user on average \cite{Muntenescu_2020}. Ultimately, Kotlin is now the chosen development language by several major international companies such as Netflix, Slack and X due to its benefits over Java, however Kotlin still has some drawbacks.
 
-One of the main difficulties I was wary of was the age of the language. As previously mentioned Kotlin was first stably released in February 2016, just over 20 years after the first Java release in 1996. This immaturity in comparison to Java causes less documentation and general community when trying to solve a problem. In general, when finding a bug in your code you are much more likely to find a solution developing in Java compared to Kotlin. FIND ANOTHER NEGATIVE POINT TO BOOST THIS LAST PARAGRAPH
+One of the main difficulties is the age of the language. As previously mentioned Kotlin was first stably released in February 2016, just over 20 years after the first Java release in 1996. This immaturity in comparison to Java causes less documentation and less general community when trying to solve a problem. In general, when finding a bug in your code you are more likely to find a solution when developing in Java compared to Kotlin.
 
 \subsection{Jetpack Compose vs XML}
 \label{sec:composevsxml}
 
-Android user interface (UI) development has undergone several changes and improvements over the years. Initially, it was standard to build UIs with XML, a markup language that defines the layout and appearance of UI elements. Using XML allowed developers to separate the layout from the logic of the application and reuse whole components made of XML, similar to many popular modern Web Application frameworks such as React and Flutter. However, XML also had several drawbacks such as its verbosity and inability to support dynamic changing UIs that change for different events. In 2019, Google announced their experiment to solve some of these issues through a project named Jetpack Compose.  It was further refined across two years before reaching its first stable release in July 2021. Since then it has evolved into the recommended way to build Android UI by Google.
+Android user interface (UI) development has undergone several changes and improvements across the years. Initially, it was standard to build UIs with XML, a markup language that defines the layout and appearance of UI elements. Using XML allowed developers to separate the layout from the logic of the application and reuse UI components, similar to many popular modern Web Application frameworks such as React and Flutter. However, XML also had several drawbacks, such as its verbosity and inability to support dynamically changing UIs. In 2019, Google announced their experiment to solve these issues through a project named Jetpack Compose.  It was further refined across two years before reaching its first stable release in July 2021. Since then it has evolved into the recommended way to build Android UI by Google.
 
-Jetpack Compose is a “modern UI toolkit” that aims to simplify the UI development process in Android. It allows for all the functionality of XML and more while maintaining the conciseness of Kotlin programming. In 2020 (CHECK THIS), the TV show tracking Android application ‘Tivi’ went through a migration of an XML-based layout approach to Jetpack Compose and saw a 41\% decrease in Android Package (APK) when using Jetpack Compose. They also report a 76\% decrease in XML lines as well as an 8\% decrease in Kotlin lines across the project while maintaining a very similar application layout. Finally, they also found a 29\% reduction in build time after converting the project to Jetpack Compose. Moving away from statistical improvements, Jetpack Compose also easily allows for dynamic rendering through the use of states. With all the performance improvement and concise nature of Jetpack Compose, alongside the dynamic rendering necessary for my application, Jetpack Compose was the clear choice
+Jetpack Compose is a “modern UI toolkit” that aims to simplify the UI development process in Android. It allows for an increase in the functionality compared to XML while maintaining the conciseness of Kotlin. In 2020, the TV show tracking Android application ‘Tivi’ went through a migration of an XML-based layout approach to Jetpack Compose and saw a 41\% decrease in Android Package (APK) when using Jetpack Compose (\cite{Banes_2020}). They also report a 76\% decrease in XML lines as well as an 8\% decrease in Kotlin lines across the project while maintaining a very similar application layout. Finally, they also found a 29\% reduction in build time after converting the project to Jetpack Compose. Moving away from statistical improvements, Jetpack Compose also easily allows for dynamic rendering through the use of states. With all the performance improvement and concise nature of Jetpack Compose, alongside the dynamic rendering necessary for the application functionality, Jetpack Compose was the clear choice
 
-However, Jetpack Compose isn’t without its challenges and difficulties. Regardless of the layout framework chosen - XML or Jetpack Compose - they were both new frameworks however, XML is much more similar to previous layout technologies I’ve used such as HTML and CSS. This likely required a slightly longer time to practice and master Jetpack Compose than if I chose to develop in XML. This learning curve is worsened by the lack of documentation and resources available in comparison to XML ([SOURCE](https://medium.com/@gaga.lomidze/xml-vs-jetpack-compose-advantages-and-disadvantages-538ceee28dbd)) due to how new the framework is.
+However, Jetpack Compose is not without its challenges and difficulties. The learning curve for Jetpack Compose can be more complex, with the lack of documentation and resources available in comparison to XML due to how new the framework is, as noted by \cite{Lomidze_2023}.
 
 \subsection{Room Database}
 \label{sec:room}
 
-Android development has always relied on SQLite - a lightweight and efficient relational database management system - for applications storing data. It is a powerful tool that is well-suited for small to medium-scale projects, known for being reliable and efficient. However, dealing directly with SQLite can be complicated, relying on a lot of boilerplate code to work effectively (SOURCE).
+Android database development has always relied on SQLite - a lightweight and efficient relational database management system - for applications storing data. It is a powerful tool well-suited for small to medium-scale projects and known for being reliable and efficient (\cite{Ferrell_2022}). However, dealing directly with SQLite can be complicated, relying on a lot of boilerplate code to work effectively as noted by \cite{Rawat_2019}.
 
-The Room Database is an Android library that simplifies data persistence (SOURCE). It is used as a layer of abstraction over SQLite, maintaining efficiency while reducing the complexity of database interactions. Room is an Object Relational Mapping (ORM) library, meaning it maps database objects directly to Java objects to be interacted with in our code. This greatly reduces the need for boilerplate code when developing a database system. 
+The Room Database is an Android library that simplifies data persistence (\cite{Rawat_2019}). It is used as a layer of abstraction over SQLite, maintaining efficiency while reducing the complexity of database interactions. Room is an Object Relational Mapping (ORM) library, meaning it maps database objects directly to Kotlin objects to be interacted with in our code. This greatly reduces the need for boilerplate code when developing a database system. 
 
-Room also has the added benefit of built-in compile-time SQL validation. This means that Room ensures the SQL operations throughout the application are valid, rather than having to debug a crash that would be standard with using an SQLite approach.
+Room also has the added benefit of compile-time SQL validation. This means that Room ensures the SQL operations throughout the application are correct, rather than debugging a complex crash - the standard when using an SQLite approach.
 
 Room has three main components:
 
 \begin{itemize}
-    \item \textbf{Entity} - An Entity as the name suggests represents an entity in the database. In my application, there are two entities used - a ‘User’ and a ‘Workout’ entity. This is responsible for defining the data types and the structure of the object, allowing for convenient reading and manipulation by Kotlin code when necessary
-    \item \textbf{Data Access Object (DAO)} - DAOs are responsible for the interactions with the database. It translates functions called in the Kotlin code into SQL requests, allowing for efficient access to the database whenever it is required
-    \item \textbf{Database} - The Database object holds the actual database, and is responsible for instantiating the database upon the launch of the application. It is the main part of the component stack allowing for data persistence, even when the application is closed or the device powers off
+    \item \textbf{Entity} - An Entity as the name suggests represents an entity in the database. In my application, two entities are used - a ‘User’ and a ‘Workout’ entity. This component is responsible for defining the data types and the structure of the object, allowing for convenient reading and manipulation by Kotlin code when necessary.
+    \item \textbf{Data Access Object (DAO)} - DAOs are responsible for the interactions with the database. It translates functions called in the Kotlin code into SQLite requests, allowing for efficient access to the database whenever it is required.
+    \item \textbf{Database} - The Database object holds the application database, and is responsible for instantiating this database upon the launch of the application. It is the main part of the component stack that allows for data persistence, even when the application is closed or the device powers off.
 \end{itemize}
+
+This structure and interaction set-up can be seen in Figure \ref{fig:roomstructure}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{dissertation//dissImages/RoomDatabaseStructure.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \caption{A diagram of the components and interactions in the Room Database structure. Image by \cite{Rawat_2019}}
+    \label{fig:roomstructure}
 \end{figure}
 
 \section{Algorithms}
 \label{sec:algorithms}
 
-Algorithms are the backbone of functionality within my application, processing and reacting to data to calculate and present detailed results to the user. This chapter will investigate the three algorithms imperative to functionality:
+Algorithms are the backbone of functionality within my application, processing and adapting to data to calculate and present detailed results to the user. This chapter will investigate the three algorithms imperative to functionality:
 
 \begin{itemize}
     \item \textbf{Heart Rate Recovery Algorithm} - The core algorithm that, when called upon, stores and calculates the change in a user’s heart rate across a minute. The algorithm stores these heart rates as a list in the database to be used in the results section
@@ -537,26 +551,24 @@ Algorithms are the backbone of functionality within my application, processing a
     \item \textbf{Calorific Expenditure Algorithm} - An algorithm used to track the calories burned by the user during a workout. Another useful health metric based on age, weight, gender and heart rate that further helps a user understand how intense their exercise was.
 \end{itemize}
 
-These algorithms were implemented in an Android ViewModel as previously discussed in chapter (ENTER CHAPTER HERE) so the calculations can happen in the background and do not prevent the user from using and navigating the application.
+These algorithms were implemented in an Android ViewModel, previously discussed in section \ref{sec:systemarch}, allowing the processing of calculations in the background and maintaining the user's ability to use and navigate the application as normal.
 
-There are a few other processes reliant on these algorithms not further explained, one of which is the updating of the progress variable. This progress variable is a measure of the completion percentage of a HRR reading, stored as a floating point number and updated throughout the HRR algorithm. The progress is used during the results section, described in section (ENTER CHAPTER NUMBER HERE), and allows for a progress-bar style update to the user to visualise how far through their HRR reading they are.
+There are a few other processes reliant on these algorithms that are not explored further. One of which is the updating of the progress variable. This progress variable is a measure of the completion percentage of a HRR reading, stored as a floating point number and updated throughout the HRR algorithm. The progress is used during the results section, allowing for a progress bar for the user to visualise how far through their HRR reading they are.
 
-The Automatic Pausing functionality described in the automating HRR measurements subsection describes setting the application state to paused or resumed depending on the movement of the device. This application state determines the difference between the Active Time - the time a user is actively moving for - and the Total Duration of a workout - the total time since the workout started. This allows a user to get a more accurate understanding of how long they have been working out.
+The Automatic Pausing functionality described in the automating HRR measurements subsection (Section \ref{sec:autohrr}) describes setting the application state to "paused" or "resumed" depending on the movement of the device. This application state determines the difference between the Active Time - the time a user is actively moving for - and the Total Duration of a workout - the total time since the workout started. This allows a user to get a more accurate understanding of how long they have been working out.
 
-Finally, the application makes use of theoretical maximum heart rate. This is determined by (SOURCE) as a reliable method to approximate the maximum heart rate of the user, based on their age. It is implemented with the following function:
+Finally, the application makes use of theoretical maximum heart rate. This is determined by \cite{NesHRmax} as a reliable method to approximate the maximum heart rate of the user, based on their age, as noted in section \ref{sec:backgroundmaxhr}. It is implemented with the following function:
 
 $$
-MaxHR = 211 - (0.64 \times A)
+HR_{max} = 211 - (0.64 \times Age)
 $$
-
-Where $A$ is the user’s age.
 
 \subsection{Heart Rate Recovery}
 \label{sec:hrrimplementation}
 
-The main algorithm the application is built around is the Heart Rate Recovery algorithm. This is handled in the form of a function that, when called upon, will track the user’s heart rate over the space of a minute and return the list of results. The reasoning behind returning a list of results is so heart rates can be plotted in a smooth bar chart for the user to help visualise this change in heart rate. This algorithm is run asynchronously to maintain app usability and navigation while these measurements and calculations are happening. 
+The core algorithm the application is built upon is the Heart Rate Recovery algorithm. This algorithm is implemented as a function that, when called upon, will track the user’s heart rate across a minute and return the list of heart rates. The reasoning behind returning haert rates as a list is so the heart rates can be plotted in a smooth bar chart to help visualise this change in heart rate for the user. This algorithm is run asynchronously to maintain app usability and navigation while these measurements and calculations are happening. 
 
-The algorithm is dependent on the heart rate sensor, another function implemented in the ViewModel. The function registers a listener to the heart rate sensor and then detects any updates from the heart rate sensor. It also keeps track of the peak heart rate that can be used in the HRR calculation, as described in step 1 below. 
+The algorithm depends on the heart rate sensor, another function implemented in the ViewModel. The function registers a listener to the heart rate sensor and then detects any updates from the heart rate sensor. It also keeps track of the peak heart rate that can be used in the HRR calculation, as described in step 1 below. 
 
 To breakdown the algorithm, these are the steps that happen once the function is called:
 
@@ -590,10 +602,10 @@ The movement detection algorithm is implemented as follows:
     \sqrt{x^2 + y^2 + z^2} - 9.81
     $$
     
-    Where $x$, $y$ and $z$ represent the three axes of direction. Note the subtraction of 9.81 is to counteract acceleration due to gravity
+    Where $x$, $y$ and $z$ represent the three directional axes. Note the subtraction of 9.81 is to counteract acceleration due to gravity
     \item The magnitude is then added to a measurement list. To keep this list to a standard size, whenever this list exceeds 300 readings, the first reading is removed. Due to the nature of a sensor updates approximately every 10 milliseconds, the measurement list stores approximately a 3-second window of acceleration magnitudes. The average of this list is then calculated, with this value representing the user’s movement across the 3 seconds.
     \item If this average acceleration value drops below the threshold value of 2.75, the application assumes the user to be taking a break. When this happens, the application triggers a vibration to indicate to the user the change in status. 
-    \item The application then calculates the theoretical maximum heart rate (POTENTIAL FOR A SOURCE HERE) of the user. Then, ensuring the application is still in a paused state and the current heart rate is greater than half of the theoretical maximum for the user, the application triggers an intermediate HRR reading
+    \item The application then calculates the theoretical maximum heart rate of the user (see section \ref{sec:backgroundmaxhr} for the method of this calculation). Then, ensuring the application is still in a paused state and the current heart rate is greater than half of the theoretical maximum for the user, the application triggers an intermediate HRR reading
 \end{enumerate}
 
 Both of the algorithm’s hyperparameters - the threshold value for stopping movement (at 2.75) and the number of readings stored at once from the accelerometer (at 300) - were tuned through the auto-ethnography, with further feedback to optimise the accuracy gathered through the pilot and user studies
@@ -601,7 +613,7 @@ Both of the algorithm’s hyperparameters - the threshold value for stopping mov
 \subsection{Calorific Expenditure Algorithm}
 \label{sec:calories}
 
-The final algorithm explained in detail is the calorific expenditure calculation, used to accumulate the calories burned during a workout. The algorithm heavily relies on the information provided by the user at the profile creation stage, including their weight, age and gender. This calculation is based on (ENTER SOURCE HERE).
+The final algorithm explained in detail is the calorific expenditure calculation, used to accumulate the calories burned during a workout. The algorithm heavily relies on the information provided by the user at the profile creation stage, including their weight, age and gender. This calculation is based on \cite{Dale_Griffin_2023}.
 
 The algorithm is implemented as follows:
 
@@ -609,15 +621,15 @@ The algorithm is implemented as follows:
     \item Upon a user starts a workout, the function for calculating calories is called. The algorithm acquires the user’s details from the database and calculates the user’s age from their birthday.
     \item Once the algorithm has the user’s details, it enters a while loop with the condition that the state variable calculateCalories is set to true. This state variable is initialised as true and only set to false once a user has finished their workout. Within this while loop, the calories burned across one second are calculated. There are three different calculations the application can use, depending on the gender selected by the user at the time of profile creation:
     \begin{itemize}
-        \item Where the user has selected male, the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
+        \item Where the user has selected "Male", the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
         $$
-            \frac{-55.0969 + (0.6309 \times H) + (0.1988 \times W) + (0.2017 \times A)}{4.184 \times 60}
+            Calories = \frac{-55.0969 + (0.6309 \times H) + (0.1988 \times W) + (0.2017 \times A)}{4.184 \times 60}
         $$
-        \item Where the user has selected female, the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
+        \item Where the user has selected "Female", the following calculation is used ($H$ = Current Heart Rate, $W$ = User Weight, $A$ = User Age):
         $$
-            \frac{-20.4022 + (0.4472 \times H) + (0.1263 \times W) + (0.074 \times A)}{4.184 \times 60}
+            Calories = \frac{-20.4022 + (0.4472 \times H) + (0.1263 \times W) + (0.074 \times A)}{4.184 \times 60}
         $$
-        \item Where the user has selected other, the calculation is determined as the average of the results of the previous two equations. While this solution is not necessarily the most accurate method of measuring calories in this circumstance, according to ([Calculating TDEE/BMR for Transgender or Non-Binary Individuals – ABC Trainerize Help Center](https://help.trainerize.com/hc/en-us/articles/16950447732372-Calculating-TDEE-BMR-for-Transgender-or-Non-Binary-Individuals)) there is “currently no calculation or guideline that does not use sex assigned at birth” to do this calculation, therefore, I believed it to be the best solution to ensure my application caters to as many people as possible.
+        \item Where the user has selected "Other", the calculation is determined as the average of the results of the previous two equations. While this solution is not necessarily the most accurate method of measuring calories in this circumstance, according to \cite{Trainerize_2024} there is “currently no calculation or guideline that does not use sex assigned at birth” to do this calculation, therefore, I believed it to be the best solution to ensure my application caters to as many people as possible.
     \end{itemize}
 
     \item The result of this calculation is then added to a running total, with this running total being accessible to the frontend of the application to display to the user and store in the database upon workout completion. This while loop is repeated once a second to ensure frequent updates of the current calorie count.
@@ -628,7 +640,7 @@ The algorithm is implemented as follows:
 \section{Visualising Results}
 \label{sec:visualiseresults}
 
-To present HRR reading results to the user I used a graphical representation, with the main aim of this approach to allow users to visualise complex numbers as a clear and easy-to-understand graph. Tableau (https://www.tableau.com/data-insights/data-visualization/advantages-disadvantages) states that using graphs for data visualisation allows users to more easily comprehend results compared to just showing numbers, leading to a quicker absorption of knowledge.
+To present HRR reading results to the user I used a graphical representation, with the main aim of this approach to allow users to visualise complex numbers as a clear and easy-to-understand graph. \cite{Tableau_2024} states that using graphs for data visualisation allows users to more easily comprehend results compared to just showing numbers, leading to a quicker absorption of knowledge.
 
 There are three different categories of graphs implemented within my project, all implemented as bar charts:
 
@@ -638,7 +650,7 @@ There are three different categories of graphs implemented within my project, al
     \item \textbf{HRR Comparison} - A comparison graph that plots two Heart Rate Recovery measurements, chosen by the user, to display the difference between the two results.
 \end{itemize}
 
-The graphs were implemented using the MPAndroidChart library (LINK TO GITHUB HERE). I chose to use this graphing package due to its high level of customisability through a custom renderer. This renderer was implemented slightly differently for each of the graphs mentioned above. In general, it was used to give users more information than just a standard bar chart, where I could highlight target “zones” or differentiate two separate sets of results. MPAndroidChart graphs also have a built-in animation for rendering the bar charts, plotting the results chronologically to further emphasise the progression of readings. 
+The graphs were implemented using the MPAndroidChart library. I chose to use this graphing package due to its high level of customisability through a custom renderer. This renderer was implemented slightly differently for each of the graphs mentioned above. In general, it was used to give users more information than just a standard bar chart, where I could highlight target “zones” or differentiate two separate sets of results. MPAndroidChart graphs also have a built-in animation for rendering the bar charts, plotting the results chronologically to further emphasise the progression of readings. 
 
 \subsection{Heart Rate Recovery Graph}
 \label{sec:hrrgraph}
@@ -651,17 +663,10 @@ To implement this, I first extracted the start and end values from the list, as 
     \item Remove the first and last values of the HRR list for the first and last values in the graph
     \item Divide the remaining 166 by 28 = 5 with remainder of 26
     \item Bucket size of 6 for the first 26 buckets, and 5 for the remaining 2
-    \item Take a sublist of the HRR list for the bucket, and add the average as a value to be plotted on the graph
+    \item Take a sublist of the HRR list for the bucket and add the average as a value to be plotted on the graph
 \end{itemize}
 
-Once the list has been normalised to 30 values through the bucketing process, the graph is then plotted. The x-axis shows the progress of time, showing 0s and 60s at the two ends of the measurement. The y-axis shows the heart rate values, allowing users to see the heart rate values throughout the measurement. Above the graph is the actual HRR value, calculated by subtracting the first and last heart rate stored in the HRR list.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/HRRGraph.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
-\end{figure}
+Once the list has been normalised to 30 values through the bucketing process, the graph is then plotted. The x-axis shows the progress of time, showing 0s and 60s at the two ends of the measurement. The y-axis shows the heart rate values, allowing users to see the heart rate values throughout the measurement. Above the graph is the actual HRR value, calculated by subtracting the first and last heart rate stored in the HRR list. This graph can be seen in Figure \ref{fig:hrrgraph}
 
 As well as the heart rates plotted on the graph, there are also some highlighted zones. These are used in both the Heart Rate Recovery and Heart Rate Range graphs to provide users with more information at a glance on how their readings compare to what is expected. In the case of HRR, there are three different zones:
 
@@ -671,16 +676,23 @@ As well as the heart rates plotted on the graph, there are also some highlighted
     \item \textbf{Zone 3 (High HRR)} - This level indicates a recovery greater than 25 BPM, associated with improved fitness and athletic performance
 \end{itemize}
 
-These zones are possible thanks to the custom renderer, mentioned in section \ref{sec:visualiseresults}. They are calculated and plotted synchronously with the rest of the graph, coloured semi-transparently to prevent the colours from over-cluttering the graph and confusing users. Users can understand what each of the zones indicates by clicking the information icon, located at the top-right of the graph. The values selected for Low, Healthy and High HRR are from the same paper mentioned in section \ref{sec:backgroundhrr}, \cite{HRR2000}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\linewidth]{dissertation//dissImages/HRRGraph.png}
+    \caption{An example HRR graph displayed to the user after they finish their workout}
+    \label{fig:hrrgraph}
+\end{figure}
+
+These zones are possible thanks to the custom renderer, mentioned in section \ref{sec:visualiseresults}. They are calculated and plotted synchronously with the rest of the graph, coloured semi-transparently to prevent the colours from over-cluttering the graph and confusing users. Users can understand what each of the zones indicates by clicking the information icon, located at the top-right of the graph. The values selected for Low, Healthy and High HRR are from the same paper mentioned in section \ref{sec:backgroundhrr}, \cite{HRR2000}. The zonal description displayed can be seen in Figure \ref{fig:hrrgraphzones}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\linewidth]{dissertation//dissImages/CombinedHRRZones.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.9\linewidth]{dissertation//dissImages/CombinedHRRZones.png}
+    \caption{The zones displayed to a user after clicking the information icon on the HRR graph}
+    \label{fig:hrrgraphzones}
 \end{figure}
 
-At the top of the graph, there is also another icon top-left. This icon allows the user into the HRR Comparison page, discussed further in section \ref{sec:hrrcomparison}
+At the top of the graph, there is also another icon on the left. This icon allows the user into the HRR Comparison page, discussed further in section \ref{sec:hrrcomparison}
 
 \subsection{Heart Rate Range Graph}
 \label{sec:hrrangegraph}
@@ -689,33 +701,33 @@ When swiping along from the HRR bar chart, you are met with another bar chat sho
 
 As well as the heart rates, the graph also has a feint grey horizontal line plotted, representing the user’s average heart rate. This value is calculated from the list of heart rates gathered from the database to ensure it takes into account the whole workout. The average heart rate value is displayed above the line as another way for users to understand the intensity of their workout.
 
-The x-axis represents the user’s total workout duration, retrieved from the database, with the different heart rate values being plotted on the y-axis. Above the graph, the heart rate range is shown in the format “{Minimum Heart Rate} - {Maximum Heart Rate} BPM”.
+The x-axis represents the user’s total workout duration, retrieved from the database, with the different heart rate values being plotted on the y-axis. Above the graph, the heart rate range is shown in the format “{Minimum Heart Rate} - {Maximum Heart Rate} BPM”. This graph can be seen in Figure \ref{fig:heartrategraph}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/HRRangeGraph.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.4\linewidth]{dissertation//dissImages/HRRangeGraph.png}
+    \caption{An example Heart Rate Range graph displayed to the user after they finish their workout}
+    \label{fig:heartrategraph}
 \end{figure}
 
 There are six different highlighted zones representing different levels of heart rate intensity:
 
 \begin{itemize}
-    \item \textbf{Zone 1 (Sedentary)} - This level indicates a heart rate less than 50\% of your theoretical maximum heart rate, representing a healthy resting heart rate
-    \item \textbf{Zone 2 (Very Light)} - This level represents 50-60\% of your theoretical maximum heart rate, great for improving overall health and helping recovery
-    \item \textbf{Zone 3 (Light)} - This level represents 60-70\% of your theoretical maximum heart rate, great for improving basic endurance and fat-burning
-    \item \textbf{Zone 4 (Moderate)} - This level represents 70-80\% of your theoretical maximum heart rate, great for improving aerobic fitness
-    \item \textbf{Zone 5 (Hard)} - This level represents 80-90\% of your theoretical maximum heart rate, great for increasing maximum performance
-    \item \textbf{Zone 6 (Extreme)} - This level represents 90-100\% of your theoretical maximum heart rate, great for developing maximum performance and speed
+    \item \textbf{Zone 1 (Sedentary)} - This level indicates a heart rate less than 50\% of your theoretical maximum heart rate, representing a healthy resting heart rate.
+    \item \textbf{Zone 2 (Very Light)} - This level represents 50-60\% of your theoretical maximum heart rate, great for improving overall health and helping recovery.
+    \item \textbf{Zone 3 (Light)} - This level represents 60-70\% of your theoretical maximum heart rate, great for improving basic endurance and fat-burning.
+    \item \textbf{Zone 4 (Moderate)} - This level represents 70-80\% of your theoretical maximum heart rate, great for improving aerobic fitness.
+    \item \textbf{Zone 5 (Hard)} - This level represents 80-90\% of your theoretical maximum heart rate, great for increasing maximum performance.
+    \item \textbf{Zone 6 (Extreme)} - This level represents 90-100\% of your theoretical maximum heart rate, great for developing maximum performance and speed.
 \end{itemize}
 
-These zones have a different colour scheme to the HRR zones, however maintain a similar semi-transparent approach and are again achievable through the custom renderer. There is an information icon located at the top-right of the graph that allows users to understand what each of the coloured zones represents. The zonal highlighting values are scientifically proven intensity zones, as mentioned by \cite{8025953}
+These zones have a different colour scheme to the HRR zones, however maintain a similar semi-transparent approach and are again achievable through the custom renderer. There is an information icon located at the top-right of the graph that allows users to understand what each of the coloured zones represents, as seen in figure \ref{fig:heartrategraphzones}. The zonal highlighting values are scientifically-proven intensity zones, as mentioned by \cite{8025953}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HRZonesCombined.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \caption{The zones displayed to a user after clicking the information icon on the Heart Rate Range graph}
+    \label{fig:heartrategraphzones}
 \end{figure}
 
 \subsection{HRR Comparison}
@@ -723,13 +735,13 @@ These zones have a different colour scheme to the HRR zones, however maintain a 
 
 To compare HRR readings previously, users would have to flick between two different readings potentially even in different workouts. It was also often difficult to compare that way due to the different heart rate values in a HRR reading changing the y-axis scale. The HRR comparison page fixes this problem, giving users a simple graph to directly compare two HRR readings from any of their workouts.
 
-Once a user has clicked on the comparison icon, as described at the end of section \ref{sec:hrrgraph}, to compare another measurement to the one they're currently on. The user can swipe through all the HRR readings the watch has stored on the database across all their workouts, including the current one. Clicking on another reading then provides the comparison between the selected measurement and the current one through a graph shown below.
+Once a user has clicked on the comparison icon, as described at the end of section \ref{sec:hrrgraph}, to compare another measurement to the one they're currently on. The user can swipe through all the HRR readings the watch has stored on the database across all their workouts, including the current one. Clicking on another reading then provides the comparison between the selected measurement and the current one through a graph shown below in Figure \ref{fig:hrrcompare}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\linewidth]{dissertation//dissImages/HRRCompareGraph.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.4\linewidth]{dissertation//dissImages/HRRCompareGraph.png}
+    \caption{An example comparison of two HRR readings, with one plotted in red and the other in blue}
+    \label{fig:hrrcompare}
 \end{figure}
 
 The plotting of the graph is done almost identically to the HRR bar chart, except for two HRR lists. These two lists are given a separate colour scheme, one red and the other blue, to differentiate between the two plots. By plotting on the same graph, it fixes the issue of scaling while also being able to compare the heart rates across the minute-long interval. Above the graph, the two HRR values are shown, with coloured indicators as the key for the graph. Swiping across also allows users to see the two readings plotted individually if they want to look closer at one of the two measurements.
@@ -766,7 +778,7 @@ This prompted another two fixes for the application before the user studies.
 
 Firstly, the accuracy for detecting movement was adequately accurate when running at a fair pace, however was too strict when running at lighter paces. To address this, I reduced the hyperparameter determining the amount of movement required to class as being stopped, as well as increasing the time window it averages the movement across from 2 seconds to 3 seconds. This overall caused a slight but significant decrease in the sensitivity to users taking breaks and had a much more desired effect from the algorithm at slower speeds.
 
-It was clear to see how the vibrations could be confusing to a user not aware of how the background system works, and it was an oversight to assume users would understand what a vibration indicated. To address this, I implemented an overlay that would trigger if some movement was detected. Whenever the toggle for changing the isPaused state - mentioned in section \ref{sec:autohrr} - it would also trigger the launch of this overlay, telling the user they had either paused or continued their workout. This overlay could then work alongside the vibrations already providing feedback to the user.
+It was clear to see how the vibrations could be confusing to a user not aware of how the background system works, and it was an oversight to assume users would understand what a vibration indicated. To address this, I implemented an overlay that would trigger if some movement was detected. Whenever the toggle for changing the "isPaused" state - mentioned in section \ref{sec:autohrr} - it would also trigger the launch of this overlay, telling the user they had either paused or continued their workout. This overlay could then work alongside the vibrations already providing feedback to the user.
 
 Once these final issues were rectified, I was ready to plan and carry out the wider user study to gather more feedback.
 
@@ -810,51 +822,49 @@ A total of 7 participants were gathered from a convenience sample, all of which 
 
 Quantitative questions were evaluated against the Likert scale, with 1 being a strongly negative response and 5 being a strongly positive response. Each question had the scale labelled more specifically to ensure a clear understanding of the scale for the respondent.
 
-\noindent\mbox{}\\
 \subsubsection{Intuitive Design Questions}
 \noindent\mbox{}\\
 
-When asked about the navigational process throughout the application, participants found the process very intuitive. Regarding the question “How easy do you find the application to navigate?”, all participants answered above a rating of 4, with one participant reviewing it a 5. Users also found the application to be consistent with similar mobile applications, with an average rating of 4 across all participants (standard deviation = 0.40)
+When asked about the navigational process throughout the application, participants found the process very intuitive. Regarding the question “How easy do you find the application to navigate?”, all participants answered above a rating of 4, with one participant reviewing it a 5 (Figure \ref{fig:navigateeasy}). Users also found the application to be consistent with similar mobile applications, with an average rating of 4 across all participants (standard deviation = 0.40, Figure \ref{fig:navconsistent})
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/NavigationEasy.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.61\linewidth]{dissertation//dissImages/NavigationEasy.png}
+    \caption{Responses to: "How easy do you find the application to navigate?"}
+    \label{fig:navigateeasy}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/NavigationConsistency.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.61\linewidth]{dissertation//dissImages/NavigationConsistency.png}
+    \caption{Responses to: "Is navigation consistent with similar mobile applications?"}
+    \label{fig:navconsistent}
 \end{figure}
 
-Another key aim of the study was to assess the design and clarity of the graphs presented at the end of a workout. Evaluators reported an average score of 3.86 when considering how easy the post-workout graphs (HRR and HR range) were to understand (standard deviation = 0.99). The respondents also reviewed the clarity of the graph colours at a very high average rating of 4.43 (standard deviation = 0.73).
+Another key aim of the study was to assess the design and clarity of the graphs presented at the end of a workout. Evaluators reported an average score of 3.86 when considering how easy the post-workout graphs (HRR and HR range) were to understand (standard deviation = 0.99, Figure \ref{fig:grapheasy}). The respondents also reviewed the clarity of the graph colours at a very high average rating of 4.43 (standard deviation = 0.73, Figure \ref{fig:graphcolours}).
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/GraphEasy.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.65\linewidth]{dissertation//dissImages/GraphEasy.png}
+    \caption{Responses to: "How easy are the post-workout graphs to understand?"}
+    \label{fig:grapheasy}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/GraphColour.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.65\linewidth]{dissertation//dissImages/GraphColour.png}
+    \caption{Responses to: "Is it clear what the graph colours represent?"}
+    \label{fig:graphcolours}
 \end{figure}
 
-Participant’s opinions on the vibrations given by the system when toggling between a ‘paused’ and ‘resumed’ state were very mixed however generally the vibrations were not appreciated with an average rating of just 2.86 (standard deviation = 1.25).
+Participant’s opinions on the vibrations given by the system when toggling between a "paused" and "resumed" state were very mixed however generally the vibrations were not appreciated with an average rating of just 2.86 (standard deviation = 1.25, Figure \ref{fig:vibration}).
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/Vibrations.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.65\linewidth]{dissertation//dissImages/Vibrations.png}
+    \caption{Responses to: "Is it clear what the vibrations during a workout indicate?"}
+    \label{fig:vibration}
 \end{figure}
-
 
 \noindent\mbox{}\\
 \subsubsection{Post-Exercise Task-Based Questions}
@@ -871,10 +881,12 @@ Based on the responses to the task-based questions, I could gather whether or no
     \item \textbf{Task 6} asked users what their active running time and total exercise duration was throughout the run
 \end{itemize}
 
+The results of these tasks can be seen below in Table \ref{fig:tasktable}
+
 \begin{table}[h!]
     \centering
-    \caption{Enter Caption} % MENTION ASTERISK MEANINGS
-    \label{fig:enter-label}
+    \caption{Table showing the completion of tasks with each Participant.} % MENTION ASTERISK MEANINGS
+    \label{fig:tasktable}
     \begin{tabular}{|l|ccccccc|r|}
         \hline  
         Participant no. & 1 & 2 & 3 & 4 & 5 & 6 & 7 & Task Completion \\
@@ -888,47 +900,48 @@ Based on the responses to the task-based questions, I could gather whether or no
         \hline
     \end{tabular}
 \end{table}
+* Application Bug - Heart Rate Range graph was not recorded, making this task impossible\\
+** Application Bug - Active Timer did not increment, causing incorrect results. The Participant still used the correct method for completing the task
 
-\noindent\mbox{}\\
 \subsubsection{Application Practicality}
 \noindent\mbox{}\\
 
-The overall concept of the application received high praise from evaluators, with an average review of 4.71 (standard deviation = 0.45). This goes hand in hand with how important participants found their heart health information while working out, with an average review of 4.0 (standard deviation = 1.41)
+The overall concept of the application received high praise from evaluators, with an average review of 4.71 (standard deviation = 0.45, Figure \ref{fig:useapp}). This goes hand in hand with how important participants found their heart health information while working out, with an average review of 4.0 (standard deviation = 1.41, Figure \ref{fig:heartimportant})
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HeartImportant.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.62\linewidth]{dissertation//dissImages/HeartImportant.png}
+    \caption{Responses to: "How important is your Heart Health information while working out?"}
+    \label{fig:heartimportant}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/UseApplication.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.62\linewidth]{dissertation//dissImages/UseApplication.png}
+    \caption{Responses to: "How likely are you to use a similar application in the real world?"}
+    \label{fig:useapp}
 \end{figure}
 
 
-The auto-pausing functionality proved divisive for participants, with the highest variance in results across all the quantitative questions asked. The average review of the effectiveness was 2.86 with a huge standard deviation of 1.46
+The auto-pausing functionality proved divisive for participants, with the highest variance in results across all the quantitative questions asked. The average review of the effectiveness was 2.86 with a huge standard deviation of 1.46 (Figure \ref{fig:autopause}).
+
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/PauseEffective.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=0.62\linewidth]{dissertation//dissImages/PauseEffective.png}
+    \caption{Responses to: "How effective was the auto-pausing functionality at knowing when you had stopped/started your exercise?"}
+    \label{fig:autopause}
 \end{figure}
 
 \subsection{Analysis and Discussion}
 \label{sec:userstudyanalysis}
 
-\noindent\mbox{}\\
 \subsubsection{Intuitive Design}
 \noindent\mbox{}\\
 
-One of the main aims of the application is to allow for easy accessibility to HRR. The results show that the navigational design of the application was overall very positive (ENTER FIGURE REFERENCE HERE). Some evaluators did report that they were “unsure at first with navigation”, however found it “very intuitive and easy to use” after some adjusting to the new system. Participant 6 explained how “the little dots showed whereabouts I was so I never got lost”, showing that while this navigational technique may have been new for some users, the design choices I made to assist with navigational context proved very effective in directing users.
+One of the main aims of the application is to allow for easy accessibility to HRR. The results show that the navigational design of the application was overall very positive (Figure \ref{fig:navigateeasy}). Some evaluators did report that they were “unsure at first with navigation”, however found it “very intuitive and easy to use” after some adjusting to the new system. Participant 6 explained how “the little dots showed whereabouts I was so I never got lost”, showing that while this navigational technique may have been new for some users, the design choices I made to assist with navigational context proved very effective in directing users.
 
-The graphical representation of the HRR and heart rate range was also very well received as evident from (ENTER FIGURE REFERENCE HERE), with four participants expressing how they liked the “clear and basic” and “easy to understand” design. Participant 7 did note that they “weren’t quite sure what they were representing”. This feedback indicates that while the application may logically represent HRR, it needs to have a clearer explanation of what it is measuring and displaying to the user.
+The graphical representation of the HRR and heart rate range was also very well received as evident from Figure \ref{fig:grapheasy}, with four participants expressing how they liked the “clear and basic” and “easy to understand” design. Participant 7 did note that they “weren’t quite sure what they were representing”. This feedback indicates that while the application may logically represent HRR, it needs to have a clearer explanation of what it is measuring and displaying to the user.
 
 Giving users multimodal context of the state of the application was a feature designed to let users know when the application paused state had toggled without needing to visually check if it had toggled. This was implemented in the form of vibrations, however the system received mixed feedback with the question receiving the second-highest standard deviation across the whole evaluation at 1.25. The overall negative feedback of the feature means it will need a redesigned implementation and further evaluation to ensure the desired effect. This is discussed further in section \ref{sec:futurework}.
 
@@ -955,7 +968,7 @@ Both tasks 4 and 5 only saw a 42.9\% success rate, with only 3 of the 7 particip
 \subsubsection{Application Practicality}
 \noindent\mbox{}\\
 
-People are keen to keep track of their heart health with all participants scoring a 4 or above on how likely they are to use the application. The desire to use my application is evidence of the gap in current applications and is a strong indication of a successful project.
+People are keen to keep track of their heart health with all participants scoring a 4 or above on how likely they are to use the application (Figure \ref{fig:useapp}). The desire to use my application is evidence of the gap in current applications and is a strong indication of a successful project.
 
 Considering the application’s performance on other exercises, the variety of other exercises can be categorised into three different types:
 
@@ -965,7 +978,7 @@ Considering the application’s performance on other exercises, the variety of o
     \item \textbf{Negligible Arm Movement} - Activities where there is rarely any fast arm movement, such as weightlifting, a ‘leg workout’ and scrambling
 \end{itemize}
 
-From qualitative feedback, the feedback on the application’s performance follows what was theorised. 
+From qualitative feedback, the feedback on the application’s performance follows the expected result. 
 
 The application performs “functionally the same” when considering an exercise with lots of arm movement, with Participant 7 stating their rowing exercise showed statistics “similar to the machine”. 
 
@@ -977,7 +990,7 @@ Finally, negligible arm movement exercises performed overall poorly as anticipat
 \subsubsection{General Discussion}
 \noindent\mbox{}\\
 
-After completing the evaluation, I asked the participants some questions about how everything went and if they experienced any issues. Participant 4 explained that they removed the watch accidentally before remembering they had not ended the workout. This resulted in their heart rate graph being skewed. This is an oversight of the application that could be solved by simply not storing values of 0 or below, allowing for the heart rate graph to remain accurate.
+After completing the evaluation, I asked the participants some questions about how everything went and if they experienced any issues. Participant 4 explained that they removed the watch accidentally before remembering they had not ended the workout. This resulted in their heart rate graph being skewed. This is an oversight of the application that could be solved by not storing values of 0 or below, allowing for the heart rate graph to remain accurate.
 
 More general feedback received from Participants 2 and 3 is that the idea of an “Active Timer” and “Total Duration” is confusing. They stated that they felt when the watch entered a paused state, that it was no longer tracking their workout. This is inaccurate, everything is still being tracked with the only impact being the “Active Timer” is paused, however the design of the pausing effect gives the impression that more is happening.
 
@@ -1007,7 +1020,7 @@ Workout and fitness trackers are becoming increasingly common with an increase i
 
 In order to bridge this gap, I designed and developed an application that puts heart health metrics at the forefront of functionality. The application provided users with useful insight into their heart health, displaying graphs of their results for easy interpretation.
 
-The application design was carefully considered, from the visuals of the user interface to the interaction and navigation design, in order to ensure users could navigate the application and find the information they were looking for as intuitively as possible.
+The application design was carefully considered, from the visuals of the user interface to the interaction and navigation design, to ensure users could navigate the application and find the information they were looking for as intuitively as possible.
 
 The application was developed and evaluated using the Mobvoi TicWatch Pro 3. The evaluation consisted of two main stages:
 
@@ -1030,33 +1043,119 @@ Larger-scale developments include adding more variety of supported workouts to c
 %==================================================================================================================================
 %  APPENDICES  
 
-\begin{appendices}
 
+
+% \begin{appendices}
+\renewcommand{\thechapter}{A}
 \chapter{Appendices}
 \label{sec:appendices}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/WorkoutFlow.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/WorkoutFlow.pdf}
+    \caption{A flow diagram showing the application flow through the Workout}
+    \label{fig:workoutflow}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/HealthHistoryFlow.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/HealthHistoryFlow.pdf}
+    \caption{A flow diagram showing the application flow through the Health History}
+    \label{fig:healthhistoryflow}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{dissertation//dissImages/UserSettingFlow.pdf}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/UserSettingFlow.pdf}
+    \caption{A flow diagram showing the application flow through the User Settings}
+    \label{fig:usersettingsflow}
 \end{figure}
 
-\end{appendices}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/RequestforEthicsApprovalpage1.pdf}
+    \caption{Evaluation - Request for Ethics Approval - Page 1}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/RequestforEthicsApprovalpage2.pdf}
+    \caption{Evaluation - Request for Ethics Approval - Page 2}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/RequestforEthicsApprovalpage3.pdf}
+    \caption{Evaluation - Request for Ethics Approval - Page 3}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/IntroductionScript.pdf}
+    \caption{Evaluation - Introduction Script}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/DebriefingScript.pdf}
+    \caption{Evaluation - Debriefing Script}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/InformationSheet.pdf}
+    \caption{Evaluation - Information Sheet}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/ConsentForm.pdf}
+    \caption{Evaluation - Blank Consent Form}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent1.jpg}
+    \caption{Evaluation - Signed Consent Form (1)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent2.jpg}
+    \caption{Evaluation - Signed Consent Form (2)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent3.jpg}
+    \caption{Evaluation - Signed Consent Form (3)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent4.jpg}
+    \caption{Evaluation - Signed Consent Form (4)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent5.jpg}
+    \caption{Evaluation - Signed Consent Form (5)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent6.jpg}
+    \caption{Evaluation - Signed Consent Form (6)}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\linewidth]{dissertation//dissImages/Consent7.jpg}
+    \caption{Evaluation - Signed Consent Form (7)}
+\end{figure}
+
+% \end{appendices}
 
 %==================================================================================================================================
 %   BIBLIOGRAPHY   
